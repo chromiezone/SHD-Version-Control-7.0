@@ -1,0 +1,69 @@
+[gd_scene load_steps=9 format=3 uid="uid://cyd14embcvdsn"]
+
+[ext_resource type="PackedScene" uid="uid://duo3fiqbm8255" path="res://traps/meshes/blowtorch_mesh.tscn" id="1_41ws1"]
+[ext_resource type="Script" uid="uid://cdfrwuyl0ijuy" path="res://traps/door_torch_m.gd" id="1_nlvsb"]
+[ext_resource type="Script" uid="uid://dbt0vsbq77thh" path="res://foundation/hit_box_3d.gd" id="2_7y13j"]
+[ext_resource type="Script" uid="uid://desvgwiwbekmh" path="res://traps/hammer_interactable.gd" id="4_q72kt"]
+[ext_resource type="PackedScene" uid="uid://cqa7t87wkfhyc" path="res://traps/vfx/blow_torch_flame.tscn" id="5_q72kt"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q72kt"]
+size = Vector3(0.0390625, 0.241102, 0.785645)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nlvsb"]
+size = Vector3(0.0244141, 0.181641, 0.128906)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_434am"]
+size = Vector3(0.025, 0.19, 0.15)
+
+[node name="DoorTorchM" type="Area3D"]
+script = ExtResource("1_nlvsb")
+
+[node name="blowtorch" parent="." instance=ExtResource("1_41ws1")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.042918, -1.82542, 0)
+
+[node name="Nailhead" parent="blowtorch/Misc" index="4"]
+visible = false
+
+[node name="Nail" parent="blowtorch/Misc" index="5"]
+visible = false
+
+[node name="Hitbox3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000366211, 0, 0.00149536)
+collision_layer = 7
+collision_mask = 7
+script = ExtResource("2_7y13j")
+damage = 5
+damage_source = 7
+detected_hurtboxes = 7
+metadata/_custom_type_script = "uid://dbt0vsbq77thh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0903257, -0.0555983, -0.608403)
+shape = SubResource("BoxShape3D_q72kt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_nlvsb")
+
+[node name="HammerInteractable" type="Area3D" parent="."]
+script = ExtResource("4_q72kt")
+metadata/_custom_type_script = "uid://db2palc6yt7u1"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable"]
+shape = SubResource("BoxShape3D_434am")
+
+[node name="DoorDetection" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0568752, 0.0833865, -0.0882437)
+target_position = Vector3(0, 0, -0.8)
+collision_mask = 3
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="BlowTorchFlame" parent="." instance=ExtResource("5_q72kt")]
+transform = Transform3D(1, 0, 0, 0, -0.398589, 0.91713, 0, -0.91713, -0.398589, 0, 0, -0.225452)
+
+[node name="GPUParticles3D" parent="BlowTorchFlame" index="0"]
+transform = Transform3D(0.989403, 0.13267, 0.0589931, -0.128584, 0.989339, -0.068384, -0.0674367, 0.0600738, 0.995914, 0.0885181, -0.0603222, 0.0120895)
+
+[editable path="blowtorch"]
+[editable path="BlowTorchFlame"]

@@ -1,0 +1,55 @@
+[gd_scene load_steps=9 format=3 uid="uid://0n3swx0uu2qe"]
+
+[ext_resource type="Script" uid="uid://bupkuql0oojwe" path="res://traps/bear_trap.gd" id="1_gprdy"]
+[ext_resource type="Script" uid="uid://dbt0vsbq77thh" path="res://foundation/hit_box_3d.gd" id="3_44ewl"]
+[ext_resource type="Script" uid="uid://desvgwiwbekmh" path="res://traps/hammer_interactable.gd" id="4_r76te"]
+[ext_resource type="AudioStream" uid="uid://ce03csuxw8jiu" path="res://traps/sfx/chains.wav" id="5_bsn5x"]
+[ext_resource type="PackedScene" uid="uid://d2kaly81nv3l5" path="res://traps/meshes/bear_trap_mesh.tscn" id="5_gprdy"]
+[ext_resource type="AudioStream" uid="uid://c3qkxjii24yfa" path="res://traps/sfx/beartrap.wav" id="6_44ewl"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_qhphu"]
+height = 0.285034
+radius = 0.639648
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fvvxq"]
+height = 0.341522
+radius = 0.666016
+
+[node name="BearTrap" type="Area3D"]
+script = ExtResource("1_gprdy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00294328, 0.140564, -0.337208)
+shape = SubResource("CylinderShape3D_qhphu")
+
+[node name="Hitbox3D" type="Area3D" parent="."]
+collision_layer = 7
+collision_mask = 7
+script = ExtResource("3_44ewl")
+damage = 4
+damage_source = 7
+detected_hurtboxes = 7
+metadata/_custom_type_script = "uid://dbt0vsbq77thh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13942, -0.337706)
+shape = SubResource("CylinderShape3D_qhphu")
+
+[node name="HammerInteractable" type="Area3D" parent="."]
+script = ExtResource("4_r76te")
+metadata/_custom_type_script = "uid://desvgwiwbekmh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14247, -0.337039)
+shape = SubResource("CylinderShape3D_fvvxq")
+
+[node name="Initialization" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_bsn5x")
+
+[node name="bear_trap_mesh" parent="." instance=ExtResource("5_gprdy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0505928, 0)
+
+[node name="TrapActivated" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_44ewl")
+
+[editable path="bear_trap_mesh"]

@@ -1,0 +1,366 @@
+@tool
+class_name Door3D extends Interactable3D
+
+
+@onready var _reroaming_target = $ExitingArea/CollisionShape3D
+@onready var _door_body = $Door/Swivel/AnimatableBody3D
+@onready var _top_section_interactable: FixedTrapVisual = $TrapSetup/Interactable2
+@onready var _mid_section_interactable: FixedTrapVisual = $TrapSetup/Interactable
+
+var is_active := false: set = set_is_active
+var door_open := false
+
+var _tween_door : Tween = null
+@onready var _swivel: CSGCylinder3D = $Door/Swivel
+ 
+var broken := false : set = set_broken
+var broken_sound_played := false
+
+var swivel_rotation_was_at_zero := true
+
+
+var hinge1_completion: int = 3
+var hinge2_completion: int = 3
+var hinge3_completion: int = 3
+
+var fix_completion : int = 3 : set = set_fix_completion
+
+var door_trap : DoorTrap = null
+var door_has_trap := false : set = set_door_trap
+
+
+func set_door_trap(new_value: bool) -> void:
+	door_has_trap = new_value
+
+
+
+
+func set_fix_completion(new_value) -> void:
+	fix_completion = new_value
+	if new_value == 3:
+		fix_door()
+
+func set_broken(new_value) -> void:
+	broken = new_value
+	if new_value == true:
+		is_active = true
+		get_tree().create_timer(0.25 if _swivel.rotation.y < 0 else 0.01).timeout.connect(door_break_tween)
+		if broken_sound_played == false:
+			get_tree().create_timer(0.50).timeout.connect(func() -> void:
+				$DoorBreak.play()
+				broken_sound_played = true
+				)
+		$Door/Swivel/AnimatableBody3D/CollisionShape3D.disabled = true
+		fix_completion = 0
+		hinge1_completion = 0
+		hinge2_completion = 0
+		hinge3_completion = 0
+
+
+func fix_door() -> void:
+	print("door fixed")
+	broken = false
+	var position_end_value : Vector3 = Vector3(0.0, 1.0, 0.36)
+	var rotation_end_value : Vector3 = Vector3(0.0, 0.0, 0.0)
+	
+	if _tween_door != null:
+			_tween_door.kill()
+	_tween_door = create_tween()
+	_tween_door.set_ease(Tween.EASE_OUT)
+	_tween_door.set_trans(Tween.TRANS_BOUNCE)
+	_tween_door.set_parallel(true)
+	
+	_tween_door.tween_property(_swivel, "position", position_end_value, 1.0)
+	_tween_door.tween_property(_swivel, "rotation", rotation_end_value, 1.0)
+	
+	get_tree().create_timer(1.2).timeout.connect(func() -> void:
+		$Door/Swivel/AnimatableBody3D/CollisionShape3D.disabled = false
+		)
+
+# In any instance of a door or window, red should be on the *inside* of the home.
+
+
+
+func _ready() -> void:
+	
+	
+	$FixSetup/HingeInteractable1.connect("interacted_with_hammer", func() -> void:
+		if broken:
+			print("fixed")
+			hinge1_completion += 1
+			if hinge1_completion == 3:
+				fix_completion += 1
+		)
+	$FixSetup/HingeInteractable2.connect("interacted_with_hammer", func() -> void:
+		if broken:
+			print("fixed")
+			hinge2_completion += 1
+			if hinge2_completion == 3:
+				fix_completion += 1
+		)
+	$FixSetup/HingeInteractable3.connect("interacted_with_hammer", func() -> void:
+		if broken:
+			print("fixed")
+			hinge3_completion += 1
+			if hinge3_completion == 3:
+				fix_completion += 1
+		)
+	
+	
+	# Exiting Tween
+	$ExitingArea.body_entered.connect(func(body: Node3D) -> void:
+		if body is Enemy3D:
+			body.current_entryway = self
+		if body is Burglar and is_active == false and body.current_state == 3:
+			if body.door_interaction_cooldown_timer.time_left > 0.0:
+				return
+			var direction_to_door = global_transform.origin - body.global_transform.origin
+			direction_to_door = direction_to_door.normalized()
+			var target_forward = -body.global_transform.basis.z.normalized()
+			var dot_product = target_forward.dot(direction_to_door)
+			if body._roaming_ray_cast.get_collider() == self or dot_product > 0.800:
+				print("door should open")
+				if not broken:
+					$DoorForce.play()
+					body.door_exit_anim_end_position = $ExitingTweenTargetPos/CollisionShape3D.global_position
+					var end_value := - PI / 2.0
+					if _tween_door != null:
+						_tween_door.kill()
+					_tween_door = create_tween()
+					_tween_door.set_ease(Tween.EASE_OUT)
+					_tween_door.set_trans(Tween.TRANS_BOUNCE)
+					
+					_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+					_tween_door.finished.connect(func() -> void:
+						broken = true
+					)
+		if body is Enemy3D and is_active == false and body.current_state >= 4:
+			if body.door_interaction_cooldown_timer.time_left > 0.0:
+				return
+			body.door_interaction_cooldown_timer.start()
+			print("enemy preparing to exit")
+			if not broken:
+				$DoorForce.play()
+				body.door_exit_anim_end_position = $ExitingTweenTargetPos/CollisionShape3D.global_position
+				var end_value := - PI / 2.0
+				if _tween_door != null:
+					_tween_door.kill()
+				_tween_door = create_tween()
+				_tween_door.set_ease(Tween.EASE_OUT)
+				_tween_door.set_trans(Tween.TRANS_BOUNCE)
+				
+				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+				_tween_door.finished.connect(func() -> void:
+					broken = true
+					)
+		)
+		# Entering Tween
+	#_entering_area_recheck()
+	$EnteringArea.body_entered.connect(func(body: Node3D) -> void:
+		#if broken == true:
+			#return
+		if body is Enemy3D:
+			body.current_entryway = self
+		if body is Enemy3D and body.current_state <= 4 or body.current_state == 13:
+			print("enemy preparing to enter")
+			if is_active == false:
+				$DoorFidget.play(0.0)
+			can_interact = false
+			body.door_anim_end_position = $EnteringTweenTargetPos/CollisionShape3D.global_position
+			await get_tree().create_timer(body.door_open_duration).timeout
+			if $DoorFidget.is_playing():
+				$DoorFidget.stop()
+			if is_active == false and broken == false:
+				$DoorForce.play()
+				var end_value := PI / 2.0
+				if _tween_door != null:
+					_tween_door.kill()
+				_tween_door = create_tween()
+				_tween_door.set_ease(Tween.EASE_OUT)
+				_tween_door.set_trans(Tween.TRANS_BOUNCE)
+				
+				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+				_tween_door.finished.connect(func() -> void:
+					can_interact = true
+					if broken == false:
+						$CloseTimer.start(0.0)
+					)
+		elif body is Enemy3D and body.current_state == 7:
+			if body.door_interaction_cooldown_timer.time_left > 0.0 or broken == true:
+				return
+			body.door_interaction_cooldown_timer.start()
+			can_interact = false
+			$DoorForce.play()
+			var end_value := PI / 2.0
+			if _tween_door != null:
+				_tween_door.kill()
+			_tween_door = create_tween()
+			_tween_door.set_ease(Tween.EASE_OUT)
+			_tween_door.set_trans(Tween.TRANS_BOUNCE)
+			
+			_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+			_tween_door.finished.connect(func() -> void:
+				can_interact = true
+				if broken == false:
+					$CloseTimer.start(0.0)
+				)
+		)
+	$CloseTimer.timeout.connect(_on_close_timer_timeout)
+	
+
+
+func door_break_tween() -> void:
+		# Door Breaking Tween
+	
+	var door_rotation_negative = _swivel.rotation.y < 0.1
+	var position_end_value : Vector3 = Vector3(0.64, 0.025, 1.458) if door_rotation_negative else Vector3(-0.192, 0.048, 1.613)
+	var rotation_end_value : Vector3 = Vector3(47 * PI / 1800.0, (-71.9 / 180.0) * PI, - PI / 2.0) if door_rotation_negative else Vector3(3.1 * PI / 180.0, 37 * PI / 72, 101 * PI / 200)
+	
+	if _tween_door != null:
+			_tween_door.kill()
+	_tween_door = create_tween()
+	_tween_door.set_ease(Tween.EASE_OUT)
+	_tween_door.set_trans(Tween.TRANS_BOUNCE)
+	_tween_door.set_parallel(true)
+	
+	_tween_door.tween_property(_swivel, "position", position_end_value, 1.0 if door_rotation_negative else 0.85)
+	_tween_door.tween_property(_swivel, "rotation", rotation_end_value, 1.0 if door_rotation_negative else 0.85)
+
+func _entering_area_recheck() -> void:
+	if broken == true:
+		return
+	var bodies = $EnteringArea.get_overlapping_bodies()
+	if bodies.size() > 0:
+		for body in bodies:
+			if body is Enemy3D and body.current_state == 7:
+				if body.door_interaction_cooldown_timer.time_left > 0.0:
+					return
+				body.door_interaction_cooldown_timer.start()
+				can_interact = false
+				$DoorForce.play()
+				var end_value := PI / 2.0
+				if _tween_door != null:
+					_tween_door.kill()
+				_tween_door = create_tween()
+				_tween_door.set_ease(Tween.EASE_OUT)
+				_tween_door.set_trans(Tween.TRANS_BOUNCE)
+				
+				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+				_tween_door.finished.connect(func() -> void:
+					can_interact = true
+					if broken == false:
+						$CloseTimer.start(0.0)
+					)
+func _exiting_area_recheck() -> void:
+	var bodies = $ExitingArea.get_overlapping_bodies()
+	if bodies.size() > 0:
+		for body in bodies:
+			if body is Enemy3D and is_active == false and body.current_state >= 4:
+				if body.door_interaction_cooldown_timer.time_left > 0.0:
+					return
+				body.door_interaction_cooldown_timer.start()
+				print("enemy preparing to exit")
+				if not broken:
+					$DoorForce.play()
+					body.door_exit_anim_end_position = $ExitingTweenTargetPos/CollisionShape3D.global_position
+					var end_value := - PI / 2.0
+					if _tween_door != null:
+						_tween_door.kill()
+					_tween_door = create_tween()
+					_tween_door.set_ease(Tween.EASE_OUT)
+					_tween_door.set_trans(Tween.TRANS_BOUNCE)
+					
+					_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+					_tween_door.finished.connect(func() -> void:
+						broken = true
+						)
+
+
+func _process(_delta: float) -> void:
+	if door_trap != null:
+		door_trap.door_trap_in_effect.connect(func() -> void:
+			broken = true
+			)
+	
+	if _swivel.rotation.y == 0.0:
+		door_open = false
+	else:
+		door_open = true
+	
+	#if door_open == true:
+		#_top_section_interactable.can_interact = false
+	#else:
+		#_top_section_interactable.can_interact = true
+	
+	if door_open == true:
+		$TrapSetup/Interactable2.can_interact = false
+		#print("shouldnt be able to place door trap")
+	
+	var current_rotation = _swivel.rotation.y
+	var is_at_zero = is_equal_approx(current_rotation, 0.0)
+	if is_at_zero and not swivel_rotation_was_at_zero:
+		$DoorClose.play()
+	swivel_rotation_was_at_zero = is_at_zero
+	
+	# Tracks whether the door has a trap attached
+	for child in _mid_section_interactable.get_children():
+		if child is DoorTrap:
+			door_has_trap = true
+			door_trap = child
+	
+	for child in _top_section_interactable.get_children():
+		if child is DoorTrap:
+			$Door/Swivel/RopeAttachment.show()
+		else:
+			$Door/Swivel/RopeAttachment.hide()
+	
+
+func _physics_process(_delta: float) -> void:
+	if Trap3D.Blackboard.player_money > 500:
+		_mid_section_interactable.can_interact = true
+		_top_section_interactable.can_interact = true
+	if not broken:
+		_entering_area_recheck()
+		_exiting_area_recheck()
+	
+
+func _on_close_timer_timeout() -> void:
+	if broken:
+		return
+	$DoorCreakIdle.play(0.0)
+	print("close")
+	var end_value := 0.0
+	if _tween_door != null:
+		_tween_door.kill()
+	_tween_door = create_tween()
+	_tween_door.set_ease(Tween.EASE_OUT)
+	_tween_door.set_trans(Tween.TRANS_EXPO)
+	
+	_tween_door.tween_property(_swivel, "rotation:y", end_value, 3.0)
+	
+
+func interact() -> void:
+	super()
+	set_is_active(not is_active)
+	if is_active == true and not broken:
+		$DoorOpen.play()
+	if not $CloseTimer.is_stopped():
+		$CloseTimer.stop()
+
+func set_is_active(value: bool) -> void:
+	is_active = value
+	#_static_body_collision_shape_3d.disabled = is_active
+	#print(is_active)
+	
+	var end_value := PI / 2.0 if is_active else 0.0
+	if _tween_door != null:
+		_tween_door.kill()
+	if broken == true:
+		return
+	_tween_door = create_tween()
+	_tween_door.set_ease(Tween.EASE_OUT)
+	_tween_door.set_trans(Tween.TRANS_BACK if is_active else Tween.TRANS_BOUNCE)
+	
+	_tween_door.tween_property(_swivel, "rotation:y", end_value, 1.0)
+	_tween_door.finished.connect(func() -> void:
+		)

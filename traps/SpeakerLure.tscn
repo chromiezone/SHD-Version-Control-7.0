@@ -1,0 +1,77 @@
+[gd_scene load_steps=12 format=3 uid="uid://dpyn0dxc6a1w2"]
+
+[ext_resource type="Script" uid="uid://cax61ydn8hyv4" path="res://traps/speaker_lure.gd" id="1_v0yw2"]
+[ext_resource type="PackedScene" uid="uid://dnum66mgsu47a" path="res://traps/meshes/speakerlure_mesh.tscn" id="2_fhss6"]
+[ext_resource type="Script" uid="uid://db2palc6yt7u1" path="res://interactables/interactable_3d.gd" id="3_d7oc5"]
+[ext_resource type="AudioStream" uid="uid://p5bdvnfc0bwa" path="res://traps/sfx/Arise (2018 Remaster).mp3" id="4_hj44w"]
+[ext_resource type="AudioStream" uid="uid://58l8jpngghdo" path="res://traps/sfx/846144__highpixel__button-press.ogg" id="5_awnrh"]
+[ext_resource type="Script" uid="uid://desvgwiwbekmh" path="res://traps/hammer_interactable.gd" id="6_s5wuw"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fhss6"]
+height = 1.2998
+radius = 7.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d7oc5"]
+size = Vector3(0.386597, 0.744202, 0.405151)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hj44w"]
+size = Vector3(0.0552368, 0.0279541, 0.0256348)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_awnrh"]
+height = 1.2998
+radius = 1.54102
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mne4u"]
+size = Vector3(0.42746, 0.784401, 0.405151)
+
+[node name="SpeakerLure" type="Area3D"]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_v0yw2")
+metadata/_custom_type_script = "uid://0rog0ashlmx"
+
+[node name="DetectionArea" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.641113, 0)
+shape = SubResource("CylinderShape3D_fhss6")
+debug_color = Color(0.945845, 7.9897e-06, 0.59057, 0.42)
+
+[node name="speakerlure_mesh" parent="." instance=ExtResource("2_fhss6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.50251, -0.0550216, 0.205052)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00933838, 0.373138, -0.0151978)
+shape = SubResource("BoxShape3D_d7oc5")
+
+[node name="Interactable3D" type="Area3D" parent="."]
+script = ExtResource("3_d7oc5")
+metadata/_custom_type_script = "uid://db2palc6yt7u1"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0482483, 0.263733, -0.215942)
+shape = SubResource("BoxShape3D_hj44w")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_hj44w")
+
+[node name="ButtonPress" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_awnrh")
+
+[node name="LuredArea" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LuredArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.641113, 0)
+shape = SubResource("CylinderShape3D_awnrh")
+
+[node name="HammerInteractable" type="Area3D" parent="."]
+script = ExtResource("6_s5wuw")
+metadata/_custom_type_script = "uid://desvgwiwbekmh"
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="HammerInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00773624, 0.372417, -0.0151978)
+shape = SubResource("BoxShape3D_mne4u")
+
+[editable path="speakerlure_mesh"]

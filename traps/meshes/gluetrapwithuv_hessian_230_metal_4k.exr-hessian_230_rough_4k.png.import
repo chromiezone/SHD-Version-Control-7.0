@@ -1,0 +1,38 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://rb1iwcoi7cw"
+path.s3tc="res://.godot/imported/gluetrapwithuv_hessian_230_metal_4k.exr-hessian_230_rough_4k.png-bed3c776d97815409da79569966875e4.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "9737e5fe9b8e742dec11f1a46178f128"
+}
+
+[deps]
+
+source_file="res://traps/meshes/gluetrapwithuv_hessian_230_metal_4k.exr-hessian_230_rough_4k.png"
+dest_files=["res://.godot/imported/gluetrapwithuv_hessian_230_metal_4k.exr-hessian_230_rough_4k.png-bed3c776d97815409da79569966875e4.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

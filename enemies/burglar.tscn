@@ -1,0 +1,573 @@
+[gd_scene load_steps=55 format=3 uid="uid://bh18j2r1mi2uj"]
+
+[ext_resource type="Script" uid="uid://bd7omwe3tqj0x" path="res://enemies/burglar.gd" id="1_ppjas"]
+[ext_resource type="PackedScene" uid="uid://or5ebfivwt02" path="res://weapons/melee_weapon.tscn" id="2_6aodv"]
+[ext_resource type="Script" uid="uid://c2wlbcqcd1qlk" path="res://foundation/hurt_box_3d.gd" id="2_7fqvo"]
+[ext_resource type="PackedScene" uid="uid://eklwc7wycweg" path="res://weapons/firearm.tscn" id="3_c23ex"]
+[ext_resource type="PackedScene" uid="uid://ch33ayu8f2w6u" path="res://enemies/vision_cone.tscn" id="4_x65s2"]
+[ext_resource type="AudioStream" uid="uid://bsdsgg5rgwk58" path="res://enemies/sfx/firearms/574818__wesleyextreme_gamer__gunshot.ogg" id="5_61ima"]
+[ext_resource type="Script" uid="uid://dbt0vsbq77thh" path="res://foundation/hit_box_3d.gd" id="5_ab62j"]
+[ext_resource type="AudioStream" uid="uid://ccwl34wn4b8s" path="res://enemies/sfx/melee/702942__franzzle__swordhit1.wav" id="6_08uhm"]
+[ext_resource type="AudioStream" uid="uid://37p1aqxowme6" path="res://enemies/sfx/looting/651515__1bob__grab-item.wav" id="7_3xq2e"]
+[ext_resource type="AudioStream" uid="uid://bpku28vpum1i5" path="res://enemies/sfx/movement/615044__junvi__walking-footstep.wav" id="10_ndtmc"]
+[ext_resource type="AudioStream" uid="uid://dhtt62byhutb0" path="res://enemies/sfx/damage/533840__rickplayer__hurt_dying.mp3" id="11_dejio"]
+[ext_resource type="PackedScene" uid="uid://bwh0hfdojkte6" path="res://enemies/meshes/burglar_skin_v2.tscn" id="12_no3p5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7fqvo"]
+size = Vector3(0.153, 0.162, 0.597)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_kqu6x"]
+height = 1.79717
+radius = 0.3
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_7fqvo"]
+height = 1.8
+radius = 0.3
+
+[sub_resource type="Animation" id="Animation_6aodv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Arm/ArmBody:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.0414865, -0.393624, -2.82737e-10)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CSGCylinder3D:transparency")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MeleeHitbox:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Arm/ArmBody:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.310313, 0.940551, -0.200609)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("MeleeHitbox/CollisionShape3D:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_c23ex"]
+resource_name = "firing"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Arm/ArmBody:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0333333, 0.15),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.310313, 0.940551, -0.200609), Vector3(0.268978, 0.940551, -0.106079), Vector3(0.310313, 0.940551, -0.200609)]
+}
+tracks/1/type = "audio"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Firearm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("5_61ima")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/1/use_blend = true
+
+[sub_resource type="Animation" id="Animation_7fqvo"]
+resource_name = "looting"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CSGCylinder3D:transparency")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 1.0, 0.0]
+}
+tracks/1/type = "audio"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Looting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("7_3xq2e")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/1/use_blend = true
+
+[sub_resource type="Animation" id="Animation_x65s2"]
+resource_name = "melee_attack"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Arm/ArmBody:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.0414865, -0.393624, -2.82737e-10), Vector3(-0.753808, -0.553419, 0.417269), Vector3(0.0414865, -0.393624, -2.82737e-10)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeleeHitbox:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -0.427), Vector3(0, 0, 0)]
+}
+tracks/2/type = "audio"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Melee")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("6_08uhm")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/2/use_blend = true
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MeleeHitbox/CollisionShape3D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0666667, 0.366667, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, true]
+}
+
+[sub_resource type="Animation" id="Animation_3xq2e"]
+resource_name = "stunned"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 2.0944, 0), Vector3(0, -2.0944, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x65s2"]
+_data = {
+&"RESET": SubResource("Animation_6aodv"),
+&"firing": SubResource("Animation_c23ex"),
+&"looting": SubResource("Animation_7fqvo"),
+&"melee_attack": SubResource("Animation_x65s2"),
+&"stunned": SubResource("Animation_3xq2e")
+}
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ab62j"]
+points = PackedVector3Array(-0.000195742, 1, -0.000195742, 0.194988, -1, -0.980814, -0.000195742, -1, -1, -0.195184, -1, -0.980814, -0.382733, -1, -0.924041, -0.555599, -1, -0.831637, -0.707126, -1, -0.707126, -0.831637, -1, -0.555599, -0.924041, -1, -0.382733, -0.980814, -1, -0.195184, -1, -1, -0.000195742, -0.980814, -1, 0.194988, -0.924041, -1, 0.382537, -0.831637, -1, 0.555403, -0.707126, -1, 0.70693, -0.555599, -1, 0.831441, -0.382733, -1, 0.923845, -0.195184, -1, 0.980619, -0.000195742, -1, 1, 0.194988, -1, 0.980619, 0.382537, -1, 0.923845, 0.555403, -1, 0.831441, 0.70693, -1, 0.70693, 0.831441, -1, 0.555403, 0.923845, -1, 0.382537, 0.980619, -1, 0.194988, 1, -1, -0.000195742, 0.980619, -1, -0.195184, 0.923845, -1, -0.382733, 0.831441, -1, -0.555599, 0.70693, -1, -0.707126, 0.555403, -1, -0.831637, 0.382537, -1, -0.924041)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_c23ex"]
+height = 16.256
+radius = 2.01953
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c23ex"]
+size = Vector3(0.617432, 1.59622, 1.15433)
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8natc"]
+animation = &"fire"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_no3p5"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3uqa4"]
+animation = &"loot_prepare"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_e1wpq"]
+animation = &"looting"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qgopq"]
+animation = &"looting_unprepare"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6tu41"]
+animation = &"melee_attack"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_gwy2n"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jd3hv"]
+animation = &"stun"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ncr2k"]
+animation = &"take_aim"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jd3hv"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3uqa4"]
+advance_mode = 2
+advance_expression = "velocity"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_e1wpq"]
+advance_mode = 2
+advance_expression = "!velocity"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qgopq"]
+advance_mode = 2
+advance_expression = "current_state == 10"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_no3p5"]
+advance_mode = 2
+advance_expression = "current_state == 10"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gwy2n"]
+advance_mode = 2
+advance_expression = "!current_state == 10"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6tu41"]
+advance_mode = 2
+advance_expression = "!current_state == 10"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8natc"]
+advance_mode = 2
+advance_expression = "is_looting == true and current_state == 3"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ncr2k"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sb8ue"]
+advance_mode = 2
+advance_expression = "is_looting == false"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_aady5"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_o0137"]
+advance_mode = 2
+advance_expression = "current_state == 10"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_21upu"]
+advance_mode = 2
+advance_expression = "current_state == 8"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tofmg"]
+advance_mode = 2
+advance_expression = "not current_state == 8"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_llfsc"]
+advance_mode = 2
+advance_expression = "player_spotted == false"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_scs0e"]
+advance_mode = 2
+advance_expression = "current_state == 9"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_625bu"]
+advance_mode = 2
+advance_expression = "current_state == 9"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wm14f"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_m28lf"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_s6uay"]
+advance_mode = 2
+advance_expression = "not current_state == 9"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_qgopq"]
+states/End/position = Vector2(1807, 60)
+states/Start/position = Vector2(224, 120)
+states/fire/node = SubResource("AnimationNodeAnimation_8natc")
+states/fire/position = Vector2(1490, 172)
+states/idle/node = SubResource("AnimationNodeAnimation_no3p5")
+states/idle/position = Vector2(370, 141)
+states/loot_prepare/node = SubResource("AnimationNodeAnimation_3uqa4")
+states/loot_prepare/position = Vector2(540, 185)
+states/looting/node = SubResource("AnimationNodeAnimation_e1wpq")
+states/looting/position = Vector2(675, 185)
+states/looting_unprepare/node = SubResource("AnimationNodeAnimation_qgopq")
+states/looting_unprepare/position = Vector2(842, 185)
+states/melee_attack/node = SubResource("AnimationNodeAnimation_6tu41")
+states/melee_attack/position = Vector2(1406, 60)
+states/run/node = SubResource("AnimationNodeAnimation_gwy2n")
+states/run/position = Vector2(370, 49)
+states/stun/node = SubResource("AnimationNodeAnimation_jd3hv")
+states/stun/position = Vector2(596, 80)
+states/take_aim/node = SubResource("AnimationNodeAnimation_ncr2k")
+states/take_aim/position = Vector2(1601, 172)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_jd3hv"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_3uqa4"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_e1wpq"), "run", "stun", SubResource("AnimationNodeStateMachineTransition_qgopq"), "idle", "stun", SubResource("AnimationNodeStateMachineTransition_no3p5"), "stun", "run", SubResource("AnimationNodeStateMachineTransition_gwy2n"), "stun", "idle", SubResource("AnimationNodeStateMachineTransition_6tu41"), "run", "loot_prepare", SubResource("AnimationNodeStateMachineTransition_8natc"), "loot_prepare", "looting", SubResource("AnimationNodeStateMachineTransition_ncr2k"), "looting", "looting_unprepare", SubResource("AnimationNodeStateMachineTransition_sb8ue"), "looting_unprepare", "run", SubResource("AnimationNodeStateMachineTransition_aady5"), "looting", "stun", SubResource("AnimationNodeStateMachineTransition_o0137"), "run", "melee_attack", SubResource("AnimationNodeStateMachineTransition_21upu"), "melee_attack", "run", SubResource("AnimationNodeStateMachineTransition_tofmg"), "fire", "run", SubResource("AnimationNodeStateMachineTransition_llfsc"), "run", "fire", SubResource("AnimationNodeStateMachineTransition_scs0e"), "idle", "fire", SubResource("AnimationNodeStateMachineTransition_625bu"), "fire", "take_aim", SubResource("AnimationNodeStateMachineTransition_wm14f"), "take_aim", "fire", SubResource("AnimationNodeStateMachineTransition_m28lf"), "fire", "idle", SubResource("AnimationNodeStateMachineTransition_s6uay")]
+
+[node name="Burglar" type="CharacterBody3D" node_paths=PackedStringArray("debug_label")]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_ppjas")
+debug_label = NodePath("Label3D")
+max_health = 5
+
+[node name="Arm" type="Node3D" parent="."]
+
+[node name="ArmBody" type="MeshInstance3D" parent="Arm"]
+transform = Transform3D(0.923525, -0.015907, -0.383208, -2.82494e-10, 0.999137, -0.0414746, 0.383538, 0.0383027, 0.922731, 0.310313, 0.940551, -0.200609)
+mesh = SubResource("BoxMesh_7fqvo")
+
+[node name="HandleMarker" type="Marker3D" parent="Arm/ArmBody"]
+transform = Transform3D(0.998515, 0.0544465, -0.00164667, -0.054408, 0.998356, 0.0180338, 0.00262591, -0.0179175, 0.999836, -0.0103527, -0.00977755, -0.235542)
+
+[node name="MeleeWeapon" parent="Arm/ArmBody/HandleMarker" instance=ExtResource("2_6aodv")]
+transform = Transform3D(1, 1.86265e-09, -2.98023e-08, 0, 1, -1.86265e-08, -2.98023e-08, -2.6077e-08, 1, 2.98023e-08, 0.283037, -0.0117489)
+
+[node name="Firearm" parent="Arm/ArmBody/HandleMarker" instance=ExtResource("3_c23ex")]
+transform = Transform3D(0.891457, 0.00472053, 0.453082, -0.0165597, 0.999617, 0.022167, -0.452804, -0.0272638, 0.891193, -0.0614904, 0.201798, -0.119503)
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.889891, 0)
+shape = SubResource("CylinderShape3D_kqu6x")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.797314, 0)
+visible = false
+radius = 0.304
+height = 1.60205
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7872, 0)
+billboard = 1
+text = "Health"
+
+[node name="Hurtbox3D" type="Area3D" parent="."]
+unique_name_in_owner = true
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("2_7fqvo")
+damage_source = 5
+metadata/_custom_type_script = "uid://c2wlbcqcd1qlk"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.889453, 0)
+shape = SubResource("CylinderShape3D_7fqvo")
+
+[node name="RoamingRayCast" type="RayCast3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36313, 0)
+target_position = Vector3(0, 0, -7.5)
+collide_with_areas = true
+
+[node name="ObstacleAvoidanceRaycasts" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="RayCast3D" type="RayCast3D" parent="ObstacleAvoidanceRaycasts"]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.00455189, 1.16008, 0)
+target_position = Vector3(0, 0, -0.75)
+
+[node name="RayCast3D2" type="RayCast3D" parent="ObstacleAvoidanceRaycasts"]
+transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, 0.0509808, 1.16008, 0)
+target_position = Vector3(0, 0, -0.75)
+
+[node name="RayCast3D3" type="RayCast3D" parent="ObstacleAvoidanceRaycasts"]
+transform = Transform3D(0.99042, 0, -0.138084, 0, 1, 0, 0.138084, 0, 0.99042, 0.0339466, 1.16008, 0)
+target_position = Vector3(0, 0, -1)
+
+[node name="RayCast3D4" type="RayCast3D" parent="ObstacleAvoidanceRaycasts"]
+transform = Transform3D(0.996478, 0, 0.0838515, 0, 1, 0, -0.0838515, 0, 0.996478, -0.0043666, 1.16008, 0)
+target_position = Vector3(0, 0, -1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_x65s2")
+}
+
+[node name="LootingTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="VisionTimer" type="Timer" parent="."]
+wait_time = 0.25
+autostart = true
+
+[node name="VisionArea" type="Area3D" parent="."]
+
+[node name="Cone" parent="VisionArea" instance=ExtResource("4_x65s2")]
+transform = Transform3D(2, 0, 0, 0, -8.74228e-08, -2, 0, 2, -8.74228e-08, -0.0327954, 1.34495, -1.74451)
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VisionArea"]
+transform = Transform3D(2, 0, 0, 0, -8.74228e-08, -2, 0, 2, -8.74228e-08, -0.0327954, 1.34495, -1.74451)
+shape = SubResource("ConvexPolygonShape3D_ab62j")
+debug_color = Color(0, 1, 0, 1)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="VisionArea"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.0108147, 1.33924, -11.8765)
+shape = SubResource("CylinderShape3D_c23ex")
+debug_color = Color(0, 1, 0, 1)
+
+[node name="VisionRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.39715, 0)
+target_position = Vector3(0, 0, -12)
+debug_shape_custom_color = Color(0, 1, 0, 1)
+
+[node name="MeleeHitbox" type="Area3D" parent="."]
+collision_layer = 2
+script = ExtResource("5_ab62j")
+damage_source = 2
+detected_hurtboxes = 1
+metadata/_custom_type_script = "uid://dbt0vsbq77thh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeleeHitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7957, -0.315445)
+shape = SubResource("BoxShape3D_c23ex")
+
+[node name="MeleeCooldown" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="ShootCooldown" type="Timer" parent="."]
+one_shot = true
+
+[node name="AwarenessTimer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
+[node name="VisionTargetChangeTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="DoorInteractionCooldown" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="LureInteractionCooldown" type="Timer" parent="."]
+wait_time = 15.0
+one_shot = true
+
+[node name="Looting" type="AudioStreamPlayer3D" parent="."]
+
+[node name="Melee" type="AudioStreamPlayer3D" parent="."]
+
+[node name="Firearm" type="AudioStreamPlayer3D" parent="."]
+
+[node name="Movement" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("10_ndtmc")
+
+[node name="Damage" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("11_dejio")
+
+[node name="WalkNoiseTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="BurglarSkinV2" parent="." instance=ExtResource("12_no3p5")]
+transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0, 0, 0.166245)
+
+[node name="Skeleton3D" parent="BurglarSkinV2/Armature" index="0"]
+bones/0/position = Vector3(0, 0.998342, 0.182244)
+bones/1/rotation = Quaternion(0.119803, 1.18351e-07, 1.42816e-08, 0.992798)
+bones/2/position = Vector3(0.162604, 0.437528, -0.0507622)
+bones/2/rotation = Quaternion(0.0516299, -0.249036, 0.899029, -0.356459)
+bones/3/rotation = Quaternion(0.166512, 0.016438, -0.065359, 0.983734)
+bones/4/rotation = Quaternion(-0.00051469, -0.00417002, 0.0423084, 0.999096)
+bones/5/rotation = Quaternion(0.0121374, -0.128401, 0.988791, -0.0752171)
+bones/6/rotation = Quaternion(-0.00456993, 0.00352434, -0.0336907, 0.999416)
+bones/7/rotation = Quaternion(0.419967, 0.0175269, 0.0159588, 0.90723)
+bones/8/position = Vector3(-0.162604, 0.437528, -0.0507622)
+bones/8/rotation = Quaternion(-0.0516299, -0.249036, 0.899029, 0.356459)
+bones/9/rotation = Quaternion(0.166512, -0.016438, 0.065359, 0.983734)
+bones/10/rotation = Quaternion(-0.00051469, 0.00417002, -0.0423084, 0.999096)
+bones/11/rotation = Quaternion(-0.0121374, -0.128401, 0.988791, 0.0752171)
+bones/12/rotation = Quaternion(-0.00456993, -0.00352434, 0.0336907, 0.999416)
+bones/13/rotation = Quaternion(0.419967, -0.0175269, -0.0159589, 0.90723)
+bones/14/position = Vector3(0.143205, 0.628349, 0.61256)
+bones/14/rotation = Quaternion(-0.0520479, 0.705189, 0.705189, -0.0520479)
+bones/16/position = Vector3(-0.143205, 0.628349, 0.61256)
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath("../BurglarSkinV2")
+tree_root = SubResource("AnimationNodeStateMachine_qgopq")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../BurglarSkinV2/AnimationPlayer")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.7
+debug_enabled = true
+
+[editable path="BurglarSkinV2"]

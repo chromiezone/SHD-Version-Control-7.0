@@ -1,0 +1,70 @@
+[gd_scene load_steps=3 format=3 uid="uid://gtcvcs85hxnd"]
+
+[ext_resource type="Theme" uid="uid://dbspr2y3sde3u" path="res://ui/trapui/test_theme.tres" id="1_usdut"]
+[ext_resource type="Script" uid="uid://bqei8mqf5um4f" path="res://ui/trapui/trap_ui.gd" id="2_ym1f8"]
+
+[node name="TrapUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_usdut")
+script = ExtResource("2_ym1f8")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.168
+anchor_top = 0.69484
+anchor_right = 0.832
+anchor_bottom = 0.808247
+offset_left = 0.463989
+offset_top = -0.256012
+offset_right = -0.463989
+offset_bottom = 0.255981
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+
+[node name="DoorBombE" type="Button" parent="ScrollContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 3.0
+text = "Door Trap (E)"
+
+[node name="DoorTorchM" type="Button" parent="ScrollContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 3.0
+text = "Door Torch (M)"
+
+[node name="Nailboard" type="Button" parent="ScrollContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 3.0
+text = "Nailboard"
+
+[node name="BearTrap" type="Button" parent="ScrollContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 3.0
+text = "Bear Trap"
+
+[node name="GlueTrap" type="Button" parent="ScrollContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 3.0
+text = "Glue Trap"
+
+[node name="SpeakerLure" type="Button" parent="ScrollContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 3.0
+text = "Speaker Lure"

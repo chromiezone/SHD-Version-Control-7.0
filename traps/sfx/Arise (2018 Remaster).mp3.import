@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://p5bdvnfc0bwa"
+path="res://.godot/imported/Arise (2018 Remaster).mp3-be05a97749421eacdc98c99627163877.mp3str"
+
+[deps]
+
+source_file="res://traps/sfx/Arise (2018 Remaster).mp3"
+dest_files=["res://.godot/imported/Arise (2018 Remaster).mp3-be05a97749421eacdc98c99627163877.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

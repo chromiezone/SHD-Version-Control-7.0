@@ -1,0 +1,62 @@
+[gd_scene load_steps=10 format=3 uid="uid://d6w7x1ulke20"]
+
+[ext_resource type="Script" uid="uid://caxv02l4irbiq" path="res://traps/door_bomb_electric.gd" id="1_0ekya"]
+[ext_resource type="Script" uid="uid://dbt0vsbq77thh" path="res://foundation/hit_box_3d.gd" id="2_lajr2"]
+[ext_resource type="AudioStream" uid="uid://ktltgmem6edf" path="res://traps/sfx/616821__trp__cell-phone-beep-2012.wav" id="3_wxxfy"]
+[ext_resource type="Script" uid="uid://desvgwiwbekmh" path="res://traps/hammer_interactable.gd" id="4_qjw0h"]
+[ext_resource type="PackedScene" uid="uid://bg7ebb8jpvxwi" path="res://traps/meshes/pipebomb_mesh.tscn" id="5_wmi4w"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_glhfm"]
+size = Vector3(0.0244141, 0.181641, 0.128906)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glhfm"]
+albedo_color = Color(1, 0, 0.0588235, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ahr4c"]
+material = SubResource("StandardMaterial3D_glhfm")
+size = Vector3(0.0244141, 0.181641, 0.128906)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lajr2"]
+radius = 1.05995
+
+[node name="DoorBombE" type="Area3D"]
+script = ExtResource("1_0ekya")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_glhfm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_ahr4c")
+
+[node name="Laser" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.168539, 0.0833865, -0.0882437)
+target_position = Vector3(0, 0, -0.8)
+collision_mask = 3
+
+[node name="Hitbox3D" type="Area3D" parent="."]
+collision_layer = 7
+collision_mask = 7
+script = ExtResource("2_lajr2")
+damage = 100
+damage_source = 7
+detected_hurtboxes = 7
+metadata/_custom_type_script = "uid://dbt0vsbq77thh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox3D"]
+shape = SubResource("SphereShape3D_lajr2")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Initialization" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_wxxfy")
+
+[node name="HammerInteractable" type="Area3D" parent="."]
+script = ExtResource("4_qjw0h")
+metadata/_custom_type_script = "uid://db2palc6yt7u1"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable"]
+shape = SubResource("BoxShape3D_glhfm")
+
+[node name="pipebomb" parent="." instance=ExtResource("5_wmi4w")]
+transform = Transform3D(-6.55671e-09, 0, 0.15, 0, 0.15, 0, -0.15, 0, -6.55671e-09, 0.119452, -0.0456743, 0)

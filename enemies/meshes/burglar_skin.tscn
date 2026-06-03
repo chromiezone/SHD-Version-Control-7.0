@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://bk050er7jmbm3"]
+
+[ext_resource type="PackedScene" uid="uid://cypmowr4et471" path="res://enemies/meshes/lowpolyman3.glb" id="1_fyv1d"]
+
+[node name="BurglarSkin" instance=ExtResource("1_fyv1d")]
+
+[node name="Skeleton3D" parent="Armature" index="0"]
+bones/0/position = Vector3(0, 0.972757, 0.182244)
+bones/1/rotation = Quaternion(0.119803, 1.18351e-07, 1.42816e-08, 0.992798)
+bones/2/rotation = Quaternion(0.133871, -0.0652772, 0.958856, -0.241686)
+bones/3/rotation = Quaternion(0.166512, 0.016438, -0.065359, 0.983734)
+bones/5/rotation = Quaternion(0.00875443, 0.0122024, 0.996905, -0.0771628)
+bones/6/rotation = Quaternion(-0.24578, 0.0115559, -0.0318426, 0.968734)
+bones/7/rotation = Quaternion(0.510938, 0.0135613, 0.0170779, 0.859341)
+bones/8/rotation = Quaternion(-0.133076, -0.0629954, 0.955657, 0.255034)
+bones/9/rotation = Quaternion(0.166512, -0.016438, 0.065359, 0.983734)
+bones/11/rotation = Quaternion(-0.00875442, 0.0122024, 0.996905, 0.0771628)
+bones/12/rotation = Quaternion(-0.24578, -0.0115559, 0.0318426, 0.968734)
+bones/13/rotation = Quaternion(0.510938, -0.0135613, -0.0170779, 0.859341)
+bones/14/position = Vector3(0.143205, 0.628349, 0.61256)
+bones/14/rotation = Quaternion(-0.0520479, 0.705189, 0.705189, -0.0520479)
+bones/16/position = Vector3(-0.143205, 0.628349, 0.61256)

@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=3 uid="uid://bywuv82e3mk7k"]
+
+[ext_resource type="Script" uid="uid://c3gmwfvk5yh6p" path="res://traps/glue_trap.gd" id="1_n636g"]
+[ext_resource type="PackedScene" uid="uid://5njp82e6ynsy" path="res://traps/meshes/gluetrap_mesh.tscn" id="2_20u8j"]
+[ext_resource type="Script" uid="uid://desvgwiwbekmh" path="res://traps/hammer_interactable.gd" id="3_6gfdw"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_85a42"]
+size = Vector3(1.25762, 0.0493162, 1.07782)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6gfdw"]
+size = Vector3(1.25762, 0.0415037, 1.07782)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_na1ey"]
+size = Vector3(0.0668945, 0.106445, 0.0751953)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_55r11"]
+size = Vector3(0.0668945, 0.0924072, 0.0751953)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wtp54"]
+size = Vector3(0.0668945, 0.0924072, 0.0751953)
+
+[node name="GlueTrap" type="Area3D"]
+collision_mask = 3
+script = ExtResource("1_n636g")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00672519, 0.0197306, 0.0198922)
+shape = SubResource("BoxShape3D_85a42")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.000114679, 0.0235024, 0.0258309)
+shape = SubResource("BoxShape3D_6gfdw")
+
+[node name="gluetrap_mesh" parent="." instance=ExtResource("2_20u8j")]
+
+[node name="HammerInteractable" type="Area3D" parent="."]
+script = ExtResource("3_6gfdw")
+metadata/_custom_type_script = "uid://desvgwiwbekmh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.579011, 0.047659, -0.568086)
+shape = SubResource("BoxShape3D_na1ey")
+
+[node name="HammerInteractable2" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15574, 0, 0)
+script = ExtResource("3_6gfdw")
+metadata/_custom_type_script = "uid://desvgwiwbekmh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.575378, 0.0416446, -0.568086)
+shape = SubResource("BoxShape3D_55r11")
+
+[node name="HammerInteractable3" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15574, 0, 1.17545)
+script = ExtResource("3_6gfdw")
+metadata/_custom_type_script = "uid://desvgwiwbekmh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.579011, 0.0423072, -0.568086)
+shape = SubResource("BoxShape3D_wtp54")
+
+[node name="HammerInteractable4" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00100112, 0, 1.17545)
+script = ExtResource("3_6gfdw")
+metadata/_custom_type_script = "uid://desvgwiwbekmh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.579011, 0.0477556, -0.568086)
+shape = SubResource("BoxShape3D_wtp54")
+
+[editable path="gluetrap_mesh"]

@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwh0hfdojkte6"]
+
+[ext_resource type="PackedScene" uid="uid://cewsf3e0bdqdm" path="res://enemies/meshes/lowpolyman3v2.glb" id="1_be5ri"]
+
+[node name="BurglarSkinV2" instance=ExtResource("1_be5ri")]

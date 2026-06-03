@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bnp265up087dq"]
+
+[ext_resource type="Script" uid="uid://bvm7n23ix274x" path="res://traps/visuals/bear_trap_visual.gd" id="1_4cdcx"]
+[ext_resource type="PackedScene" uid="uid://d2kaly81nv3l5" path="res://traps/meshes/bear_trap_mesh.tscn" id="1_yfiyg"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4cdcx"]
+height = 0.0109621
+radius = 0.64
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fs08u"]
+height = 0.170777
+radius = 0.64
+
+[node name="BearTrapVisual" type="Area3D"]
+collision_mask = 8193
+script = ExtResource("1_4cdcx")
+
+[node name="bear_trap_mesh" parent="." instance=ExtResource("1_yfiyg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0505928, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0997365, -0.30281)
+shape = SubResource("CylinderShape3D_4cdcx")
+
+[node name="ClippingPreventionArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00300997, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ClippingPreventionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.194265, -0.301238)
+shape = SubResource("CylinderShape3D_fs08u")
+
+[editable path="bear_trap_mesh"]

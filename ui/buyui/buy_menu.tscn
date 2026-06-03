@@ -1,0 +1,88 @@
+[gd_scene load_steps=10 format=3 uid="uid://rl1aoa3qnp35"]
+
+[ext_resource type="FontFile" uid="uid://chm6ln4jwygs7" path="res://ui/fonts/norwester.otf" id="1_3hbqk"]
+[ext_resource type="Script" uid="uid://dao4gxxc6bx5h" path="res://ui/buyui/buy_menu.gd" id="2_fv4rk"]
+[ext_resource type="Texture2D" uid="uid://d4h48yaxlnpgs" path="res://traps/icons/electricdoorbomb.png" id="2_gnknr"]
+[ext_resource type="Texture2D" uid="uid://1kuhf36md1ku" path="res://traps/icons/nailboard.png" id="4_fv4rk"]
+[ext_resource type="Texture2D" uid="uid://dr8rswc84gis2" path="res://traps/icons/beartrap.png" id="5_v63p8"]
+[ext_resource type="Texture2D" uid="uid://hrpusa20w4gr" path="res://traps/icons/doortorchm.png" id="6_55h34"]
+[ext_resource type="Texture2D" uid="uid://b2ki2ytnw4x7v" path="res://traps/icons/gluetrap.png" id="7_28c58"]
+[ext_resource type="Texture2D" uid="uid://bwnmwek1v4avw" path="res://traps/icons/speakerlure.png" id="8_ar1cu"]
+
+[sub_resource type="Theme" id="Theme_fv4rk"]
+Button/font_sizes/font_size = 40
+Button/fonts/font = ExtResource("1_3hbqk")
+ItemList/font_sizes/font_size = 24
+ItemList/fonts/font = ExtResource("1_3hbqk")
+Label/font_sizes/font_size = 50
+Label/fonts/font = ExtResource("1_3hbqk")
+
+[node name="BuyMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_fv4rk")
+script = ExtResource("2_fv4rk")
+
+[node name="ItemList" type="ItemList" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 324.0
+offset_right = -324.0
+grow_horizontal = 2
+grow_vertical = 2
+item_count = 6
+item_0/text = "Electric Door Bomb"
+item_0/icon = ExtResource("2_gnknr")
+item_1/text = "Nailboard"
+item_1/icon = ExtResource("4_fv4rk")
+item_2/text = "Bear Trap"
+item_2/icon = ExtResource("5_v63p8")
+item_3/text = "Blow Torch"
+item_3/icon = ExtResource("6_55h34")
+item_4/text = "Glue Trap"
+item_4/icon = ExtResource("7_28c58")
+item_5/text = "Speaker Lure"
+item_5/icon = ExtResource("8_ar1cu")
+
+[node name="BuyButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.793
+anchor_top = 0.784
+anchor_right = 0.916
+anchor_bottom = 0.926
+offset_left = -0.536072
+offset_top = -0.0320129
+offset_right = -0.232056
+offset_bottom = -0.0480347
+grow_horizontal = 0
+grow_vertical = 2
+text = "Buy"
+
+[node name="Nailboard" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="PriceLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.838
+anchor_top = 0.5
+anchor_right = 0.872
+anchor_bottom = 0.5
+offset_left = -52.3761
+offset_top = 75.0
+offset_right = 50.4559
+offset_bottom = 167.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "Select
+Trap"
+horizontal_alignment = 1

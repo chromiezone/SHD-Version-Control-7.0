@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dkv4ygp7nbv1h"
+path="res://.godot/imported/Grand Theft Auto IV  Lesbians Ringtone [Sound Effect].wav-3fb0ca4546a36d93d2f02e7c12c86c88.sample"
+
+[deps]
+
+source_file="res://traps/sfx/Grand Theft Auto IV  Lesbians Ringtone [Sound Effect].wav"
+dest_files=["res://.godot/imported/Grand Theft Auto IV  Lesbians Ringtone [Sound Effect].wav-3fb0ca4546a36d93d2f02e7c12c86c88.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=2
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,109 @@
+[gd_scene load_steps=11 format=3 uid="uid://cak0rv26wil5d"]
+
+[ext_resource type="Script" uid="uid://t4akr6h0eg3s" path="res://traps/nailboard.gd" id="1_hsgim"]
+[ext_resource type="PackedScene" uid="uid://fml10qv6v0pt" path="res://traps/meshes/nailboard_mesh.tscn" id="2_5xb77"]
+[ext_resource type="Script" uid="uid://dbt0vsbq77thh" path="res://foundation/hit_box_3d.gd" id="2_hsgim"]
+[ext_resource type="AudioStream" uid="uid://52sfri7xo5s1" path="res://traps/sfx/wooden-impact.wav" id="3_6jarn"]
+[ext_resource type="Script" uid="uid://desvgwiwbekmh" path="res://traps/hammer_interactable.gd" id="4_fqt2e"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_daslo"]
+size = Vector3(0.18, 0.038, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_c5b2q"]
+size = Vector3(0.025, 0.125, -0.005)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3xhq4"]
+size = Vector3(0.25316, 0.11499, 1.04932)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hsgim"]
+size = Vector3(0.25316, 0.11499, 1.04932)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5xb77"]
+size = Vector3(0.335693, 0.148193, 1.13477)
+
+[node name="Nailboard" type="Area3D"]
+script = ExtResource("1_hsgim")
+metadata/_custom_type_script = "uid://btkofrup0u0nm"
+
+[node name="NailboardMesh" parent="." instance=ExtResource("2_5xb77")]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, 0, 0)
+
+[node name="Nailboard" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_daslo")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, 0.260046)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, 0.169476)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, 0.0817659)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, -0.113254)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, -0.302743)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, -0.403229)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, 0.455824)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, 0.356801)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D14" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, 0.169476)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D16" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, -0.0149136)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D17" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, -0.113254)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="MeshInstance3D19" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, -0.302743)
+mesh = SubResource("PrismMesh_c5b2q")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00200938, 0.0567627, -0.0246582)
+shape = SubResource("BoxShape3D_3xhq4")
+
+[node name="Hitbox3D" type="Area3D" parent="."]
+collision_layer = 7
+collision_mask = 7
+script = ExtResource("2_hsgim")
+damage = 2
+damage_source = 7
+detected_hurtboxes = 7
+metadata/_custom_type_script = "uid://dbt0vsbq77thh"
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Hitbox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00200938, 0.0567627, -0.0246582)
+shape = SubResource("BoxShape3D_hsgim")
+
+[node name="Initialization" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_6jarn")
+
+[node name="HammerInteractable" type="Area3D" parent="."]
+script = ExtResource("4_fqt2e")
+metadata/_custom_type_script = "uid://desvgwiwbekmh"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00200938, 0.0733643, -0.0246582)
+shape = SubResource("BoxShape3D_5xb77")

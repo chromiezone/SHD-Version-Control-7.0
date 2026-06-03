@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://deab0a544ovvu"]
+
+[ext_resource type="PackedScene" uid="uid://cdt5uiw5alggs" path="res://interactables/terminal/meshes/terminaltable.glb" id="1_jpjcp"]
+
+[node name="TerminalTableMesh" instance=ExtResource("1_jpjcp")]

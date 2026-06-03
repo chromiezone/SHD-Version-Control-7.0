@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://b0qffpfpqqg2d"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_eft8m"]
+size = Vector3(0.03, 0.5, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hfpo2"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_crc8l"]
+top_radius = 0.05
+bottom_radius = 0.04
+height = 0.1
+
+[sub_resource type="PrismMesh" id="PrismMesh_psygy"]
+size = Vector3(0.1, 0.1, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_crc8l"]
+size = Vector3(0.35, 0.35, 1.25)
+
+[node name="Hammer" type="MeshInstance3D"]
+mesh = SubResource("BoxMesh_eft8m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.159201, 0)
+mesh = SubResource("BoxMesh_hfpo2")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.160563, -0.0628424)
+mesh = SubResource("CylinderMesh_crc8l")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -4.37114e-08, 1, 1, 8.9407e-08, 4.37114e-08, -8.9407e-08, 1, 4.37114e-08, -0.0354343, 0.159458, 0.0986257)
+mesh = SubResource("PrismMesh_psygy")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -4.37114e-08, 1, 1, 8.9407e-08, 4.37114e-08, -8.9407e-08, 1, 4.37114e-08, 0.0352904, 0.159458, 0.0986257)
+mesh = SubResource("PrismMesh_psygy")
+
+[node name="RightArm" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, -0.00156282, -0.121087, 0.121567)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_crc8l")

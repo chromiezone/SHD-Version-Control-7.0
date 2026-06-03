@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://buguh3cpd5frp"]
+
+[ext_resource type="PackedScene" uid="uid://b3j00125ef0wj" path="res://interactables/door/meshes/DoorTrim1.glb" id="1_7k5ms"]
+
+[node name="DoorTrim" instance=ExtResource("1_7k5ms")]

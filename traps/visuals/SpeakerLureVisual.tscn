@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://blflokv8ms7on"]
+
+[ext_resource type="Script" uid="uid://b0hjn5kv2inu3" path="res://traps/visuals/speaker_lure_visual.gd" id="1_5r52p"]
+[ext_resource type="PackedScene" uid="uid://dnum66mgsu47a" path="res://traps/meshes/speakerlure_mesh.tscn" id="2_nvmi8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_by6g7"]
+size = Vector3(0.386597, 0.123062, 0.405151)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gxb4q"]
+size = Vector3(0.386597, 0.0937653, 0.405151)
+
+[node name="SpeakerLureVisual" type="Area3D"]
+collision_mask = 8193
+script = ExtResource("1_5r52p")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00933838, -0.0596569, -0.0151978)
+shape = SubResource("BoxShape3D_by6g7")
+
+[node name="ClippingPreventionArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.737735, 0)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ClippingPreventionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00933838, -0.0424701, -0.0151978)
+shape = SubResource("BoxShape3D_gxb4q")
+
+[node name="speakerlure_mesh" parent="." instance=ExtResource("2_nvmi8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.50251, -0.0550216, 0.205052)
+
+[editable path="speakerlure_mesh"]

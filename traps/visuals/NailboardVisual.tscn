@@ -1,0 +1,94 @@
+[gd_scene load_steps=7 format=3 uid="uid://botxo3s8o73jj"]
+
+[ext_resource type="Material" uid="uid://jhjqownss2qu" path="res://traps/visuals/VisualRed.tres" id="1_h3byf"]
+[ext_resource type="Script" uid="uid://d1ppa6s8y0mdl" path="res://traps/visuals/nailboard_visual.gd" id="1_ik35e"]
+[ext_resource type="PackedScene" uid="uid://fml10qv6v0pt" path="res://traps/meshes/nailboard_mesh.tscn" id="4_uy17n"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_daslo"]
+size = Vector3(0.18, 0.038, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_c5b2q"]
+size = Vector3(0.025, 0.125, -0.005)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hsgim"]
+size = Vector3(0.253067, 0.0180969, 1.04883)
+
+[node name="NailboardVisual" type="Area3D"]
+collision_mask = 8193
+script = ExtResource("1_ik35e")
+
+[node name="Nailboard" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000670373, -0.00102198, 0.0054431)
+visible = false
+mesh = SubResource("BoxMesh_daslo")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, 0.260046)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, 0.169476)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, 0.0817659)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, -0.113254)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, -0.302743)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0493151, 0.0809752, -0.403229)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, 0.455824)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, 0.356801)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D14" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, 0.169476)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D16" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, -0.0149136)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D17" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, -0.113254)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="MeshInstance3D19" type="MeshInstance3D" parent="Nailboard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325221, 0.0809752, -0.302743)
+mesh = SubResource("PrismMesh_c5b2q")
+surface_material_override/0 = ExtResource("1_h3byf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00222015, -0.0111966, -0.0244141)
+visible = false
+shape = SubResource("BoxShape3D_hsgim")
+
+[node name="NailboardMesh" parent="." instance=ExtResource("4_uy17n")]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, 0, 0)
+
+[editable path="NailboardMesh"]

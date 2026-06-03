@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3 uid="uid://t25bho7aju4d"]
+
+[ext_resource type="Script" uid="uid://p1pd8u3kd6s0" path="res://test_level/power_switch.gd" id="1_om7or"]
+[ext_resource type="AudioStream" uid="uid://chgya84r3jrhi" path="res://test_level/sfx/130153__sribubba__circuit-breaker-2-dp.wav" id="2_0eql3"]
+[ext_resource type="PackedScene" uid="uid://rqs6u3my85ll" path="res://interactables/powerswitch/meshes/power_switch_mesh.tscn" id="3_ma8si"]
+[ext_resource type="Script" uid="uid://70cs4h3dd3iw" path="res://interactables/powerswitch/scripts/cover_interactable.gd" id="4_e8roc"]
+[ext_resource type="PackedScene" uid="uid://oa3en0gbiug1" path="res://interactables/powerswitch/meshes/cover_hinge_mesh.tscn" id="5_7r2ir"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_28wsp"]
+size = Vector3(0.1, 5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_om7or"]
+size = Vector3(0.35, 0.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0eql3"]
+size = Vector3(0.03, 0.25, 0.08)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0eql3"]
+size = Vector3(0.0480453, 0.0831299, 0.0876587)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7r2ir"]
+size = Vector3(0.215359, 0.346558, 0.0112305)
+
+[node name="PowerSwitch" type="Area3D"]
+script = ExtResource("1_om7or")
+
+[node name="Pole" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00941718, 2.50106, -0.00200939)
+mesh = SubResource("BoxMesh_28wsp")
+
+[node name="Box" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00941718, 1.22506, -0.1579)
+visible = false
+mesh = SubResource("BoxMesh_om7or")
+
+[node name="Swivel" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.766302, 0.64248, 0, -0.64248, 0.766302, -0.165013, 1.26436, -0.19595)
+visible = false
+
+[node name="Switch" type="MeshInstance3D" parent="Swivel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.017385, 0.0914209, -0.00553703)
+visible = false
+mesh = SubResource("BoxMesh_0eql3")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0101839, 1.30349, -0.101729)
+shape = SubResource("BoxShape3D_0eql3")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_0eql3")
+
+[node name="PowerSwitchMesh" parent="." instance=ExtResource("3_ma8si")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.0103166, -0.188285, -0.0313191)
+
+[node name="CoverHinge" parent="PowerSwitchMesh" index="1"]
+visible = false
+
+[node name="CoverInteractable" type="Area3D" parent="."]
+script = ExtResource("4_e8roc")
+metadata/_custom_type_script = "uid://db2palc6yt7u1"
+
+[node name="CoverHinge" parent="CoverInteractable" instance=ExtResource("5_7r2ir")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.010165, 1.43187, -0.145549)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CoverInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0105038, 1.28359, -0.154053)
+shape = SubResource("BoxShape3D_7r2ir")
+
+[editable path="PowerSwitchMesh"]
+[editable path="PowerSwitchMesh/CoverHinge"]

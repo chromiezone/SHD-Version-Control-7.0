@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://or5ebfivwt02"]
+
+[ext_resource type="Script" uid="uid://b1rvabw36oijs" path="res://weapons/melee_weapon.gd" id="1_j23ck"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_b6jv8"]
+size = Vector3(0.025, 0.76, 0.105)
+
+[node name="MeleeWeapon" type="MeshInstance3D"]
+transform = Transform3D(1, 9.31323e-10, 5.96046e-08, -9.31323e-10, 1, 7.45058e-09, -5.96046e-08, -7.45058e-09, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_b6jv8")
+script = ExtResource("1_j23ck")

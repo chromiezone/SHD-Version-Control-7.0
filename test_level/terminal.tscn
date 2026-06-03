@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://dmjjvlm07qd76"]
+
+[ext_resource type="Script" uid="uid://cnbn4csxbau6i" path="res://test_level/terminal.gd" id="1_fg5sv"]
+[ext_resource type="PackedScene" uid="uid://deab0a544ovvu" path="res://interactables/terminal/meshes/terminal_table_mesh.tscn" id="2_kd7qh"]
+[ext_resource type="PackedScene" uid="uid://dya6281wbno77" path="res://interactables/terminal/meshes/terminal_mesh.tscn" id="3_0mtjq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0mtjq"]
+size = Vector3(0.62851, 0.375305, 0.0391694)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e4ao2"]
+size = Vector3(1.21851, 0.986084, 0.762329)
+
+[node name="Terminal" type="Area3D"]
+script = ExtResource("1_fg5sv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0182393, 1.28025, -0.606047)
+shape = SubResource("BoxShape3D_0mtjq")
+
+[node name="TerminalTableMesh" parent="." instance=ExtResource("2_kd7qh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0055393, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00842285, 0.492798, -0.354187)
+shape = SubResource("BoxShape3D_e4ao2")
+
+[node name="TerminalMesh" parent="." instance=ExtResource("3_0mtjq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00712353, 0)

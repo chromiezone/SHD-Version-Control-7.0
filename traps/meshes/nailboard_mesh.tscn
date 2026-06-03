@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://fml10qv6v0pt"]
+
+[ext_resource type="PackedScene" uid="uid://dhc3l5q16ayvx" path="res://traps/meshes/nailboard.glb" id="1_han7n"]
+
+[node name="NailboardMesh" instance=ExtResource("1_han7n")]
+
+[node name="Wood" parent="." index="0"]
+transform = Transform3D(5.6633e-09, 0, -0.123999, 0, -0.129561, 0, 0.129561, 0, 5.42016e-09, 0.0146008, 0.0412195, 0.0498398)
+
+[node name="StraightNail" parent="." index="1"]
+transform = Transform3D(-1.22723e-10, 0, 0.00280757, 0, -0.0487915, 0, -0.00280757, 0, -1.22723e-10, -0.0085917, 0.036749, 0.0520007)
+
+[node name="StraightNail_001" parent="." index="2"]
+transform = Transform3D(0.000161478, 7.83204e-05, 0.00280292, 0.000303111, -0.0485058, -1.29746e-05, -0.00278649, -0.00527187, 0.000161019, -0.0587651, 0.036749, 0.365702)
+
+[node name="StraightNail_002" parent="." index="3"]
+transform = Transform3D(-0.00032712, 0.00078619, 0.00278808, -0.00061748, -0.0475944, -2.80102e-05, -0.00271922, 0.0107131, -0.000329044, 0.0935141, 0.036749, -0.453357)
+
+[node name="StraightNail_003" parent="." index="4"]
+transform = Transform3D(0.000232315, 0.00462333, 0.00278527, 0.00103906, -0.0452396, 0.000161979, -0.00259786, -0.0176809, 0.00031386, -0.0908119, 0.036749, -0.627235)
+
+[node name="StraightNail_004" parent="." index="5"]
+transform = Transform3D(-1.22723e-10, -0.0160686, 0.00265095, 0, -0.0460697, -0.000924621, -0.00280757, -6.70603e-10, -1.43433e-10, 0.107998, 0.0328238, -0.101933)
+
+[node name="StraightNail_005" parent="." index="6"]
+transform = Transform3D(0.000128871, -0.00210613, 0.00280199, -0.000445001, -0.0481438, -9.93538e-05, -0.00276908, 0.00763885, 0.000146369, 0.0544009, 0.035171, 0.459893)
+
+[node name="CurvedNail" parent="." index="7"]
+transform = Transform3D(-0.00248212, 0, 0.00131207, 0, -0.0487915, 0, -0.00131207, 0, -0.00248212, 0.00808008, 0.036749, -0.294484)
+
+[node name="CurvedNail_001" parent="." index="8"]
+transform = Transform3D(-0.00260558, 0, -0.00104567, 0, -0.0487915, 0, 0.00104567, 0, -0.00260558, -0.0858752, 0.036749, 0.498149)
+
+[node name="CurvedNail_002" parent="." index="9"]
+transform = Transform3D(0.00215453, 0, -0.00180012, 0, -0.0487915, 0, 0.00180012, 0, 0.00215453, -0.0658598, 0.036749, -0.163138)
+
+[node name="CurvedNail_003" parent="." index="10"]
+transform = Transform3D(-0.00123871, 0, -0.00251953, 0, -0.0487915, 0, 0.00251953, 0, -0.00123871, 0.0080801, 0.036749, 0.226866)

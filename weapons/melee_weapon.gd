@@ -1,0 +1,1 @@
+class_name MeleeWeapon extends MeshInstance3D
