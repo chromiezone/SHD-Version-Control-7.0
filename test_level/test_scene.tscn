@@ -447,7 +447,7 @@ progress = 55.0
 transform = Transform3D(-2.98023e-08, 0, -1, 0, 1, 0, 1, 0, -2.98023e-08, 6.88836, 0.125838, 10.9307)
 
 [node name="LootObject" parent="LootObjects" instance=ExtResource("8_ubww3")]
-transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, 2.26301, 0, 2.4223)
+transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, 2.26301, 0, 1.04011)
 
 [node name="LootObject2" parent="LootObjects" instance=ExtResource("8_ubww3")]
 transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, -8.9317, 0, 5.53399)
