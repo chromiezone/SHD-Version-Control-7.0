@@ -473,6 +473,9 @@ func _physics_process(delta: float) -> void:
 				var destination = _navigation_agent_3d.get_next_path_position()
 				var local_destination = destination - global_position
 				var path_direction = local_destination.normalized()
+				var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
+				var target_quat = target_transform.basis.get_rotation_quaternion()
+				var current_quat = global_transform.basis.get_rotation_quaternion()
 				
 				var direction := global_position.direction_to(nearest_loot_object.global_position)
 				var desired_velocity := direction * walk_speed
@@ -513,9 +516,14 @@ func _physics_process(delta: float) -> void:
 					#)
 				
 				if player_spotted == false:
-					#look_at(destination, Vector3.UP)
-					rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
-					#rotation.y = rotate_toward(rotation.y, atan2(velocity.x,velocity.z), delta * _rotation_speed)
+					if velocity.length_squared() > 0.01:
+						var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
+						global_transform.basis = Basis(next_quat)
+						#var look_target = global_position + velocity
+						#look_at(look_target, Vector3.UP)
+						#look_at(destination, Vector3.UP)
+					#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
+					#rotation.y = rotate_toward(rotation.y, atan2(velocity.x,velocity.z), delta * look_rotation_speed)
 					
 				else:
 					look_at(player.global_position, Vector3.UP)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=4 uid="uid://bosweipof0qll"]
+[gd_scene load_steps=39 format=4 uid="uid://bosweipof0qll"]
 
 [ext_resource type="Texture2D" uid="uid://dwe1ecnx384jl" path="res://assets/test_textures/checkerboard.png" id="1_8emi3"]
 [ext_resource type="Script" uid="uid://cgyxipu7annlm" path="res://test_level/test_scene.gd" id="1_52nfv"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://t25bho7aju4d" path="res://test_level/power_switch.tscn" id="11_c5b2q"]
 [ext_resource type="PackedScene" uid="uid://h038noljfski" path="res://grasstest.tscn" id="13_v2e80"]
 [ext_resource type="PackedScene" uid="uid://byv3bhju3nn6x" path="res://traps/GooningLure.tscn" id="16_5hecu"]
+[ext_resource type="PackedScene" uid="uid://dpyn0dxc6a1w2" path="res://traps/SpeakerLure.tscn" id="16_ut5bn"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_if5o4"]
 vertices = PackedVector3Array(-22.8369, 0.106731, -6.99776, -11.5369, 0.106731, -6.89776, -11.5369, 0.106731, -7.49776, -11.3369, 0.106731, -7.79776, -10.3369, 0.106731, -7.89776, -10.3369, 0.106731, -19.2978, -22.8369, 0.106731, -19.2978, 7.76311, 0.106731, -7.89776, 7.76311, 0.106731, -19.2978, 8.96311, 0.106731, -7.49776, 8.96311, 0.106731, -6.89776, 20.2631, 0.106731, -6.99776, 8.76311, 0.106731, -7.79776, 20.2631, 0.106731, -19.2978, -22.8369, 0.106731, 12.7022, -11.5369, 0.106731, 12.6022, 8.96311, 0.106731, 12.6022, 20.2631, 0.106731, 12.7022, -11.5369, 0.106731, 13.2022, -11.3369, 0.106731, 13.5022, -10.3369, 0.106731, 25.0022, -10.3369, 0.106731, 13.6022, -22.8369, 0.106731, 25.0022, 8.96311, 0.106731, 13.2022, 8.76311, 0.106731, 13.5022, 7.76311, 0.106731, 13.6022, 7.76311, 0.106731, 25.0022, 20.2631, 0.106731, 25.0022)
@@ -444,7 +445,7 @@ progress = 55.0
 [node name="LootObjects" type="Node3D" parent="."]
 
 [node name="SafeLootObject" parent="LootObjects" instance=ExtResource("7_wc6xd")]
-transform = Transform3D(-2.98023e-08, 0, -1, 0, 1, 0, 1, 0, -2.98023e-08, 6.88836, 0.125838, 10.9307)
+transform = Transform3D(-2.98023e-08, 0, -1, 0, 1, 0, 1, 0, -2.98023e-08, 6.88836, 0.125838, 7.69719)
 
 [node name="LootObject" parent="LootObjects" instance=ExtResource("8_ubww3")]
 transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, 2.26301, 0, 1.04011)
@@ -640,3 +641,6 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 1.1247
 
 [node name="Door3D2" parent="IndoorDoors" instance=ExtResource("3_obkna")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8561, 0, 10.8733)
+
+[node name="SpeakerLure" parent="." instance=ExtResource("16_ut5bn")]
+transform = Transform3D(0.404328, 0, 0.914614, 0, 1, 0, -0.914614, 0, 0.404328, 5.07689, 0.15774, 10.7429)

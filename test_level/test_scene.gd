@@ -92,7 +92,7 @@ func set_current_stage(new_stage: Stage) -> void:
 			print("health score is " + str(health_score))
 			print("overall score is " + str(overall_score))
 
-var possible_spawns := [80.0] #[0.86, 25.0, 55.0, 80.0, 110, 140, 160, 188]
+var possible_spawns := [140.0] #[0.86, 25.0, 55.0, 80.0, 110, 140, 160, 188]
 var current_path_progress : float
 var move_speed := 1.0
 
