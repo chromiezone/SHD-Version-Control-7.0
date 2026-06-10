@@ -643,4 +643,4 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 1.1247
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8561, 0, 10.8733)
 
 [node name="SpeakerLure" parent="." instance=ExtResource("16_ut5bn")]
-transform = Transform3D(0.404328, 0, 0.914614, 0, 1, 0, -0.914614, 0, 0.404328, 5.07689, 0.15774, 10.7429)
+transform = Transform3D(0.404328, 0, 0.914614, 0, 1, 0, -0.914614, 0, 0.404328, -6.24524, 0.15774, 10.7429)

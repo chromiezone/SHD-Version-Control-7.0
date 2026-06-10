@@ -109,9 +109,13 @@ func _ready() -> void:
 	
 	# Exiting Tween
 	$ExitingArea.body_entered.connect(func(body: Node3D) -> void:
+		var accepted_states = [2,3, 14]
 		if body is Enemy3D:
 			body.current_entryway = self
-		if body is Burglar and is_active == false and body.current_state == 3:
+			get_tree().create_timer(4.0).timeout.connect(func() -> void:
+				body.current_entryway = null
+				)
+		if body is Burglar and is_active == false and body.current_state in accepted_states:
 			if body.door_interaction_cooldown_timer.time_left > 0.0:
 				return
 			var direction_to_door = global_transform.origin - body.global_transform.origin
@@ -134,7 +138,7 @@ func _ready() -> void:
 					_tween_door.finished.connect(func() -> void:
 						broken = true
 					)
-		if body is Enemy3D and is_active == false and body.current_state >= 4:
+		elif body is Enemy3D and is_active == false and body.current_state not in accepted_states:
 			if body.door_interaction_cooldown_timer.time_left > 0.0:
 				return
 			body.door_interaction_cooldown_timer.start()
@@ -157,11 +161,12 @@ func _ready() -> void:
 		# Entering Tween
 	#_entering_area_recheck()
 	$EnteringArea.body_entered.connect(func(body: Node3D) -> void:
+		var accepted_states = [0,1,2,3,4,13,14]
 		#if broken == true:
 			#return
 		if body is Enemy3D:
 			body.current_entryway = self
-		if body is Enemy3D and body.current_state <= 4 or body.current_state == 13:
+		if body is Enemy3D and body.current_state in accepted_states:
 			print("enemy preparing to enter")
 			if is_active == false:
 				$DoorFidget.play(0.0)
@@ -252,10 +257,11 @@ func _entering_area_recheck() -> void:
 						$CloseTimer.start(0.0)
 					)
 func _exiting_area_recheck() -> void:
+	var accepted_states = [2,3, 14]
 	var bodies = $ExitingArea.get_overlapping_bodies()
 	if bodies.size() > 0:
 		for body in bodies:
-			if body is Enemy3D and is_active == false and body.current_state >= 4:
+			if body is Enemy3D and is_active == false and body.current_state not in accepted_states:
 				if body.door_interaction_cooldown_timer.time_left > 0.0:
 					return
 				body.door_interaction_cooldown_timer.start()

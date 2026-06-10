@@ -40,7 +40,18 @@ var player: CharacterBody3D = null
 
 var point_of_entry = null
 var point_of_exit = null
-var current_entryway = null
+var current_entryway = null : set = set_current_entryway
+var current_entryway_just_updated : bool = false
+func set_current_entryway(new_entryway) -> void:
+	if current_entryway == new_entryway:
+		return
+	current_entryway = new_entryway
+	current_entryway_just_updated = true
+	get_tree().create_timer(1.0).timeout.connect(func() -> void:
+		current_entryway_just_updated = false
+		)
+var entryway_reference = null
+
 var nearest_poxit = null
 
 var nearest_loot_object : LootObject = null
@@ -314,7 +325,9 @@ func _ready() -> void:
 	
 
 func _physics_process(delta: float) -> void:
-	
+	print("current_entryway is " + str(current_entryway))
+	print("current_entryway_just_updated is " + str(current_entryway_just_updated))
+	print("velocity.length_squared is " + str(velocity.length_squared()))
 	#var destination = _navigation_agent_3d.get_next_path_position()
 	#var local_destination = destination - global_position
 	#var path_direction = local_destination.normalized()
@@ -469,10 +482,18 @@ func _physics_process(delta: float) -> void:
 				)
 			nearest_loot_object = find_closest_node_to_point(filtered_loot_objects, self.global_position)
 			if nearest_loot_object:
-				_navigation_agent_3d.set_target_position(nearest_loot_object.global_position)
+				# Door realignment logic. If the burglar has recently updated their entryway and that entryway is not null, 
+				# they will path towards that entryway. Otherwise, they will path towards the nearest loot object as normal. 
+				# This is to prevent the burglar from getting stuck on corners while trying to exit through a door.
+				if current_entryway_just_updated == true and current_entryway != null:
+					entryway_reference = current_entryway
+					_navigation_agent_3d.set_target_position(entryway_reference.global_position)
+				else:
+					_navigation_agent_3d.set_target_position(nearest_loot_object.global_position)
 				var destination = _navigation_agent_3d.get_next_path_position()
 				var local_destination = destination - global_position
 				var path_direction = local_destination.normalized()
+				# Look Logic
 				var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
 				var target_quat = target_transform.basis.get_rotation_quaternion()
 				var current_quat = global_transform.basis.get_rotation_quaternion()
@@ -516,12 +537,16 @@ func _physics_process(delta: float) -> void:
 					#)
 				
 				if player_spotted == false:
-					if velocity.length_squared() > 0.01:
-						var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
-						global_transform.basis = Basis(next_quat)
+					if velocity.length_squared() == 0.00 and current_entryway != null and current_entryway_just_updated == true and current_entryway is Door3D:
+						var entryway_look_reference = current_entryway
+						look_at(entryway_look_reference.global_position, Vector3.UP)
 						#var look_target = global_position + velocity
 						#look_at(look_target, Vector3.UP)
 						#look_at(destination, Vector3.UP)
+					else:
+						# Look Logic Continued
+						var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
+						global_transform.basis = Basis(next_quat)
 					#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
 					#rotation.y = rotate_toward(rotation.y, atan2(velocity.x,velocity.z), delta * look_rotation_speed)
 					
@@ -738,33 +763,66 @@ func _physics_process(delta: float) -> void:
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
 		State.MOVING_TO_LURE:
 			lure_delta_timer += delta
+			if _roaming_ray_cast.is_colliding():
+				if _roaming_ray_cast.get_collider() is Door3D:
+					var door = _roaming_ray_cast.get_collider()
+					look_at(door.global_position, Vector3.UP)
+					rotation.x = 0
+					rotation.z = 0
+					if global_position.distance_to(door.global_position) < 1.5:
+						global_position.y = stored_y_position
+						var direction := global_position.direction_to(door.global_position) 
+						var desired_velocity := direction * walk_speed
+						var velocity_distance := velocity.distance_to(desired_velocity)
+						velocity = velocity.move_toward(
+							desired_velocity,
+							velocity_distance * walk_acceleration_factor * delta
+						)
+						
+						move_and_slide()
+
+			
 			#print(lure_delta_timer)
 			if lure != null:
-				var nearest_entry_relative_to_lure = find_closest_node_to_point(Blackboard.point_of_entries, lure.global_position)
-				if not $VisionArea.overlaps_area(lure):
-					vision_target = nearest_entry_relative_to_lure
-				vision_target = lure
-				#global_position.y = stored_y_position
-				look_at(vision_target.global_position)
+				_navigation_agent_3d.set_target_position(lure.global_position)
+				var destination = _navigation_agent_3d.get_next_path_position()
+				var local_destination = destination - global_position
+				var path_direction = local_destination.normalized()
+				# Look Logic
+				var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
+				var target_quat = target_transform.basis.get_rotation_quaternion()
+				var current_quat = global_transform.basis.get_rotation_quaternion()
+				
+				var direction := global_position.direction_to(lure.global_position)
+				var desired_velocity := direction * walk_speed
+				desired_velocity += calculate_avoidance_force() * delta
+				var velocity_distance := velocity.distance_to(desired_velocity)
+				global_position.y = stored_y_position
+				if not _navigation_agent_3d.is_navigation_finished():
+					velocity = path_direction * walk_speed
+					move_and_slide()
+				else:
+					velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)
+					look_at(lure.global_position, Vector3.UP)
+					rotation.x = 0
+					rotation.z = 0
+				#var nearest_entry_relative_to_lure = find_closest_node_to_point(Blackboard.point_of_entries, lure.global_position)
+				#if not $VisionArea.overlaps_area(lure):
+					#vision_target = nearest_entry_relative_to_lure
+				#vision_target = lure
+				#look_at(vision_target.global_position)
+				if player_spotted == false:
+					if velocity.length_squared() > 0.01:
+							# Look Logic Continued
+							var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
+							global_transform.basis = Basis(next_quat)
+				else:
+					look_at(player.global_position, Vector3.UP)
+					get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.COMBAT))
+					lure = null
 				rotation.x = 0
 				rotation.z = 0
-				var direction := global_position.direction_to(vision_target.global_position) 
-				direction.y = 0
-				var desired_velocity := direction * walk_speed
-				var velocity_distance := velocity.distance_to(desired_velocity)
-				velocity = velocity.move_toward(
-					desired_velocity,
-					velocity_distance * walk_acceleration_factor * delta
-				)
-			
-			move_and_slide()
-			
-			if player_spotted == true:
-				get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.COMBAT))
-				lure = null
-			
 			if lure != null:
-				
 				var distance_between_self_and_lure = global_position.distance_to(lure.global_position)
 				if distance_between_self_and_lure < 1.5 and lure_delta_timer >= 2.0:
 					being_lured = false
