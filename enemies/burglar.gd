@@ -610,12 +610,21 @@ func _physics_process(delta: float) -> void:
 				#move_and_slide()
 				global_position.y = stored_y_position
 				#look_at(point_of_exit.global_position)
+				# Look Logic
+				var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
+				var target_quat = target_transform.basis.get_rotation_quaternion()
+				var current_quat = global_transform.basis.get_rotation_quaternion()
+				
 				var look_vector = point_of_exit.global_position - global_position
 				var look_angle = atan2(look_vector.x, look_vector.z)
 				if distance_between_self_and_poxit > 3.0:
-					rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed) 
+					#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
+					# Look Logic Continued
+					var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
+					global_transform.basis = Basis(next_quat) 
 				else:
-					rotation.y = rotate_toward(rotation.y, look_angle, delta * look_rotation_speed)
+					#rotation.y = rotate_toward(rotation.y, look_angle, delta * look_rotation_speed)
+					look_at(point_of_exit.global_position, Vector3.UP)
 				rotation.x = 0
 				rotation.z = 0
 				
