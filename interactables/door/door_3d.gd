@@ -1,7 +1,7 @@
-@tool
+#@tool
 class_name Door3D extends Interactable3D
 
-
+@export var is_left_hand_door := true
 @onready var _reroaming_target = $ExitingArea/CollisionShape3D
 @onready var _door_body = $Door/Swivel/AnimatableBody3D
 @onready var _top_section_interactable: FixedTrapVisual = $TrapSetup/Interactable2
@@ -82,6 +82,12 @@ func fix_door() -> void:
 
 
 func _ready() -> void:
+	match is_left_hand_door:
+		true:
+			$FixSetup.position = Vector3(0.0,0.0,0.0)
+		false:
+			$FixSetup.position = Vector3(0.0,0.0,-0.771)
+	
 	
 	
 	$FixSetup/HingeInteractable1.connect("interacted_with_hammer", func() -> void:

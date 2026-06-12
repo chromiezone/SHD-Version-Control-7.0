@@ -142,6 +142,7 @@ stream_1/stream = ExtResource("18_bxvxq")
 [node name="Door3D" type="Area3D"]
 monitoring = false
 script = ExtResource("1_r0isn")
+is_left_hand_door = false
 
 [node name="Door" type="Node3D" parent="."]
 
