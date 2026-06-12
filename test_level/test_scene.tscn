@@ -163,7 +163,7 @@ size = Vector3(18.7127, 2.97266, 19.7784)
 
 [node name="TestScene" type="Node3D"]
 script = ExtResource("1_52nfv")
-setup_time = 20.0
+setup_time = 1.0
 
 [node name="OutdoorNavRegion" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_if5o4")
@@ -449,17 +449,11 @@ progress = 55.0
 [node name="SafeLootObject" parent="LootObjects" instance=ExtResource("7_wc6xd")]
 transform = Transform3D(-2.98023e-08, 0, -1, 0, 1, 0, 1, 0, -2.98023e-08, 6.88836, 0.125838, 7.69719)
 
-[node name="LootObject" parent="LootObjects" instance=ExtResource("8_ubww3")]
-transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, 2.26301, 0, 1.04011)
-
 [node name="LootObject2" parent="LootObjects" instance=ExtResource("8_ubww3")]
 transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, -8.9317, 0, 5.53399)
 
 [node name="LootObject3" parent="LootObjects" instance=ExtResource("8_ubww3")]
 transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, -8.9317, 0, 10.5297)
-
-[node name="LootObject4" parent="LootObjects" instance=ExtResource("8_ubww3")]
-transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, -3.59086, 0, -3.47647)
 
 [node name="ExtractionZone" type="Node3D" parent="."]
 
@@ -643,6 +637,7 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 1.1247
 
 [node name="Door3D2" parent="IndoorDoors" instance=ExtResource("3_obkna")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8561, 0, 10.8733)
+is_left_hand_door = true
 
 [node name="SpeakerLure" parent="." instance=ExtResource("16_ut5bn")]
 transform = Transform3D(0.404328, 0, 0.914614, 0, 1, 0, -0.914614, 0, 0.404328, -6.24524, 0.15774, 10.7429)

@@ -237,7 +237,7 @@ shape = SubResource("BoxShape3D_b7itc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0022424, -0.000212073, 0.000262976)
 
 [node name="Interactable2" type="Area3D" parent="TrapSetup"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0258184, 1.77059, -0.647053)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.151051, 1.77059, -0.647053)
 script = ExtResource("5_kpgih")
 
 [node name="TrapVisual" type="MeshInstance3D" parent="TrapSetup/Interactable2"]

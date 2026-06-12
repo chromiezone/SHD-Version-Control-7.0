@@ -85,8 +85,14 @@ func _ready() -> void:
 	match is_left_hand_door:
 		true:
 			$FixSetup.position = Vector3(0.0,0.0,0.0)
+			_swivel.position = Vector3(0.0,1.0,0.36)
+			_swivel.rotation.y = 0.0
+			$TrapSetup.position = Vector3(0.0,0.0,-0.092)
 		false:
 			$FixSetup.position = Vector3(0.0,0.0,-0.771)
+			_swivel.position = Vector3(0.0,1.0,-0.471)
+			$TrapSetup.position = Vector3(0.0,0.0,1.266)
+			_swivel.rotation.y = PI
 	
 	
 	
@@ -309,7 +315,7 @@ func _process(_delta: float) -> void:
 		#print("shouldnt be able to place door trap")
 	
 	var current_rotation = _swivel.rotation.y
-	var is_at_zero = is_equal_approx(current_rotation, 0.0)
+	var is_at_zero = is_equal_approx(current_rotation, 0.0) if is_left_hand_door else is_equal_approx(current_rotation, PI)
 	if is_at_zero and not swivel_rotation_was_at_zero:
 		$DoorClose.play()
 	swivel_rotation_was_at_zero = is_at_zero
@@ -341,7 +347,7 @@ func _on_close_timer_timeout() -> void:
 		return
 	$DoorCreakIdle.play(0.0)
 	print("close")
-	var end_value := 0.0
+	var end_value := 0.0 if is_left_hand_door else PI
 	if _tween_door != null:
 		_tween_door.kill()
 	_tween_door = create_tween()
@@ -364,7 +370,8 @@ func set_is_active(value: bool) -> void:
 	#_static_body_collision_shape_3d.disabled = is_active
 	#print(is_active)
 	
-	var end_value := PI / 2.0 if is_active else 0.0
+	var left_end_value := PI / 2.0 if is_active else 0.0
+	var right_end_value := PI / 2.0 if is_active else PI
 	if _tween_door != null:
 		_tween_door.kill()
 	if broken == true:
@@ -373,6 +380,6 @@ func set_is_active(value: bool) -> void:
 	_tween_door.set_ease(Tween.EASE_OUT)
 	_tween_door.set_trans(Tween.TRANS_BACK if is_active else Tween.TRANS_BOUNCE)
 	
-	_tween_door.tween_property(_swivel, "rotation:y", end_value, 1.0)
+	_tween_door.tween_property(_swivel, "rotation:y", left_end_value if is_left_hand_door else right_end_value, 1.0)
 	_tween_door.finished.connect(func() -> void:
 		)
