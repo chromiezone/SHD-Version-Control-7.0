@@ -628,7 +628,7 @@ func _physics_process(delta: float) -> void:
 				rotation.x = 0
 				rotation.z = 0
 				
-				if distance_between_self_and_poxit < 1.5:
+				if distance_between_self_and_poxit < 1.8:
 					print("burglar exiting")
 					last_state = 4
 					get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.EXITING))
