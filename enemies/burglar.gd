@@ -585,7 +585,6 @@ func _physics_process(delta: float) -> void:
 					#desired_velocity,
 					#velocity_distance * walk_acceleration_factor * delta
 				#)
-			
 				var direction := global_position.direction_to(point_of_exit.global_position) 
 				var desired_velocity := direction * walk_speed
 				var velocity_distance := velocity.distance_to(desired_velocity)
@@ -661,40 +660,81 @@ func _physics_process(delta: float) -> void:
 						set_current_state(State.STUNNED_BY_TRAP)
 				)
 			
-			
 			if $VisionTargetChangeTimer.is_stopped():
 				if player_spotted == true:
 					vision_target = player
-				if vision_target_just_turned_entry:
-					vision_target = player
-					return
-				if player_spotted == false and $AwarenessTimer.time_left < 8.0:
-					vision_target = nearest_entry_relative_to_player
+				#if vision_target_just_turned_entry:
+					#vision_target = player
+					#return
+				#if player_spotted == false and $AwarenessTimer.time_left < 8.0:
+					#vision_target = nearest_entry_relative_to_player
 				
 			
+			var direction := global_position.direction_to(player.global_position) 
+			var desired_velocity := direction * walk_speed
+			var velocity_distance := velocity.distance_to(desired_velocity)
 			
+			_navigation_agent_3d.set_target_position(player.global_position)
+			var destination = _navigation_agent_3d.get_next_path_position()
+			var local_destination = destination - global_position
+			var path_direction = local_destination.normalized()
 			
-			# Closing the distance between self and player
-			if weapon_type is MeleeWeapon:
-				global_position.y = stored_y_position
-				look_at(vision_target.global_position)
-				rotation.x = 0
-				rotation.z = 0
-				var direction := global_position.direction_to(vision_target.global_position) 
-				var desired_velocity := direction * (walk_speed * 1.75)
-				var velocity_distance := velocity.distance_to(desired_velocity)
+			global_position.y = stored_y_position
+			look_at(vision_target.global_position)
+			rotation.x = 0
+			rotation.z = 0
+			
+			if global_position.distance_squared_to(player.global_position) <= 8.0 or _navigation_agent_3d.is_target_reached():
+				print("steering")
+				_navigation_agent_3d.set_target_position(self.global_position)
 				velocity = velocity.move_toward(
-					desired_velocity,
-					velocity_distance * run_acceleration_factor * delta
-				)
+				desired_velocity,
+				velocity_distance * walk_acceleration_factor * delta)
 				move_and_slide()
-			elif weapon_type is Firearm:
-				global_position.y = stored_y_position
-				look_at(player.global_position)
-				rotation.x = 0
-				rotation.z = 0
-				velocity = velocity.move_toward(Vector3.ZERO, run_acceleration_factor * delta)
-				
+			else:
+				print("taking path")
+				_navigation_agent_3d.set_target_position(player.global_position)
+				velocity = path_direction * walk_speed
+				move_and_slide()
+			
+			
+			
+			if not _navigation_agent_3d.is_navigation_finished():
+				velocity = path_direction * walk_speed
+				move_and_slide()
+			else: 
+				velocity = velocity.move_toward(
+				desired_velocity,
+				velocity_distance * walk_acceleration_factor * delta)
+				move_and_slide()
+			
+			
+			
+			
+			
+			
+			
+			## Closing the distance between self and player
+			#if weapon_type is MeleeWeapon:
+				#global_position.y = stored_y_position
+				#look_at(vision_target.global_position)
+				#rotation.x = 0
+				#rotation.z = 0
+				#var direction := global_position.direction_to(vision_target.global_position) 
+				#var desired_velocity := direction * (walk_speed * 1.75)
+				#var velocity_distance := velocity.distance_to(desired_velocity)
+				#velocity = velocity.move_toward(
+					#desired_velocity,
+					#velocity_distance * run_acceleration_factor * delta
+				#)
+				#move_and_slide()
+			#elif weapon_type is Firearm:
+				#global_position.y = stored_y_position
+				#look_at(player.global_position)
+				#rotation.x = 0
+				#rotation.z = 0
+				#velocity = velocity.move_toward(Vector3.ZERO, run_acceleration_factor * delta)
+				#
 			if global_position.distance_squared_to(player.global_position) <= 1.5 and weapon_type is MeleeWeapon:
 				set_current_state(State.STRIKE_DELAY)
 			elif weapon_type is Firearm and player_spotted == true and $ShootCooldown.time_left == 0:
@@ -715,7 +755,7 @@ func _physics_process(delta: float) -> void:
 				var window = _roaming_ray_cast.get_collider()
 				var distance_between_self_and_window = global_position.distance_to(window.global_position)
 				print(distance_between_self_and_window)
-				if distance_between_self_and_window < 1.5:
+				if distance_between_self_and_window < 1.8:
 					# The area the burglar is standing on determines whether it's entering or exiting
 					if window.currently_occupied_area == "$ExitingArea":
 						print("should begin exiting state")
