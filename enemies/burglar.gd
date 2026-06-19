@@ -145,6 +145,7 @@ var interacted_with_trap := [
 ]
 
 var player_spotted := false : set = set_player_spotted
+var player_spotted_just_true := false
 
 func set_player_spotted(new_value: bool) -> void:
 	if player_spotted == new_value:
@@ -153,6 +154,10 @@ func set_player_spotted(new_value: bool) -> void:
 	
 	if new_value == true:
 		$AwarenessTimer.start()
+		player_spotted_just_true = true
+		get_tree().create_timer(0.75).timeout.connect(func() -> void:
+			player_spotted_just_true = false
+			)
 	
 
 @onready var door_interaction_cooldown_timer: Timer = $DoorInteractionCooldown
@@ -233,6 +238,7 @@ func set_current_state(new_state: State) -> void:
 			if player_spotted == true:
 				set_current_state(State.COMBAT)
 		State.COMBAT:
+			being_lured = false
 			vision_target = player
 			chance_to_stun = randf()
 			if $MeleeCooldown.is_connected("timeout", set_current_state.bind(State.COMBAT)):
@@ -684,7 +690,7 @@ func _physics_process(delta: float) -> void:
 			rotation.x = 0
 			rotation.z = 0
 			
-			if global_position.distance_squared_to(player.global_position) <= 8.0 or _navigation_agent_3d.is_target_reached():
+			if global_position.distance_squared_to(player.global_position) <= 15.0 or _navigation_agent_3d.is_target_reached() or current_entryway_just_updated == true:
 				print("steering")
 				_navigation_agent_3d.set_target_position(self.global_position)
 				velocity = velocity.move_toward(
@@ -737,7 +743,7 @@ func _physics_process(delta: float) -> void:
 				#
 			if global_position.distance_squared_to(player.global_position) <= 1.5 and weapon_type is MeleeWeapon:
 				set_current_state(State.STRIKE_DELAY)
-			elif weapon_type is Firearm and player_spotted == true and $ShootCooldown.time_left == 0:
+			elif weapon_type is Firearm and player_spotted == true and player_spotted_just_true == false and $ShootCooldown.time_left == 0:
 				set_current_state(State.SHOOT)
 			
 			$AwarenessTimer.timeout.connect(func() -> void:
@@ -812,6 +818,16 @@ func _physics_process(delta: float) -> void:
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
 		State.MOVING_TO_LURE:
 			lure_delta_timer += delta
+			
+			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
+				# If player punches the burglar while hidden, the burglar is stunned
+				if _hit_box.damage_source == 1 and player_spotted == false and current_state == 14:
+					set_current_state(State.STUNNED_BY_PLAYER)
+				elif _hit_box.get_parent() is Trap3D and current_state == 14:
+					last_state = 14
+					set_current_state(State.STUNNED_BY_TRAP)
+			)
+			
 			if _roaming_ray_cast.is_colliding():
 				if _roaming_ray_cast.get_collider() is Door3D:
 					var door = _roaming_ray_cast.get_collider()
@@ -829,7 +845,6 @@ func _physics_process(delta: float) -> void:
 						)
 						
 						move_and_slide()
-
 			
 			#print(lure_delta_timer)
 			if lure != null:
