@@ -60,12 +60,21 @@ var filtered_loot_objects : Array = []
 var has_loot := false
 
 var being_lured := false : set = set_being_lured
+var velocity_is_stagnant := false
 
 
 ## For the duration of this timer, the burglar will not take into account more lures other
 ## than the one currently being visited.
 @onready var _lure_interaction_cooldown: Timer = $LureInteractionCooldown
-var lure_delta_timer := 0.0
+var lure_delta_timer := 0.0 : set = set_lure_delta_timer 
+func set_lure_delta_timer(new_value) -> void:
+	if lure_delta_timer == new_value:
+		return
+	lure_delta_timer = new_value
+	if new_value >= 2.5:
+		print("should exit lure")
+		being_lured = false
+		get_tree().create_timer(1.0).timeout.connect(set_current_state.bind(State.LOOTING))
 
 func set_being_lured(new_value) -> void:
 	if new_value == false and being_lured == true:
@@ -279,6 +288,9 @@ func set_current_state(new_state: State) -> void:
 				get_tree().create_timer(2.0).timeout.connect(set_current_state.bind(State.COMBAT))
 		State.STRIKE_DELAY:
 			get_tree().create_timer(randf_range(0.01,0.10)).timeout.connect(set_current_state.bind(State.STRIKE))
+		State.MOVING_TO_LURE:
+			velocity_is_stagnant = false
+			lure_delta_timer = 0.0
 
 
 func _ready() -> void:
@@ -817,7 +829,12 @@ func _physics_process(delta: float) -> void:
 			if distance_between_self_and_poe < 1.5:
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
 		State.MOVING_TO_LURE:
-			lure_delta_timer += delta
+			print("lure_delta_timer is " + str(lure_delta_timer))
+			var stuck = velocity.length_squared() > 0.1 and velocity.length_squared() < 0.2
+			if stuck and lure_delta_timer <= 2.5:
+				lure_delta_timer += delta
+			
+			
 			
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
 				# If player punches the burglar while hidden, the burglar is stunned
@@ -888,7 +905,7 @@ func _physics_process(delta: float) -> void:
 				rotation.z = 0
 			if lure != null:
 				var distance_between_self_and_lure = global_position.distance_to(lure.global_position)
-				if distance_between_self_and_lure < 1.5 and lure_delta_timer >= 2.0:
+				if distance_between_self_and_lure < 1.5:
 					being_lured = false
 					get_tree().create_timer(5.0).timeout.connect(func() -> void:
 						#lure = null
