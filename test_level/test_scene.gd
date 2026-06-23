@@ -8,7 +8,7 @@ extends Node3D
 
 enum Stage {
 	SETUP,
-	DEFENSE,	
+	DEFENSE,
 	CLEANUP,
 	INTERMISSION,
 }
