@@ -83,6 +83,8 @@ func _ready() -> void:
 			#$StaticBody3D/CollisionShape3D.set_deferred("disabled", true)
 			#print("enemy preparing to enter")
 			body.current_entryway = self
+			body.window_anim_end_position = $ExitingArea/CollisionShape3D.global_position
+			
 			if is_active == false:
 				await get_tree().create_timer(2.0).timeout
 			

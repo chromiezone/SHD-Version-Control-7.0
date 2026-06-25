@@ -48,7 +48,7 @@ func set_current_entryway(new_entryway) -> void:
 		return
 	current_entryway = new_entryway
 	current_entryway_just_updated = true
-	get_tree().create_timer(1.0).timeout.connect(func() -> void:
+	get_tree().create_timer(3.0).timeout.connect(func() -> void:
 		current_entryway_just_updated = false
 		)
 var entryway_reference = null
@@ -679,7 +679,11 @@ func _physics_process(delta: float) -> void:
 					move_and_slide()
 		State.COMBAT:
 			print($AwarenessTimer.time_left)
-			var on_opposing_spaces = (player.is_inside_home == true and is_inside_home == false) or (player.is_inside_home == false and is_inside_home == true)
+			var _on_opposing_spaces = (player.is_inside_home == true and is_inside_home == false) or (player.is_inside_home == false and is_inside_home == true)
+			var needs_to_exit = player.is_inside_home == false and is_inside_home == true
+			var needs_to_enter = player.is_inside_home == true and is_inside_home == false
+			if needs_to_enter and player_spotted_just_false:
+				get_tree().create_timer(1.0).timeout.connect(set_current_state.bind(State.REROAMING))
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
 				if _hit_box.get_parent() is Trap3D:
 					print("trap chance to stun is " + str(chance_to_stun))
@@ -825,20 +829,27 @@ func _physics_process(delta: float) -> void:
 				velocity_distance * walk_acceleration_factor * delta)
 				move_and_slide()
 			
-			var look_vector = nearest_poxit.global_position - global_position
-			var look_angle = atan2(look_vector.x, look_vector.z)
+			#var look_vector = nearest_poxit.global_position - global_position
+			#var look_angle = atan2(look_vector.x, look_vector.z)
 			
+			# Look Logic
+			var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
+			var target_quat = target_transform.basis.get_rotation_quaternion()
+			var current_quat = global_transform.basis.get_rotation_quaternion()
 			
-			var distance_between_self_and_poe = global_position.distance_to(current_entryway.global_position)
+			var distance_between_self_and_poe = global_position.distance_to(nearest_poxit.global_position)
 			
 			if distance_between_self_and_poe > 3.0 or current_entryway == null:
-				rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed) 
+				# Look Logic Continued
+				var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
+				global_transform.basis = Basis(next_quat)
+				#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed) 
 			else:
-				rotation.y = rotate_toward(rotation.y, look_angle, delta * look_rotation_speed)
+				look_at(nearest_poxit.global_position)
 			rotation.x = 0
 			rotation.z = 0
 			
-			if distance_between_self_and_poe < 1.8 or current_entryway != null:
+			if distance_between_self_and_poe < 1.8 and current_entryway_just_updated:
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
 		State.MOVING_TO_LURE:
 			print("lure_delta_timer is " + str(lure_delta_timer))
