@@ -37,6 +37,7 @@ func calculate_avoidance_force() -> Vector3:
 	return avoidance_force
 
 var player: CharacterBody3D = null
+var player_out_of_sight_pos : Vector3 
 
 var point_of_entry = null
 var point_of_exit = null
@@ -155,6 +156,7 @@ var interacted_with_trap := [
 
 var player_spotted := false : set = set_player_spotted
 var player_spotted_just_true := false
+var player_spotted_just_false := false
 
 func set_player_spotted(new_value: bool) -> void:
 	if player_spotted == new_value:
@@ -166,6 +168,13 @@ func set_player_spotted(new_value: bool) -> void:
 		player_spotted_just_true = true
 		get_tree().create_timer(0.75).timeout.connect(func() -> void:
 			player_spotted_just_true = false
+			)
+	if new_value == false:
+		player_out_of_sight_pos = player.global_position
+		$AwarenessTimer.start()
+		player_spotted_just_false = true
+		get_tree().create_timer(0.75).timeout.connect(func() -> void:
+			player_spotted_just_false = false
 			)
 	
 
@@ -401,6 +410,7 @@ func _physics_process(delta: float) -> void:
 	# Updates the closest entrypoint relative to the player, regardless of the burglar's state. 
 	#That is why it was moved outside of the statemachine.
 	var nearest_entry_relative_to_player = find_closest_node_to_point(Blackboard.point_of_entries, player.global_position)
+	var nearest_entry_relative_to_burglar = find_closest_node_to_point(Blackboard.point_of_entries, self.global_position)
 	
 	if vision_target_just_turned_entry:
 		look_at(player.global_position)
@@ -668,6 +678,8 @@ func _physics_process(delta: float) -> void:
 					velocity = velocity.move_toward(Vector3.ZERO, walk_acceleration_factor * delta)
 					move_and_slide()
 		State.COMBAT:
+			print($AwarenessTimer.time_left)
+			var on_opposing_spaces = (player.is_inside_home == true and is_inside_home == false) or (player.is_inside_home == false and is_inside_home == true)
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
 				if _hit_box.get_parent() is Trap3D:
 					print("trap chance to stun is " + str(chance_to_stun))
@@ -692,7 +704,7 @@ func _physics_process(delta: float) -> void:
 			var desired_velocity := direction * walk_speed
 			var velocity_distance := velocity.distance_to(desired_velocity)
 			
-			_navigation_agent_3d.set_target_position(player.global_position)
+			_navigation_agent_3d.set_target_position(player.global_position if player_spotted == true else player_out_of_sight_pos)
 			var destination = _navigation_agent_3d.get_next_path_position()
 			var local_destination = destination - global_position
 			var path_direction = local_destination.normalized()
@@ -711,7 +723,7 @@ func _physics_process(delta: float) -> void:
 				move_and_slide()
 			else:
 				print("taking path")
-				_navigation_agent_3d.set_target_position(player.global_position)
+				_navigation_agent_3d.set_target_position(player.global_position if player_spotted == true else player_out_of_sight_pos)
 				velocity = path_direction * walk_speed
 				move_and_slide()
 			
@@ -761,7 +773,7 @@ func _physics_process(delta: float) -> void:
 			$AwarenessTimer.timeout.connect(func() -> void:
 				var forbidden_states = [4,5,6]
 				if is_inside_home == true:
-					print("lost sight of player, returning to looting state")
+					print("lost sight of player or lost interest, returning to looting state")
 					set_current_state(State.LOOTING)
 				else:
 					print("out of home, returning to inside of home")
@@ -819,14 +831,14 @@ func _physics_process(delta: float) -> void:
 			
 			var distance_between_self_and_poe = global_position.distance_to(current_entryway.global_position)
 			
-			if distance_between_self_and_poe > 3.0:
+			if distance_between_self_and_poe > 3.0 or current_entryway == null:
 				rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed) 
 			else:
 				rotation.y = rotate_toward(rotation.y, look_angle, delta * look_rotation_speed)
 			rotation.x = 0
 			rotation.z = 0
 			
-			if distance_between_self_and_poe < 1.5:
+			if distance_between_self_and_poe < 1.8 or current_entryway != null:
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
 		State.MOVING_TO_LURE:
 			print("lure_delta_timer is " + str(lure_delta_timer))
