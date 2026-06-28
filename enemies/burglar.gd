@@ -95,6 +95,7 @@ var vision_target = null : set = set_vision_target
 var vision_target_just_turned_player := false
 var vision_target_just_turned_entry := false
 
+
 func set_vision_target(new_value: Node3D) -> void:
 	if vision_target == new_value:
 		return
@@ -215,43 +216,45 @@ func set_current_state(new_state: State) -> void:
 				set_current_state(State.LOOTING)
 		State.ENTERING:
 			_roaming_ray_cast.target_position.z = -7.5
-			if current_entryway is Door3D:
-				var door = current_entryway
-				if door.is_active == false:
-					await get_tree().create_timer(door_open_duration).timeout
-				var entering_door_tween := create_tween()
-				entering_door_tween.tween_property(self, "global_position", door_anim_end_position, 1.0)
-				entering_door_tween.finished.connect(func() -> void:
-					get_tree().create_timer(2.0).timeout.connect(set_current_state.bind(State.LOOTING))
-				)
-			elif current_entryway is Window3D:
-				var window = current_entryway
-				if window._bottom_pane.position.y == 0.0:
-					await get_tree().create_timer(window_open_duration).timeout
-				var entering_window_tween := create_tween().set_parallel(true)
-				entering_window_tween.tween_property(self, "global_position:x", window_anim_end_position.x, 1.0)
-				entering_window_tween.tween_property(self, "global_position:z", window_anim_end_position.z, 1.0)
-				entering_window_tween.finished.connect(func() -> void:
-					get_tree().create_timer(2.0).timeout.connect(set_current_state.bind(State.LOOTING))
-				)
+			if current_entryway != null:
+				if current_entryway is Door3D:
+					var door = current_entryway
+					if door.is_active == false:
+						await get_tree().create_timer(door_open_duration).timeout
+					var entering_door_tween := create_tween()
+					entering_door_tween.tween_property(self, "global_position", door_anim_end_position, 1.0)
+					entering_door_tween.finished.connect(func() -> void:
+						get_tree().create_timer(2.0).timeout.connect(set_current_state.bind(State.LOOTING))
+					)
+				elif current_entryway is Window3D:
+					var window = current_entryway
+					if window._bottom_pane.position.y == 0.0:
+						await get_tree().create_timer(window_open_duration).timeout
+					var entering_window_tween := create_tween().set_parallel(true)
+					entering_window_tween.tween_property(self, "global_position:x", window_anim_end_position.x, 1.0)
+					entering_window_tween.tween_property(self, "global_position:z", window_anim_end_position.z, 1.0)
+					entering_window_tween.finished.connect(func() -> void:
+						get_tree().create_timer(2.0).timeout.connect(set_current_state.bind(State.LOOTING))
+					)
 		State.EXITING:
-			if current_entryway is Door3D:
-				var exiting_door_tween := create_tween()
-				exiting_door_tween.tween_property(self, "global_position", door_exit_anim_end_position, 1.0)
-				exiting_door_tween.finished.connect(
-					set_current_state.bind(State.EXTRACTION)
-				)
-			elif current_entryway is Window3D:
-				
-				var exiting_window_tween := create_tween().set_parallel(true)
-				exiting_window_tween.tween_property(self, "global_position:x", window_exit_anim_end_position.x, 1.0)
-				exiting_window_tween.tween_property(self, "global_position:z", window_exit_anim_end_position.z, 1.0)
-				exiting_window_tween.finished.connect(func() -> void:
-					if last_state == 7:
-						set_current_state(State.COMBAT)
-					elif last_state == 4:
-						set_current_state(State.EXTRACTION)
-				)
+			if current_entryway != null:
+				if current_entryway is Door3D:
+					var exiting_door_tween := create_tween()
+					exiting_door_tween.tween_property(self, "global_position", door_exit_anim_end_position, 1.0)
+					exiting_door_tween.finished.connect(
+						set_current_state.bind(State.EXTRACTION)
+					)
+				elif current_entryway is Window3D:
+					
+					var exiting_window_tween := create_tween().set_parallel(true)
+					exiting_window_tween.tween_property(self, "global_position:x", window_exit_anim_end_position.x, 1.0)
+					exiting_window_tween.tween_property(self, "global_position:z", window_exit_anim_end_position.z, 1.0)
+					exiting_window_tween.finished.connect(func() -> void:
+						if last_state == 7:
+							set_current_state(State.COMBAT)
+						elif last_state == 4:
+							set_current_state(State.EXTRACTION)
+					)
 		State.LOOTING:
 			if player_spotted == true:
 				set_current_state(State.COMBAT)
@@ -300,6 +303,8 @@ func set_current_state(new_state: State) -> void:
 		State.MOVING_TO_LURE:
 			velocity_is_stagnant = false
 			lure_delta_timer = 0.0
+		State.REROAMING:
+			door_interaction_cooldown_timer.start()
 
 
 func _ready() -> void:
@@ -682,7 +687,7 @@ func _physics_process(delta: float) -> void:
 			var _on_opposing_spaces = (player.is_inside_home == true and is_inside_home == false) or (player.is_inside_home == false and is_inside_home == true)
 			var needs_to_exit = player.is_inside_home == false and is_inside_home == true
 			var needs_to_enter = player.is_inside_home == true and is_inside_home == false
-			if needs_to_enter and player_spotted_just_false:
+			if _on_opposing_spaces and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped():
 				get_tree().create_timer(1.0).timeout.connect(set_current_state.bind(State.REROAMING))
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
 				if _hit_box.get_parent() is Trap3D:
@@ -849,8 +854,8 @@ func _physics_process(delta: float) -> void:
 			rotation.x = 0
 			rotation.z = 0
 			
-			if distance_between_self_and_poe < 1.8 and current_entryway_just_updated:
-				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
+			if distance_between_self_and_poe < 1.8:
+				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING if is_inside_home == false else State.EXITING))
 		State.MOVING_TO_LURE:
 			print("lure_delta_timer is " + str(lure_delta_timer))
 			var stuck = velocity.length_squared() > 0.1 and velocity.length_squared() < 0.2
