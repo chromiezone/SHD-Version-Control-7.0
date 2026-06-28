@@ -688,7 +688,7 @@ func _physics_process(delta: float) -> void:
 			var needs_to_exit = player.is_inside_home == false and is_inside_home == true
 			var needs_to_enter = player.is_inside_home == true and is_inside_home == false
 			if _on_opposing_spaces and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped():
-				get_tree().create_timer(1.0).timeout.connect(set_current_state.bind(State.REROAMING))
+				set_current_state(State.REROAMING)
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
 				if _hit_box.get_parent() is Trap3D:
 					print("trap chance to stun is " + str(chance_to_stun))
