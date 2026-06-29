@@ -506,6 +506,7 @@ func _physics_process(delta: float) -> void:
 				# If player punches the burglar while hidden, the burglar is stunned
 				if _hit_box.damage_source == 1 and player_spotted == false and current_state == 3:
 					set_current_state(State.STUNNED_BY_PLAYER)
+					last_state = 7
 				elif _hit_box.get_parent() is Trap3D and current_state == 3:
 					last_state = 3
 					set_current_state(State.STUNNED_BY_TRAP)
