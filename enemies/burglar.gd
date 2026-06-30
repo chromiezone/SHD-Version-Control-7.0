@@ -250,7 +250,7 @@ func set_current_state(new_state: State) -> void:
 					exiting_window_tween.tween_property(self, "global_position:x", window_exit_anim_end_position.x, 1.0)
 					exiting_window_tween.tween_property(self, "global_position:z", window_exit_anim_end_position.z, 1.0)
 					exiting_window_tween.finished.connect(func() -> void:
-						if last_state == 7:
+						if last_state != 4:
 							set_current_state(State.COMBAT)
 						elif last_state == 4:
 							set_current_state(State.EXTRACTION)
