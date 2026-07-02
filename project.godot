@@ -104,7 +104,9 @@ invis={
 
 3d_physics/layer_1="Player"
 3d_physics/layer_2="Enemy"
+3d_physics/layer_13="Stairs"
 3d_physics/layer_14="Floor"
+3d_physics/layer_15="Walls"
 
 [navigation]
 

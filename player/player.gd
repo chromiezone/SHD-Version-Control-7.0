@@ -8,6 +8,9 @@ class_name PlayerFPSController extends CharacterBody3D
 @onready var _hurtbox_3d: Hurtbox3D = %Hurtbox3D
 @onready var _hitbox_3d: Hitbox3D = %Hitbox3D
 @onready var _interaction_ray_cast_3d: InteractionRayCast3D = $Neck/Camera3D/InteractionRayCast3D
+@onready var _stair_walker: Node3D = $StairWalker
+@onready var _stair_ray_cast: RayCast3D = $StairWalker/StairRayCast
+
 
 
 @onready var _animation_player: AnimationPlayer = $AnimationPlayer
@@ -115,6 +118,7 @@ func _rotate_camera_by(look_offset_2d: Vector2) -> void:
 	_camera.rotation.y -= look_offset_2d.x
 	_camera.rotation.x -= look_offset_2d.y
 	_camera.rotation.y = wrapf(_camera.rotation.y, -PI, PI)
+	#_stair_walker.rotation.y = wrapf(_camera.rotation.y, -PI, PI)
 	const MAX_VERTICAL_ANGLE := PI / 3.0
 	_camera.rotation.x = clampf(_camera.rotation.x, -1.0 * MAX_VERTICAL_ANGLE, MAX_VERTICAL_ANGLE )
 	_camera.orthonormalize()
@@ -224,6 +228,13 @@ func _physics_process(delta: float) -> void:
 	var fall_speed := absf(velocity.y)
 	
 	move_and_slide()
+	
+	if player_wants_to_move:
+		_stair_walker.rotation.y = atan2(-movement_direction_3d.x, -movement_direction_3d.z)
+		if is_on_wall() and is_on_floor() and _stair_ray_cast.get_collider() != null:
+			print("should go up stairs")
+			var step_height = _stair_ray_cast.get_collision_point().y - global_position.y
+			global_position.y += step_height + 0.125
 	
 	var just_landed := was_in_air and is_on_floor()
 	

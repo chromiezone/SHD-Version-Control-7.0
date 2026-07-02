@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b3lxy76yh16ad"]
+[gd_scene load_steps=21 format=3 uid="uid://b3lxy76yh16ad"]
 
 [ext_resource type="Script" uid="uid://b2m7a30hrt43u" path="res://player/player.gd" id="1_oul6g"]
 [ext_resource type="Script" uid="uid://cv1si2malvf64" path="res://player/interaction_ray_cast_3d.gd" id="2_rkbax"]
@@ -293,22 +293,16 @@ _data = {
 height = 1.6
 radius = 0.3
 
+[sub_resource type="BoxMesh" id="BoxMesh_boad6"]
+size = Vector3(0.1, 0.1, 0.1)
+
 [node name="Player" type="CharacterBody3D"]
-collision_mask = 8195
+collision_mask = 28675
 script = ExtResource("1_oul6g")
-mouse_sensitivity = null
 max_speed_jog = 3.0
 max_speed_sprint = 6.0
-acceleration_jog = null
-acceleration_sprint = null
-deceleration = null
-gravity = null
-max_fall_speed = null
 jump_velocity = 6.0
-max_health = null
-max_stamina = null
 max_speed_crouch = 1.0
-money = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 unique_name_in_owner = true
@@ -409,3 +403,14 @@ one_shot = true
 [node name="StaminaTimer" type="Timer" parent="."]
 wait_time = 10.0
 one_shot = true
+
+[node name="StairWalker" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StairWalker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.500394)
+mesh = SubResource("BoxMesh_boad6")
+
+[node name="StairRayCast" type="RayCast3D" parent="StairWalker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.274065, -0.5)
+target_position = Vector3(0, -0.2, 0)
+collision_mask = 4096

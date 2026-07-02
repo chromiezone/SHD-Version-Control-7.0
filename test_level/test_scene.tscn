@@ -190,23 +190,33 @@ skeleton = NodePath("")
 [node name="CSGBox3D" type="CSGBox3D" parent="IndoorNavRegion"]
 transform = Transform3D(0.726767, 0, 0.686885, 0, 1, 0, -0.686885, 0, 0.726767, -0.513425, 0.520372, 0)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="IndoorNavRegion"]
 transform = Transform3D(0.726767, 0, 0.686885, 0, 1, 0, -0.686885, 0, 0.726767, -1.95562, 0.520372, -3.36469)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="IndoorNavRegion"]
 transform = Transform3D(0.726767, 0, 0.686885, 0, 1, 0, -0.686885, 0, 0.726767, 2.76405, 0.520372, -5.56317)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="IndoorNavRegion"]
 transform = Transform3D(-0.046043, 0, 0.99894, 0, 1, 0, -0.99894, 0, -0.046043, -7.0777, 0.520372, -0.0590039)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(1, 1, 4.17285)
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="IndoorNavRegion"]
 transform = Transform3D(-0.690895, 0, 0.722955, 0, 1, 0, -0.722955, 0, -0.690895, -7.0777, 0.520372, -3.14241)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(1, 1, 4.17285)
 
 [node name="Walls" type="Node3D" parent="IndoorNavRegion"]
@@ -215,66 +225,92 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0052104, 0.00896502, -0.002
 [node name="CSGBox3D2" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8708, 1.03013, 6.82893)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 12.3318)
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.86017, 1.03013, 8.13362)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 7.74889)
 
 [node name="CSGBox3D13" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -7.85843, 1.03013, 2.87314)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 5.75237)
 
 [node name="CSGBox3D14" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -3.01556, 1.03013, -4.13679)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 5.75237)
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 4.5026, 1.03013, 6.32129)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 6.99847)
 
 [node name="CSGBox3D12" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 6.00422, 1.03013, -2.85662)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 3.99522)
 
 [node name="CSGBox3D10" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.12558, 1.03013, 3.68886)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 13.3661)
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.83843, 1.03839, 9.15753)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 2.29644)
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85137, 1.03013, 12.0477)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 1.44024)
 
 [node name="CSGBox3D11" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11989, 1.03013, 12.0784)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.96762, 1.37175)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8708, 1.03008, -3.70986)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 2.02643, 6.70688)
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.13684, 1.03008, -3.70986)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 2.02643, 6.70688)
 
 [node name="CSGBox3D7" type="CSGBox3D" parent="IndoorNavRegion/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.13684, 1.03008, 1.67205)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 2.02643, 2.06442)
 
 [node name="Base" type="CSGBox3D" parent="."]
@@ -304,16 +340,22 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.761
 [node name="Pillar1" type="CSGBox3D" parent="TestHouse/HouseParts"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23196, -0.346733, -1.74656)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 1)
 
 [node name="Pillar2" type="CSGBox3D" parent="TestHouse/HouseParts"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23196, -0.346733, 5.12646)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 7.75629)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/HouseParts"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23226, -0.35, -3.57628e-07)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 0.001, 2.491)
 
 [node name="HouseParts2" type="Node3D" parent="TestHouse"]
@@ -322,16 +364,22 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.761
 [node name="Pillar1" type="CSGBox3D" parent="TestHouse/HouseParts2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, -1.74656)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 1)
 
 [node name="Pillar2" type="CSGBox3D" parent="TestHouse/HouseParts2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, 1.74832)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 1)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/HouseParts2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79839, -0.35, 1.19209e-07)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 0.001, 2.491)
 
 [node name="HouseOrigin" type="Marker3D" parent="TestHouse"]
@@ -343,16 +391,22 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -5.268
 [node name="Pillar1" type="CSGBox3D" parent="TestHouse/HouseParts3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, -3.48191)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 4.4707)
 
 [node name="Pillar2" type="CSGBox3D" parent="TestHouse/HouseParts3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, 1.74832)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 1)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/HouseParts3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79839, -0.35, 1.19209e-07)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 0.001, 2.491)
 
 [node name="HouseParts6" type="Node3D" parent="TestHouse"]
@@ -361,16 +415,22 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8.690
 [node name="Pillar1" type="CSGBox3D" parent="TestHouse/HouseParts6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, -3.48191)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 4.4707)
 
 [node name="Pillar2" type="CSGBox3D" parent="TestHouse/HouseParts6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, 1.74832)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 1)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/HouseParts6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79839, -0.35, 1.19209e-07)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 0.001, 2.491)
 
 [node name="HouseParts4" type="Node3D" parent="TestHouse"]
@@ -379,16 +439,22 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.7304
 [node name="Pillar1" type="CSGBox3D" parent="TestHouse/HouseParts4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, -1.74656)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 1)
 
 [node name="Pillar2" type="CSGBox3D" parent="TestHouse/HouseParts4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, 2.89187)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 3.28711)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/HouseParts4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79839, -0.35, 1.19209e-07)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 0.001, 2.491)
 
 [node name="HouseParts5" type="Node3D" parent="TestHouse"]
@@ -397,17 +463,79 @@ transform = Transform3D(1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, 3.34149,
 [node name="Pillar1" type="CSGBox3D" parent="TestHouse/HouseParts5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, -1.74656)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 1)
 
 [node name="Pillar2" type="CSGBox3D" parent="TestHouse/HouseParts5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79869, -0.346733, 4.56888)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 1.6, 6.64111)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/HouseParts5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79839, -0.35, 1.19209e-07)
 use_collision = true
+collision_layer = 16384
+collision_mask = 3
 size = Vector3(0.25, 0.001, 2.491)
+
+[node name="Stairs" type="Node3D" parent="TestHouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.4971, 0, 8.57408)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.1395, 1.39999)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.2395, 1.19999)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.3395, 0.999992)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 1)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.4395, 0.799993)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.5395, 0.599993)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.6395, 0.399993)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.7395, 0.199993)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 1)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="TestHouse/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0189857, 0.8395, 0.0999928)
+use_collision = true
+collision_layer = 4096
+size = Vector3(5, 0.2, 0.8)
+
+[node name="Ramp" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.700536, -0.713617, 0, 0.713617, 0.700536, 17.6523, 1.16786, 8.86057)
+use_collision = true
+size = Vector3(5, 0.2, 5.8418)
 
 [node name="PointOfEntries" type="Node3D" parent="."]
 
