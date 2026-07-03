@@ -380,7 +380,7 @@ transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition
 
 [node name="Burglar" type="CharacterBody3D" node_paths=PackedStringArray("debug_label")]
 collision_layer = 2
-collision_mask = 24579
+collision_mask = 26627
 script = ExtResource("1_ppjas")
 debug_label = NodePath("Label3D")
 max_health = 5
@@ -540,22 +540,22 @@ one_shot = true
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0, 0, 0.166245)
 
 [node name="Skeleton3D" parent="BurglarSkinV2/Armature" index="0"]
-bones/0/position = Vector3(0, 0.960263, 0.182244)
+bones/0/position = Vector3(0, 0.95044, 0.182244)
 bones/1/rotation = Quaternion(0.119803, 1.18351e-07, 1.42816e-08, 0.992798)
 bones/2/position = Vector3(0.162604, 0.437528, -0.0507621)
-bones/2/rotation = Quaternion(0.186297, 0.0748468, 0.968707, -0.145939)
+bones/2/rotation = Quaternion(0.179595, 0.0816319, 0.964085, -0.177826)
 bones/3/rotation = Quaternion(0.166512, 0.016438, -0.065359, 0.983734)
 bones/4/rotation = Quaternion(-0.000514691, -0.00417002, 0.0423084, 0.999096)
-bones/5/rotation = Quaternion(0.0825285, 0.0465215, 0.990312, -0.10152)
-bones/6/rotation = Quaternion(-0.298632, 0.0132879, -0.0311596, 0.953767)
-bones/7/rotation = Quaternion(0.528465, 0.087374, -0.00713987, 0.844417)
+bones/5/rotation = Quaternion(0.0818796, 0.0677618, 0.988906, -0.103777)
+bones/6/rotation = Quaternion(-0.333947, 0.0144392, -0.030643, 0.941983)
+bones/7/rotation = Quaternion(0.541825, 0.0876205, -0.00648059, 0.835886)
 bones/8/position = Vector3(-0.162604, 0.437528, -0.0507621)
-bones/8/rotation = Quaternion(-0.190821, 0.0651553, 0.970027, 0.135606)
+bones/8/rotation = Quaternion(-0.185161, 0.0712823, 0.966301, 0.164003)
 bones/9/rotation = Quaternion(0.166512, -0.016438, 0.065359, 0.983734)
 bones/10/rotation = Quaternion(-0.000514703, 0.00417002, -0.0423084, 0.999096)
-bones/11/rotation = Quaternion(-0.0755811, 0.0462632, 0.991102, 0.0993197)
-bones/12/rotation = Quaternion(-0.298632, -0.0132879, 0.0311596, 0.953767)
-bones/13/rotation = Quaternion(0.528841, -0.0804162, 0.00489919, 0.844888)
+bones/11/rotation = Quaternion(-0.0749785, 0.0675096, 0.989715, 0.101416)
+bones/12/rotation = Quaternion(-0.333947, -0.0144392, 0.030643, 0.941983)
+bones/13/rotation = Quaternion(0.542216, -0.0806238, 0.00433712, 0.836351)
 bones/14/position = Vector3(0.218322, 0.628349, 0.61256)
 bones/14/rotation = Quaternion(-0.0520479, 0.705189, 0.705189, -0.0520479)
 bones/16/position = Vector3(-0.211116, 0.628349, 0.61256)
@@ -569,5 +569,10 @@ anim_player = NodePath("../BurglarSkinV2/AnimationPlayer")
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 path_desired_distance = 0.3
 debug_enabled = true
+
+[node name="GroundingRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.200753, -0.5)
+target_position = Vector3(0, -0.5, 0)
+collision_mask = 10240
 
 [editable path="BurglarSkinV2"]

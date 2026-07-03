@@ -18,9 +18,16 @@ signal burglar_path_stop
 
 @onready var _roaming_ray_cast: RayCast3D = %RoamingRayCast
 @onready var _obstacle_avoidance_raycasts: Node3D = %ObstacleAvoidanceRaycasts
+@onready var _grounding_ray_cast: RayCast3D = $GroundingRayCast
 @export var avoidance_strength := 1000.0
 @onready var _navigation_agent_3d: NavigationAgent3D = $NavigationAgent3D
+
+@export_category("Movement")
+@export_range(1.0, 50.0, 0.1) var gravity := 17.0
+@export_range(1.0, 50.0, 0.1) var max_fall_speed := 20.0
+
 var look_rotation_speed := 5.0
+
 
 
 func calculate_avoidance_force() -> Vector3:
@@ -391,6 +398,12 @@ func _physics_process(delta: float) -> void:
 	#print(walk_speed)
 	#print("current_state is " + str(current_state))
 	# Used to determine if burglar will take damage from a trap
+	
+	# Application of gravity
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+		velocity.y = maxf(velocity.y, -max_fall_speed)
+	
 	evasion_chance = randi_range(1, 100)
 	
 	# Handles player detection
@@ -719,7 +732,10 @@ func _physics_process(delta: float) -> void:
 			var local_destination = destination - global_position
 			var path_direction = local_destination.normalized()
 			
-			global_position.y = stored_y_position
+			#global_position.y = stored_y_position
+			if _grounding_ray_cast.is_colliding():
+				var y_pos = _grounding_ray_cast.get_collision_point()
+				global_position.y = y_pos.y
 			look_at(vision_target.global_position)
 			rotation.x = 0
 			rotation.z = 0
