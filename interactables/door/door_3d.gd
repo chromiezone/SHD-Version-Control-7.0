@@ -82,17 +82,21 @@ func fix_door() -> void:
 
 
 func _ready() -> void:
+	
 	match is_left_hand_door:
 		true:
 			$FixSetup.position = Vector3(0.0,0.0,0.0)
 			_swivel.position = Vector3(0.0,1.0,0.36)
 			_swivel.rotation.y = 0.0
 			$TrapSetup.position = Vector3(0.0,0.0,-0.092)
+			$TrapSetup/Interactable.trap_rotation_property = 0.0
 		false:
 			$FixSetup.position = Vector3(0.0,0.0,-0.771)
 			_swivel.position = Vector3(0.0,1.0,-0.471)
 			$TrapSetup.position = Vector3(0.0,0.0,1.266)
 			_swivel.rotation.y = PI
+			$TrapSetup/Interactable.trap_rotation_property = PI
+			$TrapSetup/Interactable2.trap_should_be_on_right = false
 	
 	
 	
@@ -295,12 +299,15 @@ func _exiting_area_recheck() -> void:
 
 
 func _process(_delta: float) -> void:
+	#print(str(_swivel.rotation.y) + str(is_left_hand_door) + "door open is" + str(door_open))
 	if door_trap != null:
 		door_trap.door_trap_in_effect.connect(func() -> void:
 			broken = true
 			)
 	
-	if _swivel.rotation.y == 0.0:
+	if _swivel.rotation.y == 0.0 and is_left_hand_door == true:
+		door_open = false
+	elif is_equal_approx(_swivel.rotation.y, PI) and is_left_hand_door == false:
 		door_open = false
 	else:
 		door_open = true
