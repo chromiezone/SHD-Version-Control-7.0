@@ -162,6 +162,8 @@ var interacted_with_trap := [
 	{"name": "Nailboard", "times_interacted_with": 0},
 ]
 
+@onready var _footstep_detect: Area3D = $FootstepDetect
+var footstep_area_occupied := false
 var player_spotted := false : set = set_player_spotted
 var player_spotted_just_true := false
 var player_spotted_just_false := false
@@ -315,6 +317,14 @@ func set_current_state(new_state: State) -> void:
 
 
 func _ready() -> void:
+	_footstep_detect.body_entered.connect(func(body: Node3D) -> void:
+		if body == player:
+			footstep_area_occupied = true
+		)
+	_footstep_detect.body_exited.connect(func(body: Node3D) -> void:
+		if body == player:
+			footstep_area_occupied = false
+		)
 	_roaming_ray_cast.target_position.z = -50.0
 	# Stores reference to player
 	player = get_tree().root.get_node("TestScene/Player")
@@ -367,6 +377,7 @@ func _physics_process(delta: float) -> void:
 	print("current_entryway is " + str(current_entryway))
 	print("current_entryway_just_updated is " + str(current_entryway_just_updated))
 	print("velocity.length_squared is " + str(velocity.length_squared()))
+	#print("footstep_area_occupied is " + str(footstep_area_occupied))
 	#var destination = _navigation_agent_3d.get_next_path_position()
 	#var local_destination = destination - global_position
 	#var path_direction = local_destination.normalized()
@@ -407,6 +418,8 @@ func _physics_process(delta: float) -> void:
 	evasion_chance = randi_range(1, 100)
 	
 	# Handles player detection
+	
+	
 	var vision_collider = $VisionRayCast.get_collider()
 	if vision_collider == player:
 		player_spotted = true
@@ -496,6 +509,10 @@ func _physics_process(delta: float) -> void:
 			else:
 				pass
 		State.LOOTING:
+			if footstep_area_occupied and player.player_in_loud_motion == true:
+				print("should detect player")
+				player_spotted = true
+			
 			if _roaming_ray_cast.is_colliding():
 				if _roaming_ray_cast.get_collider() is Door3D:
 					var door = _roaming_ray_cast.get_collider()

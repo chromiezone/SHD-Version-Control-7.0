@@ -172,7 +172,7 @@ size = Vector3(1, 2.9104, 1)
 
 [node name="TestScene" type="Node3D"]
 script = ExtResource("1_52nfv")
-setup_time = 60.0
+setup_time = 1.0
 
 [node name="OutdoorNavRegion" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_if5o4")

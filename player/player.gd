@@ -68,14 +68,15 @@ var fists_up := false
 # Equip/Unequip Hammer
 var hammer_up := false
 
+# Used for enemy detection
+var player_in_loud_motion := false
+
 # Crouching
 var is_crouching := false: set = set_is_crouching
 @onready var _collision_shape: CollisionShape3D = %CollisionShape3D
 @onready var _collision_shape_start_height : float = _collision_shape.shape.height
 @onready var _crouch_ceiling_cast: ShapeCast3D = %CrouchCeilingCast
 @onready var _trap_visual_position: Marker3D = $Neck/Camera3D/TrapVisualPosition
-
-
 @export_range(1.0, 10.0, 0.1) var max_speed_crouch := 2.0
 
 @export var money := 750
@@ -172,6 +173,10 @@ func _physics_process(delta: float) -> void:
 		#velocity_ground_plane = velocity_ground_plane.move_toward(Vector3.ZERO, deceleration * delta)
 		#velocity.x = velocity_ground_plane.x
 		#velocity.z = velocity_ground_plane.z
+	if abs(velocity.length()) > 2.0:
+		player_in_loud_motion = true
+	else:
+		player_in_loud_motion = false
 	if player_wants_to_move:
 		if $CameraControlCooldownTimer.is_stopped():
 			var max_speed := max_speed_jog

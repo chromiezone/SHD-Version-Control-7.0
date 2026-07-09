@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://bh18j2r1mi2uj"]
+[gd_scene load_steps=56 format=3 uid="uid://bh18j2r1mi2uj"]
 
 [ext_resource type="Script" uid="uid://bd7omwe3tqj0x" path="res://enemies/burglar.gd" id="1_ppjas"]
 [ext_resource type="PackedScene" uid="uid://or5ebfivwt02" path="res://weapons/melee_weapon.tscn" id="2_6aodv"]
@@ -378,6 +378,9 @@ states/take_aim/node = SubResource("AnimationNodeAnimation_ncr2k")
 states/take_aim/position = Vector2(1601, 172)
 transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_jd3hv"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_3uqa4"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_e1wpq"), "run", "stun", SubResource("AnimationNodeStateMachineTransition_qgopq"), "idle", "stun", SubResource("AnimationNodeStateMachineTransition_no3p5"), "stun", "run", SubResource("AnimationNodeStateMachineTransition_gwy2n"), "stun", "idle", SubResource("AnimationNodeStateMachineTransition_6tu41"), "run", "loot_prepare", SubResource("AnimationNodeStateMachineTransition_8natc"), "loot_prepare", "looting", SubResource("AnimationNodeStateMachineTransition_ncr2k"), "looting", "looting_unprepare", SubResource("AnimationNodeStateMachineTransition_sb8ue"), "looting_unprepare", "run", SubResource("AnimationNodeStateMachineTransition_aady5"), "looting", "stun", SubResource("AnimationNodeStateMachineTransition_o0137"), "run", "melee_attack", SubResource("AnimationNodeStateMachineTransition_21upu"), "melee_attack", "run", SubResource("AnimationNodeStateMachineTransition_tofmg"), "fire", "run", SubResource("AnimationNodeStateMachineTransition_llfsc"), "run", "fire", SubResource("AnimationNodeStateMachineTransition_scs0e"), "idle", "fire", SubResource("AnimationNodeStateMachineTransition_625bu"), "fire", "take_aim", SubResource("AnimationNodeStateMachineTransition_wm14f"), "take_aim", "fire", SubResource("AnimationNodeStateMachineTransition_m28lf"), "fire", "idle", SubResource("AnimationNodeStateMachineTransition_s6uay")]
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_no3p5"]
+points = PackedVector3Array(4.99981, -0.0679476, 5.95145, -0.951635, -0.0679476, -7.61905, -2.38058, -0.0679476, -7.38039, -0.342385, 1.36503, -0.68477, -6.66592, -0.0679476, 4.04669, 6.42727, 0.884317, -2.38058, 1.19029, 1.12251, 5.71429, -5.71429, 1.12251, -1.19029, 6.90458, -0.0679476, -3.57087, 1.42745, 0.884317, -6.66592, -2.38058, 0.884317, 6.42727, -7.38039, -0.0679476, -2.38058, 6.42727, 0.884317, 2.38058, -3.80952, 0.884317, -5.71429, -0.951635, -0.0679476, 7.61905, -4.99981, 1.12251, 3.09505, 7.61905, -0.0679476, 0.951635, 4.04669, -0.0679476, -6.66592, 5.71429, 1.12251, -1.19029, 2.38058, 0.884317, 6.42727, 1.19029, 1.12251, -5.71429, -6.66592, 0.884317, 1.42745, 4.76116, 0.884317, -4.99981, 4.28534, 1.12251, 4.04669, -3.09505, 1.12251, -4.99981, -6.42727, 0.884317, -2.38058, -5.95145, -0.0679476, -4.99981, -4.76116, 0.884317, 4.99981, -4.04669, -0.0679476, 6.66592, -1.42745, 0.884317, -6.66592, 4.99981, 0.884317, 4.76116, 6.66592, -0.0679476, 4.04669)
+
 [node name="Burglar" type="CharacterBody3D" node_paths=PackedStringArray("debug_label")]
 collision_layer = 2
 collision_mask = 26627
@@ -485,6 +488,7 @@ debug_color = Color(0, 1, 0, 1)
 [node name="VisionRayCast" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.39715, 0)
 target_position = Vector3(0, 0, -12)
+collision_mask = 30721
 debug_shape_custom_color = Color(0, 1, 0, 1)
 
 [node name="MeleeHitbox" type="Area3D" parent="."]
@@ -540,22 +544,22 @@ one_shot = true
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0, 0, 0.166245)
 
 [node name="Skeleton3D" parent="BurglarSkinV2/Armature" index="0"]
-bones/0/position = Vector3(0, 0.972348, 0.182244)
+bones/0/position = Vector3(0, 0.937245, 0.182244)
 bones/1/rotation = Quaternion(0.119803, 1.18351e-07, 1.42816e-08, 0.992798)
 bones/2/position = Vector3(0.162604, 0.437528, -0.0507621)
-bones/2/rotation = Quaternion(0.194386, 0.0662388, 0.972949, -0.105811)
+bones/2/rotation = Quaternion(0.170226, 0.090644, 0.95612, -0.220549)
 bones/3/rotation = Quaternion(0.166512, 0.016438, -0.065359, 0.983734)
 bones/4/rotation = Quaternion(-0.000514691, -0.00417002, 0.0423084, 0.999096)
-bones/5/rotation = Quaternion(0.0835177, 0.0155804, 0.991517, -0.0983694)
-bones/6/rotation = Quaternion(-0.246593, 0.0115826, -0.0318328, 0.968527)
-bones/7/rotation = Quaternion(0.508846, 0.0871739, -0.00829853, 0.856392)
+bones/5/rotation = Quaternion(0.0811297, 0.0933034, 0.986583, -0.106618)
+bones/6/rotation = Quaternion(-0.375902, 0.0158004, -0.0299639, 0.92604)
+bones/7/rotation = Quaternion(0.557762, 0.0880568, -0.00584468, 0.825296)
 bones/8/position = Vector3(-0.162604, 0.437528, -0.0507621)
-bones/8/rotation = Quaternion(-0.197666, 0.0574053, 0.973475, 0.0998956)
+bones/8/rotation = Quaternion(-0.177258, 0.0794544, 0.959905, 0.202112)
 bones/9/rotation = Quaternion(0.166512, -0.016438, 0.065359, 0.983734)
 bones/10/rotation = Quaternion(-0.000514703, 0.00417002, -0.0423084, 0.999096)
-bones/11/rotation = Quaternion(-0.076509, 0.015312, 0.99228, 0.0964018)
-bones/12/rotation = Quaternion(-0.246593, -0.0115826, 0.0318328, 0.968527)
-bones/13/rotation = Quaternion(0.509203, -0.0802742, 0.005915, 0.856874)
+bones/11/rotation = Quaternion(-0.0742888, 0.093058, 0.987417, 0.104062)
+bones/12/rotation = Quaternion(-0.375903, -0.0158004, 0.0299639, 0.92604)
+bones/13/rotation = Quaternion(0.558172, -0.0810143, 0.00381696, 0.825752)
 bones/14/position = Vector3(0.218322, 0.628349, 0.61256)
 bones/14/rotation = Quaternion(-0.0520479, 0.705189, 0.705189, -0.0520479)
 bones/16/position = Vector3(-0.211116, 0.628349, 0.61256)
@@ -574,5 +578,12 @@ debug_enabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.200753, -0.5)
 target_position = Vector3(0, -0.5, 0)
 collision_mask = 10240
+
+[node name="FootstepDetect" type="Area3D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FootstepDetect"]
+transform = Transform3D(0.671792, 0, -0.196713, 0, 0.7, 0, 0.196713, 0, 0.671792, 0, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_no3p5")
 
 [editable path="BurglarSkinV2"]
