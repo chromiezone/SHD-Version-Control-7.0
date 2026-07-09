@@ -96,8 +96,10 @@ func set_is_crouching(new_value: bool) -> void:
 	
 	if is_crouching:
 		_collision_shape.shape.height = _collision_shape_start_height / 2.0
+		$Hurtbox3D/CollisionShape3D.shape.height = _collision_shape_start_height / 2.0
 	else:
 		_collision_shape.shape.height = _collision_shape_start_height
+		$Hurtbox3D/CollisionShape3D.shape.height = _collision_shape_start_height
 	_collision_shape.position.y = _collision_shape.shape.height / 2.0
 	
 	var target_neck_height := 0.0
