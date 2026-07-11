@@ -128,8 +128,9 @@ func _ready() -> void:
 		var accepted_states = [2,3, 14]
 		if body is Enemy3D:
 			body.current_entryway = self
+			body.temp_entryway = self
 			get_tree().create_timer(4.0).timeout.connect(func() -> void:
-				body.current_entryway = null
+				body.temp_entryway = null
 				)
 		if body is Burglar and is_active == false and body.current_state in accepted_states:
 			if body.door_interaction_cooldown_timer.time_left > 0.0:
@@ -366,6 +367,7 @@ func _on_close_timer_timeout() -> void:
 
 func interact() -> void:
 	super()
+	$DoorLure.is_active = true
 	set_is_active(not is_active)
 	if is_active == true and not broken:
 		$DoorOpen.play()

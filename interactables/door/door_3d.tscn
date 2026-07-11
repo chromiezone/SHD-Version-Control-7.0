@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=4 uid="uid://cvp2byjyx6e65"]
+[gd_scene load_steps=39 format=4 uid="uid://cvp2byjyx6e65"]
 
 [ext_resource type="Script" uid="uid://cjl008j0xxr5m" path="res://interactables/door/door_3d.gd" id="1_r0isn"]
 [ext_resource type="PackedScene" uid="uid://doknbjb0m8pl" path="res://interactables/door/meshes/DoorMesh1.glb" id="2_kpgih"]
@@ -15,6 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://c7xf0x6rwhows" path="res://interactables/door/sfx/doorclose/qubodup-DoorClose10.ogg" id="16_bxvxq"]
 [ext_resource type="AudioStream" uid="uid://eqaaxpd1ew7t" path="res://interactables/door/sfx/dooropen/qubodup-DoorOpen06.ogg" id="17_ordju"]
 [ext_resource type="AudioStream" uid="uid://cg7x80gdxosiw" path="res://interactables/door/sfx/dooropen/qubodup-DoorOpen08.ogg" id="18_bxvxq"]
+[ext_resource type="Script" uid="uid://b55rg2p38wtnu" path="res://interactables/door/door_lure.gd" id="18_ordju"]
 [ext_resource type="AudioStream" uid="uid://i1nyoo7pk018" path="res://interactables/door/sfx/doorforce/160213__qubodup__kickingforcingbreaking-wooden-door.mp3" id="19_bxvxq"]
 [ext_resource type="AudioStream" uid="uid://cnxffw1df30sl" path="res://interactables/door/sfx/doorfidget/702170__foxfire__door-knob-wiggling.wav" id="20_qh5tc"]
 
@@ -138,6 +139,10 @@ stream_3/stream = ExtResource("16_bxvxq")
 streams_count = 2
 stream_0/stream = ExtResource("17_ordju")
 stream_1/stream = ExtResource("18_bxvxq")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ordju"]
+height = 1.0
+radius = 4.0
 
 [node name="Door3D" type="Area3D"]
 monitoring = false
@@ -308,3 +313,13 @@ stream = ExtResource("20_qh5tc")
 
 [node name="DoorBreak" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("15_vxgjt")
+
+[node name="DoorLure" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("18_ordju")
+metadata/_custom_type_script = "uid://0rog0ashlmx"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorLure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_ordju")

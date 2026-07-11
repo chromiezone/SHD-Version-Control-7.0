@@ -49,6 +49,7 @@ var player_out_of_sight_pos : Vector3
 var point_of_entry = null
 var point_of_exit = null
 var current_entryway = null : set = set_current_entryway
+var temp_entryway = null
 var current_entryway_just_updated : bool = false
 func set_current_entryway(new_entryway) -> void:
 	if current_entryway == new_entryway:
@@ -250,9 +251,7 @@ func set_current_state(new_state: State) -> void:
 				if current_entryway is Door3D:
 					var exiting_door_tween := create_tween()
 					exiting_door_tween.tween_property(self, "global_position", door_exit_anim_end_position, 1.0)
-					exiting_door_tween.finished.connect(
-						set_current_state.bind(State.EXTRACTION)
-					)
+					exiting_door_tween.finished.connect(set_current_state.bind(State.EXTRACTION))
 				elif current_entryway is Window3D:
 					
 					var exiting_window_tween := create_tween().set_parallel(true)
@@ -623,10 +622,11 @@ func _physics_process(delta: float) -> void:
 				
 				# Assigns the point of exit for the burglar. 80/20 chance of the burglar leaving
 				# where they came, or picking the closest door/window.
-				if chance <= 80:
-					point_of_exit = point_of_entry
-				else:
-					point_of_exit = nearest_poxit
+				#if chance <= 80:
+					#point_of_exit = point_of_entry
+				#else:
+					#point_of_exit = nearest_poxit
+				point_of_exit = nearest_poxit
 			
 			# Conditions for the transition to exiting state
 			if filtered_loot_objects.is_empty():
@@ -878,7 +878,7 @@ func _physics_process(delta: float) -> void:
 			
 			var distance_between_self_and_poe = global_position.distance_to(nearest_poxit.global_position)
 			
-			if distance_between_self_and_poe > 3.0 or current_entryway == null:
+			if distance_between_self_and_poe > 3.0 or temp_entryway == null:
 				# Look Logic Continued
 				var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
 				global_transform.basis = Basis(next_quat)

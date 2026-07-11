@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=4 uid="uid://bosweipof0qll"]
+[gd_scene load_steps=41 format=4 uid="uid://bosweipof0qll"]
 
 [ext_resource type="Texture2D" uid="uid://dwe1ecnx384jl" path="res://assets/test_textures/checkerboard.png" id="1_8emi3"]
 [ext_resource type="Script" uid="uid://cgyxipu7annlm" path="res://test_level/test_scene.gd" id="1_52nfv"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://gtcvcs85hxnd" path="res://ui/trapui/trap_ui.tscn" id="4_fl2l1"]
 [ext_resource type="Material" uid="uid://wakwdeurgr1h" path="res://test_level/test_scene_sky.tres" id="4_if5o4"]
 [ext_resource type="PackedScene" uid="uid://dfvorgu5uf0yj" path="res://interactables/window/window_3d.tscn" id="6_sooqt"]
-[ext_resource type="PackedScene" uid="uid://bty08v2wi5uew" path="res://lootobject/safe_loot_object.tscn" id="7_wc6xd"]
 [ext_resource type="PackedScene" uid="uid://rl1aoa3qnp35" path="res://ui/buyui/buy_menu.tscn" id="8_db428"]
 [ext_resource type="PackedScene" uid="uid://dmjjvlm07qd76" path="res://test_level/terminal.tscn" id="8_nm2j8"]
 [ext_resource type="PackedScene" uid="uid://f54avjqlb52d" path="res://loot_object.tscn" id="8_ubww3"]
@@ -597,14 +596,8 @@ progress = 55.0
 
 [node name="LootObjects" type="Node3D" parent="."]
 
-[node name="SafeLootObject" parent="LootObjects" instance=ExtResource("7_wc6xd")]
-transform = Transform3D(-2.98023e-08, 0, -1, 0, 1, 0, 1, 0, -2.98023e-08, 6.88836, 0.125838, 7.69719)
-
-[node name="LootObject2" parent="LootObjects" instance=ExtResource("8_ubww3")]
-transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, -8.9317, 0, 5.53399)
-
-[node name="LootObject3" parent="LootObjects" instance=ExtResource("8_ubww3")]
-transform = Transform3D(0.213876, 0, 0, 0, 0.213876, 0, 0, 0, 0.213876, -8.9317, 0, 10.5297)
+[node name="LootObject4" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, 3.54731, 0.1, 1.13309)
 
 [node name="ExtractionZone" type="Node3D" parent="."]
 
