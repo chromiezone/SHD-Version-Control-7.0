@@ -132,6 +132,8 @@ func _ready() -> void:
 			get_tree().create_timer(4.0).timeout.connect(func() -> void:
 				body.temp_entryway = null
 				)
+		if body is Burglar:
+			body.door_exit_anim_end_position = $ExitingTweenTargetPos/CollisionShape3D.global_position
 		if body is Burglar and is_active == false and body.current_state in accepted_states:
 			if body.door_interaction_cooldown_timer.time_left > 0.0:
 				return

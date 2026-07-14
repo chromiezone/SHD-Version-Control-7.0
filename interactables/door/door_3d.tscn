@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=4 uid="uid://cvp2byjyx6e65"]
+[gd_scene load_steps=41 format=4 uid="uid://cvp2byjyx6e65"]
 
 [ext_resource type="Script" uid="uid://cjl008j0xxr5m" path="res://interactables/door/door_3d.gd" id="1_r0isn"]
 [ext_resource type="PackedScene" uid="uid://doknbjb0m8pl" path="res://interactables/door/meshes/DoorMesh1.glb" id="2_kpgih"]
@@ -98,6 +98,12 @@ size = Vector3(0.386719, 0.160706, 1.5296)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dlsql"]
 size = Vector3(0.386719, 0.160706, 1.10938)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ordju"]
+size = Vector3(0.386719, 0.160706, 1.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bxvxq"]
+size = Vector3(0.386719, 0.160706, 1.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rd4vc"]
 size = Vector3(0.386719, 0.160706, 1.10938)
@@ -202,6 +208,16 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnteringTweenTargetPos"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.698374, 0.0534875, 0)
 shape = SubResource("BoxShape3D_dlsql")
+debug_color = Color(0.972549, 0, 0, 0.419608)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="EnteringTweenTargetPos"]
+transform = Transform3D(0.751932, 0, -0.659241, 0, 1, 0, 0.659241, 0, 0.751932, 0.0611839, 0.0534877, -1.22976)
+shape = SubResource("BoxShape3D_ordju")
+debug_color = Color(0.972549, 0, 0, 0.419608)
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="EnteringTweenTargetPos"]
+transform = Transform3D(0.659241, 0, 0.751932, 0, 1, 0, -0.751932, 0, 0.659241, 0.0506561, 0.0534875, 1.21834)
+shape = SubResource("BoxShape3D_bxvxq")
 debug_color = Color(0.972549, 0, 0, 0.419608)
 
 [node name="EnteringArea" type="Area3D" parent="."]

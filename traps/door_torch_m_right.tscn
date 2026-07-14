@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://dyorbdbdgfaq3"]
+[gd_scene load_steps=18 format=4 uid="uid://bbijf1jgqbgfd"]
 
 [ext_resource type="Script" uid="uid://cdfrwuyl0ijuy" path="res://traps/door_torch_m.gd" id="1_qo14o"]
 [ext_resource type="PackedScene" uid="uid://duo3fiqbm8255" path="res://traps/meshes/blowtorch_mesh.tscn" id="2_gt3kl"]
