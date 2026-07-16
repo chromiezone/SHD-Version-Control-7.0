@@ -14,6 +14,8 @@ var _tween_door : Tween = null
 @onready var _swivel: CSGCylinder3D = $Door/Swivel
  
 var broken := false : set = set_broken
+var cause_of_break : int
+enum causes {BURGLAR, TRAP}
 var broken_sound_played := false
 
 var swivel_rotation_was_at_zero := true
@@ -166,13 +168,14 @@ func _ready() -> void:
 				$DoorForce.play()
 				body.door_exit_anim_end_position = $ExitingTweenTargetPos/CollisionShape3D.global_position
 				var end_value := - PI / 2.0
+				var dir = lerp_angle(_swivel.rotation.y, end_value, 1)
 				if _tween_door != null:
 					_tween_door.kill()
 				_tween_door = create_tween()
 				_tween_door.set_ease(Tween.EASE_OUT)
 				_tween_door.set_trans(Tween.TRANS_BOUNCE)
 				
-				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+				_tween_door.tween_property(_swivel, "rotation:y", dir, 0.5)
 				_tween_door.finished.connect(func() -> void:
 					broken = true
 					)
@@ -236,6 +239,35 @@ func _ready() -> void:
 func door_break_tween() -> void:
 		# Door Breaking Tween
 	
+	#var door_rotation_negative = _swivel.rotation.y < 0.1
+	#var position_end_value : Vector3 = Vector3(0.64, 0.025, 1.458) if door_rotation_negative else Vector3(-0.192, 0.048, 1.613)
+	#var rotation_end_value : Vector3 = Vector3(47 * PI / 1800.0, (-71.9 / 180.0) * PI, - PI / 2.0) if door_rotation_negative else Vector3(3.1 * PI / 180.0, 37 * PI / 72, 101 * PI / 200)
+	
+	var facing_inwards = _swivel.rotation.y > 0.1 if is_left_hand_door else _swivel.rotation.y < PI
+	var position_end_value : Vector3
+	var rotation_end_value : Vector3 
+	
+	
+	if is_left_hand_door:
+		position_end_value = Vector3(-0.192, 0.048, 1.613) if facing_inwards else Vector3(0.64, 0.025, 1.458)
+		rotation_end_value = Vector3(3.1 * PI / 180.0, 37 * PI / 72, 101 * PI / 200) if facing_inwards else Vector3(47 * PI / 1800.0, (-71.9 / 180.0) * PI, - PI / 2.0)
+	else:
+		position_end_value = Vector3(-1.339, 0.087, -1.236) if facing_inwards else Vector3(1.131, 0.098, -1.067) #Vector3(1.353, 0.025, -1.25)
+		rotation_end_value = Vector3(0.0, (199.0 * PI / 225.0), (-931.0 * PI / 1800.0)) if facing_inwards else Vector3(0.0, (17.0 * PI / 12.0), (12.0 * PI / 25))#Vector3(0, (-289.0 * PI / 360.0), (917.0 * PI / 1800.0))
+		
+	if _tween_door != null:
+			_tween_door.kill()
+	_tween_door = create_tween()
+	_tween_door.set_ease(Tween.EASE_OUT)
+	_tween_door.set_trans(Tween.TRANS_BOUNCE)
+	_tween_door.set_parallel(true)
+	
+	_tween_door.tween_property(_swivel, "position", position_end_value, 1.0)
+	_tween_door.tween_property(_swivel, "rotation", rotation_end_value, 1.0)
+
+func trap_door_break_tween() -> void:
+		# Door Breaking Tween
+	
 	var door_rotation_negative = _swivel.rotation.y < 0.1
 	var position_end_value : Vector3 = Vector3(0.64, 0.025, 1.458) if door_rotation_negative else Vector3(-0.192, 0.048, 1.613)
 	var rotation_end_value : Vector3 = Vector3(47 * PI / 1800.0, (-71.9 / 180.0) * PI, - PI / 2.0) if door_rotation_negative else Vector3(3.1 * PI / 180.0, 37 * PI / 72, 101 * PI / 200)
@@ -249,6 +281,7 @@ func door_break_tween() -> void:
 	
 	_tween_door.tween_property(_swivel, "position", position_end_value, 1.0 if door_rotation_negative else 0.85)
 	_tween_door.tween_property(_swivel, "rotation", rotation_end_value, 1.0 if door_rotation_negative else 0.85)
+
 
 func _entering_area_recheck() -> void:
 	if broken == true:
@@ -289,13 +322,14 @@ func _exiting_area_recheck() -> void:
 					$DoorForce.play()
 					body.door_exit_anim_end_position = $ExitingTweenTargetPos/CollisionShape3D.global_position
 					var end_value := - PI / 2.0
+					var dir = lerp_angle(_swivel.rotation.y, end_value, 1)
 					if _tween_door != null:
 						_tween_door.kill()
 					_tween_door = create_tween()
 					_tween_door.set_ease(Tween.EASE_OUT)
 					_tween_door.set_trans(Tween.TRANS_BOUNCE)
 					
-					_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
+					_tween_door.tween_property(_swivel, "rotation:y", dir, 0.5)
 					_tween_door.finished.connect(func() -> void:
 						broken = true
 						)
@@ -344,6 +378,7 @@ func _process(_delta: float) -> void:
 	
 
 func _physics_process(_delta: float) -> void:
+	print(_swivel.rotation.y)
 	if Trap3D.Blackboard.player_money > 500:
 		_mid_section_interactable.can_interact = true
 		_top_section_interactable.can_interact = true

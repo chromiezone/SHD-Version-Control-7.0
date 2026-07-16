@@ -13,7 +13,7 @@ func interact() -> void:
 	
 
 func _physics_process(_delta: float) -> void:
-	print(trap_rotation_property)
+	#print(trap_rotation_property)
 	if Globals.player.selected_fixed_trap != null:
 		$TrapVisual.visible = true
 	else:
