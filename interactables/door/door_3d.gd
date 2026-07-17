@@ -57,6 +57,7 @@ func set_broken(new_value) -> void:
 		hinge1_completion = 0
 		hinge2_completion = 0
 		hinge3_completion = 0
+	
 
 
 func fix_door() -> void:
@@ -208,8 +209,8 @@ func _ready() -> void:
 				
 				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
 				_tween_door.finished.connect(func() -> void:
-					can_interact = true
 					if broken == false:
+						can_interact = true
 						$CloseTimer.start(0.0)
 					)
 		elif body is Enemy3D and body.current_state == 7:
@@ -217,8 +218,12 @@ func _ready() -> void:
 				return
 			body.door_interaction_cooldown_timer.start()
 			can_interact = false
-			$DoorForce.play()
+			#$DoorForce.play()
 			var end_value := PI / 2.0
+			if is_left_hand_door == true and _swivel.rotation.y < end_value:
+				$DoorForce.play()
+			elif is_left_hand_door == false and _swivel.rotation.y >= end_value + 0.1:
+				$DoorForce.play()
 			if _tween_door != null:
 				_tween_door.kill()
 			_tween_door = create_tween()
@@ -227,8 +232,8 @@ func _ready() -> void:
 			
 			_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
 			_tween_door.finished.connect(func() -> void:
-				can_interact = true
 				if broken == false:
+					can_interact = true
 					$CloseTimer.start(0.0)
 				)
 		)
@@ -264,6 +269,10 @@ func door_break_tween() -> void:
 	
 	_tween_door.tween_property(_swivel, "position", position_end_value, 1.0)
 	_tween_door.tween_property(_swivel, "rotation", rotation_end_value, 1.0)
+	can_interact = false
+	_tween_door.finished.connect(func() -> void:
+		can_interact = true
+		)
 
 func trap_door_break_tween() -> void:
 		# Door Breaking Tween
@@ -294,8 +303,12 @@ func _entering_area_recheck() -> void:
 					return
 				body.door_interaction_cooldown_timer.start()
 				can_interact = false
-				$DoorForce.play()
+				#$DoorForce.play()
 				var end_value := PI / 2.0
+				if is_left_hand_door == true and _swivel.rotation.y < end_value:
+					$DoorForce.play()
+				elif is_left_hand_door == false and _swivel.rotation.y > end_value + 0.1:
+					$DoorForce.play()
 				if _tween_door != null:
 					_tween_door.kill()
 				_tween_door = create_tween()
@@ -304,19 +317,20 @@ func _entering_area_recheck() -> void:
 				
 				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
 				_tween_door.finished.connect(func() -> void:
-					can_interact = true
 					if broken == false:
+						can_interact = true
 						$CloseTimer.start(0.0)
 					)
 func _exiting_area_recheck() -> void:
-	var accepted_states = [2,3, 14]
+	#var accepted_states = [2,3, 14]
 	var bodies = $ExitingArea.get_overlapping_bodies()
 	if bodies.size() > 0:
 		for body in bodies:
-			if body is Enemy3D and is_active == false and body.current_state not in accepted_states:
+			if body is Enemy3D and body.current_state == 7:
 				if body.door_interaction_cooldown_timer.time_left > 0.0:
 					return
 				body.door_interaction_cooldown_timer.start()
+				can_interact = false
 				print("enemy preparing to exit")
 				if not broken:
 					$DoorForce.play()
@@ -336,6 +350,8 @@ func _exiting_area_recheck() -> void:
 
 
 func _process(_delta: float) -> void:
+	#print(str(self) + "broken is " + str(broken))
+	print(str(self) + "can_interact is " + str(can_interact))
 	#print(str(_swivel.rotation.y) + str(is_left_hand_door) + "door open is" + str(door_open))
 	if door_trap != null:
 		door_trap.door_trap_in_effect.connect(func() -> void:
@@ -384,6 +400,8 @@ func _physics_process(_delta: float) -> void:
 		_top_section_interactable.can_interact = true
 	if not broken:
 		_entering_area_recheck()
+		_exiting_area_recheck()
+	if $ExitingArea.has_overlapping_bodies():
 		_exiting_area_recheck()
 	
 
