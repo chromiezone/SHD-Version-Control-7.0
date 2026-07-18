@@ -63,8 +63,8 @@ func set_broken(new_value) -> void:
 func fix_door() -> void:
 	print("door fixed")
 	broken = false
-	var position_end_value : Vector3 = Vector3(0.0, 1.0, 0.36)
-	var rotation_end_value : Vector3 = Vector3(0.0, 0.0, 0.0)
+	var position_end_value : Vector3 = Vector3(0.0, 1.0, 0.36) if is_left_hand_door else Vector3(0.0,1.0,-0.471)
+	var rotation_end_value : Vector3 = Vector3(0.0, 0.0, 0.0) if is_left_hand_door else Vector3(0.0, PI, 0.0)
 	
 	if _tween_door != null:
 			_tween_door.kill()
@@ -85,6 +85,12 @@ func fix_door() -> void:
 
 
 func _ready() -> void:
+	
+	$InteractTimer.timeout.connect(func() -> void:
+		can_interact = true
+		print("should reset can interact")
+		)
+	
 	
 	match is_left_hand_door:
 		true:
@@ -194,13 +200,16 @@ func _ready() -> void:
 			if is_active == false:
 				$DoorFidget.play(0.0)
 			can_interact = false
+			$InteractTimer.start()
 			body.door_anim_end_position = $EnteringTweenTargetPos/CollisionShape3D.global_position
 			await get_tree().create_timer(body.door_open_duration).timeout
 			if $DoorFidget.is_playing():
 				$DoorFidget.stop()
-			if is_active == false and broken == false:
+			if is_active == false and broken == false and $InteractTimer.is_stopped():
 				$DoorForce.play()
 				var end_value := PI / 2.0
+				
+				
 				if _tween_door != null:
 					_tween_door.kill()
 				_tween_door = create_tween()
@@ -210,13 +219,14 @@ func _ready() -> void:
 				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
 				_tween_door.finished.connect(func() -> void:
 					if broken == false:
-						can_interact = true
+						#can_interact = true
 						$CloseTimer.start(0.0)
 					)
 		elif body is Enemy3D and body.current_state == 7:
 			if body.door_interaction_cooldown_timer.time_left > 0.0 or broken == true:
 				return
 			body.door_interaction_cooldown_timer.start()
+			$InteractTimer.start()
 			can_interact = false
 			#$DoorForce.play()
 			var end_value := PI / 2.0
@@ -224,6 +234,9 @@ func _ready() -> void:
 				$DoorForce.play()
 			elif is_left_hand_door == false and _swivel.rotation.y >= end_value + 0.1:
 				$DoorForce.play()
+			
+			
+			
 			if _tween_door != null:
 				_tween_door.kill()
 			_tween_door = create_tween()
@@ -233,7 +246,7 @@ func _ready() -> void:
 			_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
 			_tween_door.finished.connect(func() -> void:
 				if broken == false:
-					can_interact = true
+					#can_interact = true
 					$CloseTimer.start(0.0)
 				)
 		)
@@ -270,8 +283,9 @@ func door_break_tween() -> void:
 	_tween_door.tween_property(_swivel, "position", position_end_value, 1.0)
 	_tween_door.tween_property(_swivel, "rotation", rotation_end_value, 1.0)
 	can_interact = false
+	$InteractTimer.start()
 	_tween_door.finished.connect(func() -> void:
-		can_interact = true
+		#can_interact = true
 		)
 
 func trap_door_break_tween() -> void:
@@ -302,6 +316,7 @@ func _entering_area_recheck() -> void:
 				if body.door_interaction_cooldown_timer.time_left > 0.0:
 					return
 				body.door_interaction_cooldown_timer.start()
+				$InteractTimer.start()
 				can_interact = false
 				#$DoorForce.play()
 				var end_value := PI / 2.0
@@ -309,6 +324,7 @@ func _entering_area_recheck() -> void:
 					$DoorForce.play()
 				elif is_left_hand_door == false and _swivel.rotation.y > end_value + 0.1:
 					$DoorForce.play()
+				
 				if _tween_door != null:
 					_tween_door.kill()
 				_tween_door = create_tween()
@@ -318,7 +334,7 @@ func _entering_area_recheck() -> void:
 				_tween_door.tween_property(_swivel, "rotation:y", end_value, 0.5)
 				_tween_door.finished.connect(func() -> void:
 					if broken == false:
-						can_interact = true
+						#can_interact = true
 						$CloseTimer.start(0.0)
 					)
 func _exiting_area_recheck() -> void:
@@ -330,6 +346,7 @@ func _exiting_area_recheck() -> void:
 				if body.door_interaction_cooldown_timer.time_left > 0.0:
 					return
 				body.door_interaction_cooldown_timer.start()
+				$InteractTimer.start()
 				can_interact = false
 				print("enemy preparing to exit")
 				if not broken:
@@ -423,6 +440,9 @@ func _on_close_timer_timeout() -> void:
 func interact() -> void:
 	super()
 	$DoorLure.is_active = true
+	get_tree().create_timer(5.0).timeout.connect(func() -> void:
+		$DoorLure.is_active = false
+		)
 	set_is_active(not is_active)
 	if is_active == true and not broken:
 		$DoorOpen.play()

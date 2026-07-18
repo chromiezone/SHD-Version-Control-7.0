@@ -240,6 +240,10 @@ shape = SubResource("BoxShape3D_rd4vc")
 wait_time = 5.0
 one_shot = true
 
+[node name="InteractTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
 [node name="TrapSetup" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0915141)
 

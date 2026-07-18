@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://bosweipof0qll"]
+[gd_scene load_steps=40 format=4 uid="uid://bosweipof0qll"]
 
 [ext_resource type="Texture2D" uid="uid://dwe1ecnx384jl" path="res://assets/test_textures/checkerboard.png" id="1_8emi3"]
 [ext_resource type="Script" uid="uid://cgyxipu7annlm" path="res://test_level/test_scene.gd" id="1_52nfv"]
@@ -165,9 +165,6 @@ height = 2.001
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_if5o4"]
 size = Vector3(18.9952, 2.97266, 19.8965)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_5hecu"]
-size = Vector3(1, 2.9104, 1)
 
 [node name="TestScene" type="Node3D"]
 script = ExtResource("1_52nfv")
@@ -771,23 +768,15 @@ collision_mask = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42179, 0.986328, 2.86338)
 shape = SubResource("BoxShape3D_if5o4")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="IndoorArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0.9552, 0.141065)
-shape = SubResource("BoxShape3D_5hecu")
-
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="IndoorArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9191, 0.9552, 0.141065)
-shape = SubResource("BoxShape3D_5hecu")
-
 [node name="GooningLure" parent="." instance=ExtResource("16_5hecu")]
 transform = Transform3D(0.996327, 0, -0.0856256, 0, 1, 0, 0.0856256, 0, 0.996327, 1.87797, 0.985404, 7.24576)
 
 [node name="IndoorDoors" type="Node3D" parent="."]
 
-[node name="Door3D" parent="IndoorDoors" instance=ExtResource("3_obkna")]
+[node name="IndoorDoor1" parent="IndoorDoors" instance=ExtResource("3_obkna")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 1.1247, 0, 10.8106)
 
-[node name="Door3D2" parent="IndoorDoors" instance=ExtResource("3_obkna")]
+[node name="IndoorDoor2" parent="IndoorDoors" instance=ExtResource("3_obkna")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8561, 0, 10.8733)
 is_left_hand_door = true
 

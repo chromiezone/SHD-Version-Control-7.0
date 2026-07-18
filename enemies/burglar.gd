@@ -251,7 +251,13 @@ func set_current_state(new_state: State) -> void:
 				if current_entryway is Door3D:
 					var exiting_door_tween := create_tween()
 					exiting_door_tween.tween_property(self, "global_position", door_exit_anim_end_position, 1.0)
-					exiting_door_tween.finished.connect(set_current_state.bind(State.EXTRACTION))
+					#exiting_door_tween.finished.connect(set_current_state.bind(State.EXTRACTION))
+					exiting_door_tween.finished.connect(func() -> void:
+						if last_state != 4:
+							set_current_state(State.COMBAT)
+						elif last_state == 4:
+							set_current_state(State.EXTRACTION)
+						)
 				elif current_entryway is Window3D:
 					
 					var exiting_window_tween := create_tween().set_parallel(true)
@@ -264,7 +270,7 @@ func set_current_state(new_state: State) -> void:
 							set_current_state(State.EXTRACTION)
 					)
 		State.LOOTING:
-			if player_spotted == true:
+			if player_spotted == true or last_state == 7:
 				set_current_state(State.COMBAT)
 		State.COMBAT:
 			being_lured = false
@@ -718,7 +724,11 @@ func _physics_process(delta: float) -> void:
 			var _on_opposing_spaces = (player.is_inside_home == true and is_inside_home == false) or (player.is_inside_home == false and is_inside_home == true)
 			var needs_to_exit = player.is_inside_home == false and is_inside_home == true
 			var needs_to_enter = player.is_inside_home == true and is_inside_home == false
-			if _on_opposing_spaces and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped():
+			#if _on_opposing_spaces and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped() and global_position.distance_to(player.global_position) > 25.0:
+				#set_current_state(State.REROAMING)
+			if needs_to_exit and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped() and global_position.distance_to(player.global_position) > 25.0:
+				set_current_state(State.REROAMING)
+			if needs_to_enter and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped():
 				set_current_state(State.REROAMING)
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
 				if _hit_box.get_parent() is Trap3D:
