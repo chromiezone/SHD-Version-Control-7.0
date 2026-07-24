@@ -408,7 +408,7 @@ func _physics_process(delta: float) -> void:
 	#print("current lure is " + str(lure))
 	#print("current state is " + str(current_state))
 	#print("time left on lure cooldown is " + str(_lure_interaction_cooldown.time_left))
-	print("current_state is " + str(current_state))
+	print(str(self) + "'s current_state is " + str(current_state))
 	#print(last_state)
 	#print($AwarenessTimer.time_left)
 	#print(walk_speed)
@@ -442,7 +442,7 @@ func _physics_process(delta: float) -> void:
 	
 	# Updates the nearest exit point for the burglar
 	nearest_poxit = find_closest_node_to_point(Blackboard.point_of_entries, self.global_position)
-	
+	point_of_exit = nearest_poxit
 	# Updates the closest entrypoint relative to the player, regardless of the burglar's state. 
 	#That is why it was moved outside of the statemachine.
 	var nearest_entry_relative_to_player = find_closest_node_to_point(Blackboard.point_of_entries, player.global_position)
@@ -482,11 +482,11 @@ func _physics_process(delta: float) -> void:
 						set_current_state.bind(State.MOVING_TO_POE)
 					)
 		State.MOVING_TO_POE:
-			if _roaming_ray_cast.is_colliding():
-				if _roaming_ray_cast.get_collider() is Door3D:
-					pass
-					#print("Door")
-				elif _roaming_ray_cast.get_collider() is Window3D:
+			#look_at(point_of_entry.global_position, Vector3.UP)
+			#rotation.x = 0.0
+			#rotation.z = 0.0
+			if point_of_entry != null:
+				if point_of_entry is Window3D:
 					#print("Window")
 					global_position.y = stored_y_position
 				var direction := global_position.direction_to(point_of_entry.global_position) 
@@ -499,13 +499,12 @@ func _physics_process(delta: float) -> void:
 				
 				move_and_slide()
 				
-				if point_of_entry != null:
-					
-					var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
-					if distance_between_self_and_poe < 1.5:
-						get_tree().create_timer(0.5).timeout.connect(
-							set_current_state.bind(State.ENTERING)
-						)
+				var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
+				if distance_between_self_and_poe < 1.5:
+					print(str(self) + " should switch to entering state")
+					get_tree().create_timer(0.5).timeout.connect(
+						set_current_state.bind(State.ENTERING)
+					)
 		State.ENTERING:
 			if player_spotted == true:
 				#look_at(player.global_position, Vector3.UP)

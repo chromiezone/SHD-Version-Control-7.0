@@ -101,7 +101,11 @@ func _ready() -> void:
 			_tween_window.tween_property(_bottom_pane, "position:y", end_value, 0.5)
 			
 			can_interact = false
-			body.window_anim_end_position = $ExitingArea/CollisionShape3D.global_position
+			if body != null:
+				body.window_anim_end_position = $ExitingArea/CollisionShape3D.global_position
+			else:
+				can_interact = true
+				return
 			get_tree().create_timer(5.0).timeout.connect(func() -> void:
 				can_interact = true
 				)

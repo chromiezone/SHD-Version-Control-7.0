@@ -584,12 +584,15 @@ transform = Transform3D(1, 0, -1.74845e-07, 0, 1, 0, 1.74845e-07, 0, 1, 8.14081,
 [node name="Spawner" type="Node3D" parent="."]
 
 [node name="Path3D" type="Path3D" parent="Spawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0728877, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.145775, 0)
 curve = SubResource("Curve3D_52nfv")
 
-[node name="PathFollow3D" type="PathFollow3D" parent="Spawner/Path3D"]
+[node name="LeaderBurglarPath" type="PathFollow3D" parent="Spawner/Path3D"]
 transform = Transform3D(-0.511232, 0, -0.859245, 0, 0.999995, 0, 0.859246, 0, -0.511231, 29.5562, -1.87904e-05, -26.2432)
 progress = 55.0
+
+[node name="SecondaryBurglarPath" type="PathFollow3D" parent="Spawner/Path3D"]
+transform = Transform3D(0.880471, 0, -0.4741, 0, 1, 0, 0.4741, 0, 0.880471, -24.0436, -1.87904e-05, -24.9559)
 
 [node name="LootObjects" type="Node3D" parent="."]
 
