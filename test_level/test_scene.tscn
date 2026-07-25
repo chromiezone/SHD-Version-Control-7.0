@@ -359,18 +359,18 @@ environment = SubResource("Environment_fl2l1")
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.761942, 1.2, 3.64841)
 
 [node name="Pillar1" type="CSGBox3D" parent="TestHouse/HouseParts"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23196, -0.346733, -1.74656)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23196, -0.168852, -1.35343)
 use_collision = true
 collision_layer = 16384
 collision_mask = 3
-size = Vector3(0.25, 1.6, 1)
+size = Vector3(0.25, 1.95576, 1.78625)
 
 [node name="Pillar2" type="CSGBox3D" parent="TestHouse/HouseParts"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23196, -0.346733, 5.12646)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23196, -0.16812, 4.79722)
 use_collision = true
 collision_layer = 16384
 collision_mask = 3
-size = Vector3(0.25, 1.6, 7.75629)
+size = Vector3(0.25, 1.95723, 8.41477)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TestHouse/HouseParts"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.23226, -0.35, -3.57628e-07)

@@ -482,25 +482,40 @@ func _physics_process(delta: float) -> void:
 						set_current_state.bind(State.MOVING_TO_POE)
 					)
 		State.MOVING_TO_POE:
-			#look_at(point_of_entry.global_position, Vector3.UP)
-			#rotation.x = 0.0
-			#rotation.z = 0.0
+			look_at(point_of_entry.global_position, Vector3.UP)
+			rotation.x = 0.0
+			rotation.z = 0.0
 			if point_of_entry != null:
 				if point_of_entry is Window3D:
 					#print("Window")
 					global_position.y = stored_y_position
 				var direction := global_position.direction_to(point_of_entry.global_position) 
-				var desired_velocity := direction * walk_speed * 5.0
+				var desired_velocity := direction * walk_speed
 				var velocity_distance := velocity.distance_to(desired_velocity)
+				
+				_navigation_agent_3d.set_target_position(point_of_entry.global_position)
+				var destination = _navigation_agent_3d.get_next_path_position()
+				var local_destination = destination - global_position
+				var path_direction = local_destination.normalized()
+				global_position.y = stored_y_position
+				
 				velocity = velocity.move_toward(
 					desired_velocity,
 					velocity_distance * walk_acceleration_factor * delta
 				)
 				
-				move_and_slide()
+				if not _navigation_agent_3d.is_navigation_finished():
+					velocity = path_direction * walk_speed
+					move_and_slide()
+				else: 
+					velocity = velocity.move_toward(
+					desired_velocity,
+					velocity_distance * walk_acceleration_factor * delta)
+					move_and_slide()
+				
 				
 				var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
-				if distance_between_self_and_poe < 1.5:
+				if distance_between_self_and_poe < 1.5 or current_entryway != null:
 					print(str(self) + " should switch to entering state")
 					get_tree().create_timer(0.5).timeout.connect(
 						set_current_state.bind(State.ENTERING)
