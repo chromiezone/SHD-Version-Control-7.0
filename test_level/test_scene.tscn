@@ -597,7 +597,7 @@ transform = Transform3D(0.880471, 0, -0.4741, 0, 1, 0, 0.4741, 0, 0.880471, -24.
 [node name="LootObjects" type="Node3D" parent="."]
 
 [node name="LootObject4" parent="LootObjects" instance=ExtResource("8_ubww3")]
-transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, 3.54731, 0.1, 1.13309)
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, -1.01372, 0.1, 4.06027)
 
 [node name="ExtractionZone" type="Node3D" parent="."]
 

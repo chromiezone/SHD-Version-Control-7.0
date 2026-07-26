@@ -71,7 +71,7 @@ func set_current_stage(new_stage: Stage) -> void:
 			##$Spawner/Path3D/SecondaryBurglarPath.add_child(follower_burglar)
 			##$Spawner/Path3D/SecondaryBurglarPath.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random()
 			
-			var additional_burglar_count := randi_range(1,3)
+			var additional_burglar_count := randi_range(4,5)
 			for i in additional_burglar_count:
 				var additional_path_follow = PathFollow3D.new()
 				var additional_burglar := preload("res://enemies/burglar.tscn").instantiate()
@@ -80,8 +80,8 @@ func set_current_stage(new_stage: Stage) -> void:
 				additional_burglar.position.y = -0.175
 				$Spawner/Path3D.add_child(additional_path_follow)
 				additional_path_follow.add_child(additional_burglar)
-				additional_path_follow.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random()
-				#additional_path_follow.progress = _leader_burglar_path.progress - 15.0
+				additional_path_follow.progress = _leader_burglar_path.progress - randf_range(2.0, 4.0)
+				#additional_path_follow.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random()
 				additional_burglars_dict[additional_burglar] = 1.0
 				additional_burglars_array.append(additional_burglar)
 				

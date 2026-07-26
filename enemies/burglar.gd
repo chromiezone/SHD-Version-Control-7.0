@@ -51,6 +51,7 @@ var point_of_exit = null
 var current_entryway = null : set = set_current_entryway
 var temp_entryway = null
 var current_entryway_just_updated : bool = false
+var prioritized_burglar : Enemy3D = null
 func set_current_entryway(new_entryway) -> void:
 	if current_entryway == new_entryway:
 		return
@@ -208,6 +209,7 @@ enum State {
 	STRIKE_DELAY,
 	REROAMING, # Burglar fought player, ended up outside, and is now returning inside to keep looting.
 	MOVING_TO_LURE, # Burglar moves towards Lure trap
+	WINDOW_WAIT,
 }
 
 var current_state: State = State.ROAMING:
@@ -240,6 +242,11 @@ func set_current_state(new_state: State) -> void:
 					var window = current_entryway
 					if window._bottom_pane.position.y == 0.0:
 						await get_tree().create_timer(window_open_duration).timeout
+					if not window.priority_list.is_empty():
+						prioritized_burglar = window.priority_list[0]
+					if self != prioritized_burglar:
+						set_current_state(State.WINDOW_WAIT)
+						return
 					var entering_window_tween := create_tween().set_parallel(true)
 					entering_window_tween.tween_property(self, "global_position:x", window_anim_end_position.x, 1.0)
 					entering_window_tween.tween_property(self, "global_position:z", window_anim_end_position.z, 1.0)
@@ -259,7 +266,12 @@ func set_current_state(new_state: State) -> void:
 							set_current_state(State.EXTRACTION)
 						)
 				elif current_entryway is Window3D:
-					
+					var window = current_entryway
+					if not window.priority_list.is_empty():
+						prioritized_burglar = window.priority_list[0]
+					if self != prioritized_burglar:
+						set_current_state(State.WINDOW_WAIT)
+						return
 					var exiting_window_tween := create_tween().set_parallel(true)
 					exiting_window_tween.tween_property(self, "global_position:x", window_exit_anim_end_position.x, 1.0)
 					exiting_window_tween.tween_property(self, "global_position:z", window_exit_anim_end_position.z, 1.0)
@@ -319,9 +331,17 @@ func set_current_state(new_state: State) -> void:
 			lure_delta_timer = 0.0
 		State.REROAMING:
 			door_interaction_cooldown_timer.start()
+		State.MOVING_TO_POXIT:
+			if point_of_exit == null:
+				point_of_exit = nearest_poxit
 
+func _on_nav_agent_velocity_computed(safe_velocity) -> void:
+	pass
 
 func _ready() -> void:
+	$NavigationAgent3D.velocity_computed.connect(_on_nav_agent_velocity_computed)
+	
+	
 	_footstep_detect.body_entered.connect(func(body: Node3D) -> void:
 		if body == player:
 			footstep_area_occupied = true
@@ -423,8 +443,6 @@ func _physics_process(delta: float) -> void:
 	evasion_chance = randi_range(1, 100)
 	
 	# Handles player detection
-	
-	
 	var vision_collider = $VisionRayCast.get_collider()
 	if vision_collider == player:
 		player_spotted = true
@@ -442,7 +460,7 @@ func _physics_process(delta: float) -> void:
 	
 	# Updates the nearest exit point for the burglar
 	nearest_poxit = find_closest_node_to_point(Blackboard.point_of_entries, self.global_position)
-	point_of_exit = nearest_poxit
+	#point_of_exit = nearest_poxit
 	# Updates the closest entrypoint relative to the player, regardless of the burglar's state. 
 	#That is why it was moved outside of the statemachine.
 	var nearest_entry_relative_to_player = find_closest_node_to_point(Blackboard.point_of_entries, player.global_position)
@@ -452,6 +470,7 @@ func _physics_process(delta: float) -> void:
 		look_at(player.global_position)
 		rotation.x = 0
 		rotation.z = 0
+	
 	
 	#print(Blackboard.point_of_entries)
 	#print("burglar near relative entry is " + str(near_relative_entry))
@@ -503,9 +522,12 @@ func _physics_process(delta: float) -> void:
 					desired_velocity,
 					velocity_distance * walk_acceleration_factor * delta
 				)
-				
-				if not _navigation_agent_3d.is_navigation_finished():
+				var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
+				if not _navigation_agent_3d.is_navigation_finished() and distance_between_self_and_poe > 3.0:
 					velocity = path_direction * walk_speed
+					move_and_slide()
+				elif not _navigation_agent_3d.is_navigation_finished() and distance_between_self_and_poe < 3.0:
+					velocity = velocity.move_toward(Vector3.ZERO, walk_acceleration_factor * delta)
 					move_and_slide()
 				else: 
 					velocity = velocity.move_toward(
@@ -514,7 +536,7 @@ func _physics_process(delta: float) -> void:
 					move_and_slide()
 				
 				
-				var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
+				#var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
 				if distance_between_self_and_poe < 1.5 or current_entryway != null:
 					print(str(self) + " should switch to entering state")
 					get_tree().create_timer(0.5).timeout.connect(
@@ -642,14 +664,14 @@ func _physics_process(delta: float) -> void:
 				
 				# Assigns the point of exit for the burglar. 80/20 chance of the burglar leaving
 				# where they came, or picking the closest door/window.
-				#if chance <= 80:
-					#point_of_exit = point_of_entry
-				#else:
-					#point_of_exit = nearest_poxit
-				point_of_exit = nearest_poxit
+				if chance <= 80:
+					point_of_exit = point_of_entry
+				else:
+					point_of_exit = nearest_poxit
+				#point_of_exit = nearest_poxit
 			
 			# Conditions for the transition to exiting state
-			if filtered_loot_objects.is_empty():
+			if filtered_loot_objects.is_empty() and current_state != 15: 
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.MOVING_TO_POXIT))
 			
 			if player_spotted == true:
@@ -1002,6 +1024,13 @@ func _physics_process(delta: float) -> void:
 							print("out of home because was lured, returning to inside of home")
 							set_current_state(State.REROAMING)
 					)
+		State.WINDOW_WAIT:
+			if current_entryway is Window3D:
+				var window = current_entryway
+				if not window.priority_list.is_empty():
+					prioritized_burglar = window.priority_list[0]
+			if prioritized_burglar == self:
+				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
 
 func _on_vision_timer_timeout():
 	#print("timer working") 
