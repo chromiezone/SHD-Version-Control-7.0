@@ -54,14 +54,14 @@ func _ready() -> void:
 			occupancy_slots += 1
 			priority_list.append(body)
 			var index = priority_list.find(body)
-			if index > 2:
-				body.call_deferred("set_collision_mask_value", 2, false)
+			#if index > 3:
+				#body.call_deferred("set_collision_mask_value", 2, false)
 		)
 	$OccupancyArea.body_exited.connect(func(body: Node3D) -> void:
 		if body is Enemy3D:
 			priority_list.erase(body)
 			occupancy_slots -= 1
-			body.call_deferred("set_collision_mask_value", 2, true)
+			#body.call_deferred("set_collision_mask_value", 2, true)
 		)
 	
 	$ExitingArea.body_entered.connect(func(body: Node3D) -> void:
