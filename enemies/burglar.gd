@@ -503,10 +503,11 @@ func _physics_process(delta: float) -> void:
 			rotation.z = 0.0
 			
 			
-			if filtered_loot_objects.is_empty():
-				print("should cancel moving to poe and leave")
-				#call_deferred("set_collision_mask_value", 2, false)
-				set_current_state(State.EXTRACTION)
+			filtered_loot_objects = filtered_loot_objects.filter(func(loot_object: LootObject):
+				return loot_object.is_looted == false
+				)
+			if filtered_loot_objects.is_empty() and not is_inside_home:
+				get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.EXTRACTION))
 			
 			
 			if point_of_entry != null:

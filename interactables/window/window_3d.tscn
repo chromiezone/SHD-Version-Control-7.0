@@ -106,4 +106,8 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="OccupancyArea"]
 shape = SubResource("CylinderShape3D_q5yxm")
 
+[node name="SustainedOccupancyTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
 [editable path="WindowMesh"]

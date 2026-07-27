@@ -6,11 +6,17 @@ var _tween_window : Tween = null
 @onready var _bottom_pane: Node3D = $WindowMesh/BottomPane
 var pane_position_y : float
 @onready var _reroaming_target = $EnteringArea/CollisionShape3D
-var occupancy_slots : int = 0
+var occupancy_slots : int = 0 : set = set_occupancy_slots
 var priority_list : Array = []
 
 # In any instance of a door or window, position1 should be on the *inside* of the home.
 
+func set_occupancy_slots(new_value) -> void:
+	if occupancy_slots == new_value:
+		return
+	occupancy_slots = new_value
+	if occupancy_slots >= 3:
+		$SustainedOccupancyTimer.start()
 
 
 func interact() -> void:
@@ -42,8 +48,16 @@ func set_is_active(value: bool) -> void:
 	
 	
 
+func sustained_occupancy_timer_timeout() -> void:
+	if occupancy_slots >= 3:
+		if not priority_list.is_empty():
+			for i in priority_list:
+				if i is Enemy3D:
+					i.call_deferred("set_collision_mask_value", 2, false)
+
 func _ready() -> void:
 	pane_position_y = _bottom_pane.position.y
+	$SustainedOccupancyTimer.timeout.connect(sustained_occupancy_timer_timeout)
 	#$WindowMesh/BottomPane/AnimatableBody3D.sync_to_physics = false
 	
 	$WindowMesh/BottomPane/WindowGlass1_001.set_surface_override_material(0,preload("res://materials/glass.tres"))
@@ -61,7 +75,7 @@ func _ready() -> void:
 		if body is Enemy3D:
 			priority_list.erase(body)
 			occupancy_slots -= 1
-			#body.call_deferred("set_collision_mask_value", 2, true)
+			body.call_deferred("set_collision_mask_value", 2, true)
 		)
 	
 	$ExitingArea.body_entered.connect(func(body: Node3D) -> void:
@@ -134,6 +148,6 @@ func _process(_delta: float) -> void:
 	pane_position_y = _bottom_pane.position.y
 	
 	
-	if occupancy_slots > 0:
-		print("priority_list is " + str(priority_list))
-		print(str(self) + "number of occupants is " + str(occupancy_slots))
+	#if occupancy_slots > 0:
+		#print("priority_list is " + str(priority_list))
+		#print(str(self) + "number of occupants is " + str(occupancy_slots))

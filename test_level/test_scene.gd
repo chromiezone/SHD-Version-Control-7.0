@@ -87,7 +87,7 @@ func set_current_stage(new_stage: Stage) -> void:
 				
 				additional_burglar.connect("enemy_died", func() -> void:
 					burglar_count -= 1
-					print("burglar cruelty is " + str(burglar.cruelty))
+					print("burglar cruelty is " + str(additional_burglar.cruelty))
 					cruelty_score -= additional_burglar.cruelty
 					additional_burglars_array.erase(additional_burglar)
 				)

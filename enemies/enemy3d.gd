@@ -25,7 +25,10 @@ func set_health(new_health: int) -> void:
 	
 
 func destroy() -> void:
-	queue_free()
+	#queue_free()
+	call_deferred("set_collision_layer_value", 2, false)
+	call_deferred("set_collision_mask_value", 2, false)
+	get_tree().create_timer(5.0).timeout.connect(queue_free)
 	enemy_died.emit()
 
 var door_anim_end_position = null
