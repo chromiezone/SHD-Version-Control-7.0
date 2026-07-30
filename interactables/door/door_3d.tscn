@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://cvp2byjyx6e65"]
+[gd_scene load_steps=44 format=4 uid="uid://cvp2byjyx6e65"]
 
 [ext_resource type="Script" uid="uid://cjl008j0xxr5m" path="res://interactables/door/door_3d.gd" id="1_r0isn"]
 [ext_resource type="PackedScene" uid="uid://doknbjb0m8pl" path="res://interactables/door/meshes/DoorMesh1.glb" id="2_kpgih"]
@@ -108,6 +108,12 @@ size = Vector3(0.386719, 0.160706, 1.6)
 [sub_resource type="BoxShape3D" id="BoxShape3D_rd4vc"]
 size = Vector3(0.386719, 0.160706, 1.10938)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_qh5tc"]
+size = Vector3(0.386719, 0.160706, 0.622073)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oj210"]
+size = Vector3(0.386719, 0.160706, 0.559085)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dlsql"]
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.219608)
@@ -149,6 +155,9 @@ stream_1/stream = ExtResource("18_bxvxq")
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ordju"]
 height = 1.0
 radius = 4.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bxvxq"]
+radius = 1.5
 
 [node name="Door3D" type="Area3D"]
 monitoring = false
@@ -225,8 +234,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.932249, 0, 0)
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnteringArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.314944, 0.0534875, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.132479, 0.0534875, 0)
 shape = SubResource("BoxShape3D_rd4vc")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="EnteringArea"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -0.285197, 0.106975, -0.650156)
+shape = SubResource("BoxShape3D_qh5tc")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="EnteringArea"]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -0.262927, 0.106975, 0.606955)
+shape = SubResource("BoxShape3D_oj210")
 
 [node name="ExitingTweenTargetPos" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.78474, 0, 0)
@@ -343,3 +360,15 @@ metadata/_custom_type_script = "uid://0rog0ashlmx"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DoorLure"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CylinderShape3D_ordju")
+
+[node name="SustainedOccupancyTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="OccupancyArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OccupancyArea"]
+shape = SubResource("CylinderShape3D_bxvxq")

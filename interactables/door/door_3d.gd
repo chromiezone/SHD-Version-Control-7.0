@@ -20,6 +20,27 @@ var broken_sound_played := false
 
 var swivel_rotation_was_at_zero := true
 
+var occupancy_slots : int = 0 : set = set_occupancy_slots
+var priority_list : Array = []
+
+# In any instance of a door or window, position1 should be on the *inside* of the home.
+
+func set_occupancy_slots(new_value) -> void:
+	if occupancy_slots == new_value:
+		return
+	if occupancy_slots != new_value:
+		$CloseTimer.start()
+	occupancy_slots = new_value
+	if occupancy_slots >= 3:
+		$SustainedOccupancyTimer.start()
+
+func sustained_occupancy_timer_timeout() -> void:
+	if occupancy_slots >= 3:
+		if not priority_list.is_empty():
+			for i in priority_list:
+				if i is Enemy3D:
+					i.call_deferred("set_collision_mask_value", 2, false)
+
 
 var hinge1_completion: int = 3
 var hinge2_completion: int = 3
@@ -85,6 +106,20 @@ func fix_door() -> void:
 
 
 func _ready() -> void:
+	$SustainedOccupancyTimer.timeout.connect(sustained_occupancy_timer_timeout)
+	
+	$OccupancyArea.body_entered.connect(func(body: Node3D) -> void:
+		if body is Enemy3D:
+			occupancy_slots += 1
+			priority_list.append(body)
+			var index = priority_list.find(body)
+		)
+	$OccupancyArea.body_exited.connect(func(body: Node3D) -> void:
+		if body is Enemy3D:
+			priority_list.erase(body)
+			occupancy_slots -= 1
+			body.call_deferred("set_collision_mask_value", 2, true)
+		)
 	
 	$InteractTimer.timeout.connect(func() -> void:
 		can_interact = true
@@ -197,7 +232,7 @@ func _ready() -> void:
 			body.current_entryway = self
 		if body is Enemy3D and body.current_state in accepted_states:
 			print("enemy preparing to enter")
-			if is_active == false:
+			if door_open == false:
 				$DoorFidget.play(0.0)
 			can_interact = false
 			$InteractTimer.start()
@@ -205,7 +240,7 @@ func _ready() -> void:
 			await get_tree().create_timer(body.door_open_duration).timeout
 			if $DoorFidget.is_playing():
 				$DoorFidget.stop()
-			if is_active == false and broken == false and $InteractTimer.is_stopped():
+			if is_active == false and broken == false and door_open == false and $InteractTimer.is_stopped():
 				$DoorForce.play()
 				var end_value := PI / 2.0
 				

@@ -231,7 +231,7 @@ func set_current_state(new_state: State) -> void:
 			if current_entryway != null:
 				if current_entryway is Door3D:
 					var door = current_entryway
-					if door.is_active == false:
+					if door.door_open == false:
 						await get_tree().create_timer(door_open_duration).timeout
 					var entering_door_tween := create_tween()
 					entering_door_tween.tween_property(self, "global_position", door_anim_end_position, 1.0)
@@ -530,9 +530,9 @@ func _physics_process(delta: float) -> void:
 				)
 				var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
 				if not _navigation_agent_3d.is_navigation_finished() and distance_between_self_and_poe > 3.0:
-					velocity = path_direction * walk_speed
+					velocity = path_direction * walk_speed * 5.0
 					move_and_slide()
-				elif not _navigation_agent_3d.is_navigation_finished() and distance_between_self_and_poe < 3.0:
+				elif not _navigation_agent_3d.is_navigation_finished() and distance_between_self_and_poe < 2.7:
 					velocity = velocity.move_toward(Vector3.ZERO, walk_acceleration_factor * delta)
 					move_and_slide()
 				else: 
@@ -773,7 +773,7 @@ func _physics_process(delta: float) -> void:
 			var needs_to_enter = player.is_inside_home == true and is_inside_home == false
 			#if _on_opposing_spaces and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped() and global_position.distance_to(player.global_position) > 25.0:
 				#set_current_state(State.REROAMING)
-			if needs_to_exit and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped() and global_position.distance_to(player.global_position) > 25.0:
+			if needs_to_exit and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped() and global_position.distance_to(player.global_position) > 15.0:
 				set_current_state(State.REROAMING)
 			if needs_to_enter and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped():
 				set_current_state(State.REROAMING)
