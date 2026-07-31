@@ -192,6 +192,16 @@ func set_player_spotted(new_value: bool) -> void:
 
 @onready var door_interaction_cooldown_timer: Timer = $DoorInteractionCooldown
 
+var engagement_timer_just_ended := false : set = set_engagement_timer_just_ended
+
+func set_engagement_timer_just_ended(new_value) -> void:
+	if engagement_timer_just_ended == new_value:
+		return
+	engagement_timer_just_ended = new_value
+	if new_value == true:
+		get_tree().create_timer(5.0).timeout.connect(func() -> void:
+			engagement_timer_just_ended = false
+			)
 
 enum State {
 	ROAMING, # Burglar spawns and loops around house until it spots point of entry.
@@ -282,9 +292,11 @@ func set_current_state(new_state: State) -> void:
 							set_current_state(State.EXTRACTION)
 					)
 		State.LOOTING:
-			if player_spotted == true or last_state == 7:
-				set_current_state(State.COMBAT)
+			pass
+			#if player_spotted == true or last_state == 7:
+				#set_current_state(State.COMBAT)
 		State.COMBAT:
+			$EngagementTimer.start()
 			being_lured = false
 			vision_target = player
 			chance_to_stun = randf()
@@ -295,6 +307,7 @@ func set_current_state(new_state: State) -> void:
 				$ShootCooldown.timeout.disconnect(set_current_state.bind(State.COMBAT))
 				print("disconnected")
 		State.STRIKE:
+			$EngagementTimer.start()
 			var strike_twice_chance = randi_range(1, 100)
 			if strike_twice_chance <= 50:
 				_animation_player.play("melee_attack")
@@ -306,6 +319,7 @@ func set_current_state(new_state: State) -> void:
 				$MeleeCooldown.timeout.connect(set_current_state.bind(State.COMBAT))
 			#_animation_player.animation_finished.connect(set_current_state.bind(State.COMBAT))
 		State.SHOOT:
+			$EngagementTimer.start()
 			$ShootCooldown.start()
 			_animation_player.play("firing")
 			if $VisionRayCast.get_collider() == player:
@@ -441,6 +455,7 @@ func _physics_process(delta: float) -> void:
 	
 	# Handles player detection
 	var vision_collider = $VisionRayCast.get_collider()
+	#if vision_collider == player or (player in $VisionArea.get_overlapping_bodies() and global_position.distance_to(player.global_position) < 2.5):
 	if vision_collider == player:
 		player_spotted = true
 	else:
@@ -585,6 +600,8 @@ func _physics_process(delta: float) -> void:
 			
 			
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
+				looting_timer_node.stop()
+				is_looting = false
 				# If player punches the burglar while hidden, the burglar is stunned
 				if _hit_box.damage_source == 1 and player_spotted == false and current_state == 3:
 					set_current_state(State.STUNNED_BY_PLAYER)
@@ -686,10 +703,15 @@ func _physics_process(delta: float) -> void:
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.MOVING_TO_POXIT))
 			
 			if player_spotted == true:
-				get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.COMBAT))
+				if engagement_timer_just_ended == false:
+					looting_timer_node.stop()
+					is_looting = false
+					get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.COMBAT))
 			
 			# Lure transition
 			if being_lured == true:
+				looting_timer_node.stop()
+				is_looting = false
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.MOVING_TO_LURE))
 			
 		State.MOVING_TO_POXIT:
@@ -767,7 +789,8 @@ func _physics_process(delta: float) -> void:
 					velocity = velocity.move_toward(Vector3.ZERO, walk_acceleration_factor * delta)
 					move_and_slide()
 		State.COMBAT:
-			print($AwarenessTimer.time_left)
+			print("$AwarenessTimer.time_left is " + str($AwarenessTimer.time_left) +", player_spotted is " + str(player_spotted))
+			print("EngagementTimer time_left is " + str($EngagementTimer.time_left))
 			var _on_opposing_spaces = (player.is_inside_home == true and is_inside_home == false) or (player.is_inside_home == false and is_inside_home == true)
 			var needs_to_exit = player.is_inside_home == false and is_inside_home == true
 			var needs_to_enter = player.is_inside_home == true and is_inside_home == false
@@ -870,10 +893,18 @@ func _physics_process(delta: float) -> void:
 			elif weapon_type is Firearm and player_spotted == true and player_spotted_just_true == false and $ShootCooldown.time_left == 0:
 				set_current_state(State.SHOOT)
 			
-			$AwarenessTimer.timeout.connect(func() -> void:
-				var forbidden_states = [4,5,6]
+			$EngagementTimer.timeout.connect(func() -> void:
+				engagement_timer_just_ended = true
 				if is_inside_home == true:
-					print("lost sight of player or lost interest, returning to looting state")
+					print("sustained period of no engagements, returning to looting state")
+					set_current_state(State.LOOTING)
+				else:
+					print("sustained period of no engagements and out of home, returning to inside of home")
+					set_current_state(State.REROAMING)
+				)
+			$AwarenessTimer.timeout.connect(func() -> void:
+				if is_inside_home == true:
+					print("lost sight of player, returning to looting state")
 					set_current_state(State.LOOTING)
 				else:
 					print("out of home, returning to inside of home")
