@@ -5,7 +5,6 @@ extends Node3D
 @onready var _leader_burglar_path: PathFollow3D = $Spawner/Path3D/LeaderBurglarPath
 var additional_burglars_dict : Dictionary = {}
 var additional_burglars_array : Array = []
-#var completed_secondary_burglars : Array = []
 @onready var _indoor_area: Area3D = $IndoorArea
 
 
@@ -60,52 +59,38 @@ func set_current_stage(new_stage: Stage) -> void:
 			var burglar := preload("res://enemies/burglar.tscn").instantiate()
 			burglar.position.y = -0.175
 			
-			##var follower_burglar := preload("res://enemies/burglar.tscn").instantiate()
-			##follower_burglar.position.y = -0.175
-			
 			await get_tree().create_timer(enemy_spawn_time).timeout
 			
 			_leader_burglar_path.add_child(burglar)
 			_leader_burglar_path.progress = possible_spawns.pick_random()
 			
-			##$Spawner/Path3D/SecondaryBurglarPath.add_child(follower_burglar)
-			##$Spawner/Path3D/SecondaryBurglarPath.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random()
 			
-			#var additional_burglar_count := randi_range(4,5)
-			#for i in additional_burglar_count:
-				#var additional_path_follow = PathFollow3D.new()
-				#var additional_burglar := preload("res://enemies/burglar.tscn").instantiate()
-				#burglar_count += 1
+			var additional_burglar_count := randi_range(4,5)
+			for i in additional_burglar_count:
+				var additional_path_follow = PathFollow3D.new()
+				var additional_burglar := preload("res://enemies/burglar.tscn").instantiate()
+				burglar_count += 1
 				
-				#additional_burglar.position.y = -0.175
-				#$Spawner/Path3D.add_child(additional_path_follow)
-				#additional_path_follow.add_child(additional_burglar)
-				#additional_path_follow.progress = _leader_burglar_path.progress - randf_range(2.0, 4.0)
-				##additional_path_follow.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random()
-				#additional_burglars_dict[additional_burglar] = 1.0
-				#additional_burglars_array.append(additional_burglar)
-				#
-				#additional_burglar.connect("enemy_died", func() -> void:
-					#burglar_count -= 1
-					#print("burglar cruelty is " + str(additional_burglar.cruelty))
-					#cruelty_score -= additional_burglar.cruelty
-					#additional_burglars_array.erase(additional_burglar)
-				#)
-				#additional_burglar.connect("burglar_path_stop", func() -> void:
-					#var collider = additional_burglar._roaming_ray_cast.get_collider()
-					#if collider is Door3D or collider is Window3D:
-						#additional_burglars_dict[additional_burglar] = 0.0
-				#)
+				additional_burglar.position.y = -0.175
+				$Spawner/Path3D.add_child(additional_path_follow)
+				additional_path_follow.add_child(additional_burglar)
+				additional_path_follow.progress = _leader_burglar_path.progress - randf_range(2.0, 4.0)
+				#additional_path_follow.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random() #should use this one in final
+				additional_burglars_dict[additional_burglar] = 1.0
+				additional_burglars_array.append(additional_burglar)
+				
+				additional_burglar.connect("enemy_died", func() -> void:
+					burglar_count -= 1
+					print("burglar cruelty is " + str(additional_burglar.cruelty))
+					cruelty_score -= additional_burglar.cruelty
+					additional_burglars_array.erase(additional_burglar)
+				)
+				additional_burglar.connect("burglar_path_stop", func() -> void:
+					var collider = additional_burglar._roaming_ray_cast.get_collider()
+					if collider is Door3D or collider is Window3D:
+						additional_burglars_dict[additional_burglar] = 0.0
+				)
 			
-			#var initial_burglar_spawn_count = randi_range(1, 3)
-			#for i in initial_burglar_spawn_count:
-				#var new_path_follow = PathFollow3D.new()
-				#var secondary_burglar := preload("res://enemies/burglar.tscn").instantiate()
-				#secondary_burglar.position.y = -0.175
-				#$Spawner/Path3D.add_child(new_path_follow)
-				#new_path_follow.add_child(secondary_burglar)
-				#new_path_follow.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random()
-			#completed_secondary_burglars = fetch_pathfollow_children()
 			
 			burglars_have_begun = true
 			burglar_count += 1
@@ -114,22 +99,12 @@ func set_current_stage(new_stage: Stage) -> void:
 				print("burglar cruelty is " + str(burglar.cruelty))
 				cruelty_score -= burglar.cruelty
 				)
-			##follower_burglar.connect("enemy_died", func() -> void:
-				##burglar_count -= 1
-				##print("burglar cruelty is " + str(burglar.cruelty))
-				##cruelty_score -= burglar.cruelty
-				##)
 			
 			burglar.connect("burglar_path_stop", func() -> void:
 				var collider = burglar._roaming_ray_cast.get_collider()
 				if collider is Door3D or collider is Window3D:
 					leader_speed_factor = 0.0
 				)
-			##follower_burglar.connect("burglar_path_stop", func() -> void:
-				##var collider = follower_burglar._roaming_ray_cast.get_collider()
-				##if collider is Door3D or collider is Window3D:
-					##follower_speed_factor = 0.0
-				##)
 			$ExtractionZone/ExtractionArea.body_entered.connect(func(body: Node3D) -> void:
 				if body is Enemy3D and body.has_loot == true:
 					print("Game over via burglar exiting with loot")
@@ -208,15 +183,7 @@ func _ready() -> void:
 			print("player exited home")
 			body.is_inside_home = false
 		)
-	#var burglar := preload("res://enemies/burglar.tscn").instantiate()
-	#burglar.position.y = -0.175
-	#await get_tree().create_timer(enemy_spawn_time).timeout
-	#_path_follow_3d.add_child(burglar)
-	#_path_follow_3d.progress = possible_spawns.pick_random()
-	#burglar.connect("burglar_path_stop", func() -> void:
-		#move_speed = 0.0
-		#)
-	#
+
 	$ExtractionZone/ExtractionArea.body_entered.connect(func(body: Node3D) -> void:
 		if body is Enemy3D and body.has_loot == true:
 			print("Game over via burglar exiting with loot")
@@ -253,15 +220,7 @@ func _physics_process(delta: float) -> void:
 			pathfollow.progress += move_speed * speed_factor * delta
 		
 	print("additional_burglars_dict is " + str(additional_burglars_dict))
-	##$Spawner/Path3D/SecondaryBurglarPath.progress += move_speed * follower_speed_factor * delta
-	##print("Secondary burglar progress is " + str($Spawner/Path3D/SecondaryBurglarPath.progress))
-	##print("Primary burglar progress is " + str(_leader_burglar_path.progress))
-	
-	#if not completed_secondary_burglars.is_empty():
-		#for child in completed_secondary_burglars:
-			#if child is PathFollow3D:
-				#child.progress += move_speed * delta
-				#print("should move " + str(child) + "'s progress ratio")
+
 	
 
 

@@ -591,13 +591,31 @@ curve = SubResource("Curve3D_52nfv")
 transform = Transform3D(-0.511232, 0, -0.859245, 0, 0.999995, 0, 0.859246, 0, -0.511231, 29.5562, -1.87904e-05, -26.2432)
 progress = 55.0
 
-[node name="SecondaryBurglarPath" type="PathFollow3D" parent="Spawner/Path3D"]
-transform = Transform3D(0.880471, 0, -0.4741, 0, 1, 0, 0.4741, 0, 0.880471, -24.0436, -1.87904e-05, -24.9559)
-
 [node name="LootObjects" type="Node3D" parent="."]
 
 [node name="LootObject4" parent="LootObjects" instance=ExtResource("8_ubww3")]
-transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, 2.59946, 0.0316031, -0.172196)
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, 2.59946, 0.144357, -0.172196)
+
+[node name="LootObject5" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, -8.93289, 0.144357, 5.58317)
+
+[node name="LootObject6" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, -8.93289, 0.144357, -5.25199)
+
+[node name="LootObject7" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, -5.78057, 0.144357, -2.11134)
+
+[node name="LootObject8" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, -8.91997, 0.144357, 10.6877)
+
+[node name="LootObject9" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, 7.02064, 0.144357, 9.51556)
+
+[node name="LootObject10" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, 6.24144, 0.144357, -5.07437)
+
+[node name="LootObject11" parent="LootObjects" instance=ExtResource("8_ubww3")]
+transform = Transform3D(0.21385, 0, 0.00335195, 0, 0.213876, 0, -0.00335195, 0, 0.21385, 2.56336, 0.144357, 4.63502)
 
 [node name="ExtractionZone" type="Node3D" parent="."]
 

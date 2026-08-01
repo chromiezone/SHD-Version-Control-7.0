@@ -647,7 +647,14 @@ func _physics_process(delta: float) -> void:
 				
 				looting_timer_node.wait_time = nearest_loot_object.looting_duration
 				
+				
+				
+				
 				# If the burglar is inside the range of the loot object, this should occur
+				var loot_object = nearest_loot_object
+				
+				
+				
 				if is_looting == true and nearest_loot_object.is_looted == false and nearest_loot_object != null:
 					# Local variable created in preparation for the "nearest loot object"'s deletion from the filtered array
 					var looted_object = nearest_loot_object
