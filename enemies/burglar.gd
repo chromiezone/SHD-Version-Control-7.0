@@ -52,6 +52,28 @@ var current_entryway = null : set = set_current_entryway
 var temp_entryway = null
 var current_entryway_just_updated : bool = false
 var prioritized_burglar : Enemy3D = null
+
+
+var loot_object_prioritized_burglar : Enemy3D = null
+var loot_timer_time : float = 10.0
+var occupying_loot_object := false
+var occupied_loot_object : LootObject = null
+
+func set_is_looting(new_value) -> void:
+	if is_looting == new_value:
+		return
+	is_looting = new_value
+	if new_value == true:
+		call_deferred("set_collision_mask_value", 2, false)
+		$LootingSound.play()
+		print("started timer")
+		looting_timer_node.wait_time = loot_timer_time
+		looting_timer_node.start()
+	else:
+		call_deferred("set_collision_mask_value", 2, false)
+		looting_timer_node.stop()
+		$LootingSound.stop()
+
 func set_current_entryway(new_entryway) -> void:
 	if current_entryway == new_entryway:
 		return
@@ -349,9 +371,13 @@ func set_current_state(new_state: State) -> void:
 			if point_of_exit == null:
 				point_of_exit = nearest_poxit
 
+func looting_timer_timeout() -> void:
+		print("should stop sound")
+		$LootingSound.stop()
 
 func _ready() -> void:
-	
+	looting_timer_node.timeout.connect(looting_timer_timeout
+		)
 	
 	_footstep_detect.body_entered.connect(func(body: Node3D) -> void:
 		if body == player:
@@ -410,9 +436,11 @@ func _ready() -> void:
 	
 
 func _physics_process(delta: float) -> void:
-	print("current_entryway is " + str(current_entryway))
-	print("current_entryway_just_updated is " + str(current_entryway_just_updated))
-	print("velocity.length_squared is " + str(velocity.length_squared()))
+	print("looting_timer time left = " + str(looting_timer_node.time_left))
+	print("is_looting = " + str(is_looting))
+	#print("current_entryway is " + str(current_entryway))
+	#print("current_entryway_just_updated is " + str(current_entryway_just_updated))
+	#print("velocity.length_squared is " + str(velocity.length_squared()))
 	#print("footstep_area_occupied is " + str(footstep_area_occupied))
 	#var destination = _navigation_agent_3d.get_next_path_position()
 	#var local_destination = destination - global_position
@@ -578,7 +606,10 @@ func _physics_process(delta: float) -> void:
 		State.LOOTING:
 			if footstep_area_occupied and player.player_in_loud_motion == true:
 				print("should detect player")
+				looting_timer_node.stop()
+				is_looting = false
 				player_spotted = true
+				
 			
 			if _roaming_ray_cast.is_colliding():
 				if _roaming_ray_cast.get_collider() is Door3D:
@@ -645,28 +676,32 @@ func _physics_process(delta: float) -> void:
 					rotation.x = 0
 					rotation.z = 0
 				
-				looting_timer_node.wait_time = nearest_loot_object.looting_duration
+				#looting_timer_node.wait_time = nearest_loot_object.looting_duration
 				
 				
 				
 				
 				# If the burglar is inside the range of the loot object, this should occur
-				var loot_object = nearest_loot_object
-				
-				
+				if occupied_loot_object != null and not occupied_loot_object.priority_list.is_empty():
+					if loot_object_prioritized_burglar != null:
+						if self == loot_object_prioritized_burglar and occupied_loot_object.is_looted == false:
+							is_looting = true
+						else:
+							is_looting = false
+						
 				
 				if is_looting == true and nearest_loot_object.is_looted == false and nearest_loot_object != null:
 					# Local variable created in preparation for the "nearest loot object"'s deletion from the filtered array
 					var looted_object = nearest_loot_object
-					_animation_player.play("looting")
+					#_animation_player.play("looting")
 					
-					looting_timer_node.wait_time = looted_object.looting_duration
+					#looting_timer_node.wait_time = looted_object.looting_duration
 					looting_timer_node.timeout.connect(func() -> void:
-						_animation_player.play("RESET")
-						is_looting = false
-						looted_object.is_looted = true
-						looted_object.hide()
-						has_loot = true
+						if occupying_loot_object == true:
+							is_looting = false
+							looted_object.is_looted = true
+							looted_object.hide()
+							has_loot = true
 						)
 					## Burglar comes to a stop
 					#velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)

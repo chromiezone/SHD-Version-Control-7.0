@@ -35,7 +35,13 @@ var door_anim_end_position = null
 var window_anim_end_position = null
 var door_exit_anim_end_position = null
 var window_exit_anim_end_position = null
-var is_looting := false
+
+var is_looting := false : set = set_is_looting
+
+func set_is_looting(new_value) -> void:
+	if is_looting == new_value:
+		return
+	is_looting = new_value
 
 class Blackboard extends RefCounted:
 	static var house_origin := Vector3.ZERO
