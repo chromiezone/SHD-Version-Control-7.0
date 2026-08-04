@@ -480,8 +480,9 @@ func _physics_process(delta: float) -> void:
 	
 	# Updates list of unoccupied loot objects
 	filtered_unoccupied_loot_objects = Blackboard.loot_objects.filter(func(loot_object: LootObject):
-		return loot_object.occupied == false
+		return loot_object.occupied == false and loot_object.is_looted == false
 	)
+	#print("unoccupied AND unlooted loot objects are " + str(filtered_unoccupied_loot_objects))
 	
 	# Application of gravity
 	if not is_on_floor():
@@ -662,7 +663,7 @@ func _physics_process(delta: float) -> void:
 			
 			nearest_unoccupied_loot_object = find_closest_node_to_point(filtered_unoccupied_loot_objects, self.global_position)
 			nearest_loot_object = find_closest_node_to_point(filtered_loot_objects, self.global_position)
-			if nearest_loot_object:
+			if nearest_unoccupied_loot_object:
 				# Door realignment logic. If the burglar has recently updated their entryway and that entryway is not null, 
 				# they will path towards that entryway. Otherwise, they will path towards the nearest loot object as normal. 
 				# This is to prevent the burglar from getting stuck on corners while trying to exit through a door.
@@ -670,7 +671,7 @@ func _physics_process(delta: float) -> void:
 					entryway_reference = current_entryway
 					_navigation_agent_3d.set_target_position(entryway_reference.global_position)
 				else:
-					_navigation_agent_3d.set_target_position(nearest_loot_object.global_position)
+					_navigation_agent_3d.set_target_position(nearest_unoccupied_loot_object.global_position)
 				var destination = _navigation_agent_3d.get_next_path_position()
 				var local_destination = destination - global_position
 				var path_direction = local_destination.normalized()
@@ -679,17 +680,20 @@ func _physics_process(delta: float) -> void:
 				var target_quat = target_transform.basis.get_rotation_quaternion()
 				var current_quat = global_transform.basis.get_rotation_quaternion()
 				
-				var direction := global_position.direction_to(nearest_loot_object.global_position)
+				var direction := global_position.direction_to(nearest_unoccupied_loot_object.global_position)
 				var desired_velocity := direction * walk_speed
 				desired_velocity += calculate_avoidance_force() * delta
 				var velocity_distance := velocity.distance_to(desired_velocity)
 				global_position.y = stored_y_position
-				if not _navigation_agent_3d.is_navigation_finished():
+				
+				# Conditions for traveling to the path
+				if not _navigation_agent_3d.is_navigation_finished() and looting_timer_node.is_stopped():
 					velocity = path_direction * walk_speed
 					move_and_slide()
+				# Conditions for coming to a full stop
 				else:
 					velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)
-					look_at(nearest_loot_object.global_position, Vector3.UP)
+					look_at(nearest_unoccupied_loot_object.global_position, Vector3.UP)
 					rotation.x = 0
 					rotation.z = 0
 				
@@ -737,8 +741,13 @@ func _physics_process(delta: float) -> void:
 						#look_at(destination, Vector3.UP)
 					else:
 						# Look Logic Continued
-						var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
-						global_transform.basis = Basis(next_quat)
+						if occupying_loot_object == false:
+							var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
+							global_transform.basis = Basis(next_quat)
+						else:
+							look_at(nearest_loot_object.global_position, Vector3.UP)
+							rotation.x = 0.0
+							rotation.z = 0.0
 					#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
 					#rotation.y = rotate_toward(rotation.y, atan2(velocity.x,velocity.z), delta * look_rotation_speed)
 					
