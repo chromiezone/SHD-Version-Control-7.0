@@ -88,6 +88,9 @@ var nearest_poxit = null
 
 var nearest_loot_object : LootObject = null
 var filtered_loot_objects : Array = []
+
+var nearest_unoccupied_loot_object : LootObject = null
+var filtered_unoccupied_loot_objects : Array = []
 @onready var looting_timer_node: Timer = $LootingTimer
 var has_loot := false
 
@@ -392,6 +395,7 @@ func _ready() -> void:
 	player = get_tree().root.get_node("TestScene/Player")
 	debug_label.text = str(health)
 	filtered_loot_objects = Blackboard.loot_objects
+	filtered_unoccupied_loot_objects = Blackboard.loot_objects
 	weapon_type = $Arm/ArmBody/HandleMarker.get_child(0)
 	set_moving(false)
 	$MeleeHitbox/CollisionShape3D.disabled = true
@@ -641,9 +645,17 @@ func _physics_process(delta: float) -> void:
 					last_state = 3
 					set_current_state(State.STUNNED_BY_TRAP)
 			)
-			filtered_loot_objects = filtered_loot_objects.filter(func(loot_object: LootObject):
+				
+			filtered_loot_objects = filtered_loot_objects.filter(func(loot_object: LootObject): 
 				return loot_object.is_looted == false
 				)
+				
+			filtered_unoccupied_loot_objects = filtered_unoccupied_loot_objects.filter(func(loot_object: LootObject):
+				return loot_object.occupancy_slots == 0
+				)
+			print("unoccupied loot objects are " + str(filtered_unoccupied_loot_objects))
+			
+			nearest_unoccupied_loot_object = find_closest_node_to_point(filtered_unoccupied_loot_objects, self.global_position)
 			nearest_loot_object = find_closest_node_to_point(filtered_loot_objects, self.global_position)
 			if nearest_loot_object:
 				# Door realignment logic. If the burglar has recently updated their entryway and that entryway is not null, 
