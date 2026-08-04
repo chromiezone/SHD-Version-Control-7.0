@@ -2,6 +2,7 @@ class_name LootObject extends StaticBody3D
 
 @export var looting_duration := 5.0
 var is_looted := false : set = set_is_looted
+var occupied := false
 
 func set_is_looted(new_value) -> void:
 	if is_looted == new_value:
@@ -10,21 +11,34 @@ func set_is_looted(new_value) -> void:
 	if is_looted == true:
 		_burglar_detection_area.call_deferred("set_collision_mask_value", 2, false)
 
-var occupancy_slots : int = 0 : set = set_occupancy_slots
+#var occupancy_slots : int = 0 : set = set_occupancy_slots
+var occupancy_slots : int = 0
 var priority_list : Array = []
 
-func set_occupancy_slots(new_value) -> void:
-	if occupancy_slots == new_value:
-		return
-	if occupancy_slots != new_value:
-		pass
+#func set_occupancy_slots(new_value) -> void:
+	#if occupancy_slots == new_value:
+		#return
+	#if occupancy_slots > 0:
+		#occupied = true
+	#elif occupancy_slots == 0:
+		#occupied = false
 
 @onready var _burglar_detection_area: Area3D = %BurglarDetectionArea
+
+func _process(delta: float) -> void:
+	occupancy_slots = priority_list.size()
+	if priority_list.is_empty():
+		occupied = false
+	else:
+		occupied = true
+	print("occupants number is " + str(occupancy_slots) + ", occupied == " + str(occupied) + ", priority_list == " + str(priority_list))
+
 
 func _ready() -> void:
 	_burglar_detection_area.body_entered.connect(func(body: Node3D) -> void:
 		if body is Enemy3D:
-			occupancy_slots += 1
+			print("enemy body entered")
+			#occupancy_slots += 1
 			priority_list.append(body)
 			body.loot_timer_time = looting_duration
 			body.occupying_loot_object = true
@@ -36,7 +50,8 @@ func _ready() -> void:
 		)
 	_burglar_detection_area.body_exited.connect(func(body: Node3D) -> void:
 		if body is Enemy3D:
-			occupancy_slots -= 1
+			print("enemy body exited")
+			#occupancy_slots -= 1
 			body.occupying_loot_object = false
 			priority_list.erase(body)
 		)

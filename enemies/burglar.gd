@@ -478,6 +478,11 @@ func _physics_process(delta: float) -> void:
 	#print("current_state is " + str(current_state))
 	# Used to determine if burglar will take damage from a trap
 	
+	# Updates list of unoccupied loot objects
+	filtered_unoccupied_loot_objects = Blackboard.loot_objects.filter(func(loot_object: LootObject):
+		return loot_object.occupied == false
+	)
+	
 	# Application of gravity
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -650,10 +655,10 @@ func _physics_process(delta: float) -> void:
 				return loot_object.is_looted == false
 				)
 				
-			filtered_unoccupied_loot_objects = filtered_unoccupied_loot_objects.filter(func(loot_object: LootObject):
-				return loot_object.occupancy_slots == 0
-				)
-			print("unoccupied loot objects are " + str(filtered_unoccupied_loot_objects))
+			#filtered_unoccupied_loot_objects = filtered_unoccupied_loot_objects.filter(func(loot_object: LootObject):
+				#return loot_object.occupied == false
+				#)
+			#print("unoccupied loot objects are " + str(filtered_unoccupied_loot_objects))
 			
 			nearest_unoccupied_loot_object = find_closest_node_to_point(filtered_unoccupied_loot_objects, self.global_position)
 			nearest_loot_object = find_closest_node_to_point(filtered_loot_objects, self.global_position)
