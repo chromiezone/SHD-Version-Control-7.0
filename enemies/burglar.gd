@@ -58,6 +58,7 @@ var loot_object_prioritized_burglar : Enemy3D = null
 var loot_timer_time : float = 10.0
 var occupying_loot_object := false
 var occupied_loot_object : LootObject = null
+var patrol_destination : Vector3 = Vector3.ZERO
 
 func set_is_looting(new_value) -> void:
 	if is_looting == new_value:
@@ -317,7 +318,8 @@ func set_current_state(new_state: State) -> void:
 							set_current_state(State.EXTRACTION)
 					)
 		State.LOOTING:
-			pass
+			patrol_destination.x = randf_range(-5.0, 5.0)
+			patrol_destination.z = randf_range(-5.0, 5.0)
 			#if player_spotted == true or last_state == 7:
 				#set_current_state(State.COMBAT)
 		State.COMBAT:
@@ -639,6 +641,30 @@ func _physics_process(delta: float) -> void:
 						
 						move_and_slide()
 			
+			# Assigns the point of exit for the burglar. 80/20 chance of the burglar leaving
+			# where they came, or picking the closest door/window.
+			if chance <= 80:
+				point_of_exit = point_of_entry
+			else:
+				point_of_exit = nearest_poxit
+			#point_of_exit = nearest_poxit
+			
+			
+			# Conditions for the transition to exiting state
+			if filtered_loot_objects.is_empty() and current_state != 15: 
+				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.MOVING_TO_POXIT))
+			
+			if player_spotted == true:
+				if engagement_timer_just_ended == false:
+					looting_timer_node.stop()
+					is_looting = false
+					get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.COMBAT))
+			
+			# Lure transition
+			if being_lured == true:
+				looting_timer_node.stop()
+				is_looting = false
+				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.MOVING_TO_LURE))
 			
 			_hurtbox_3d.took_hit.connect(func(_hit_box: Hitbox3D) -> void:
 				looting_timer_node.stop()
@@ -663,7 +689,8 @@ func _physics_process(delta: float) -> void:
 			
 			nearest_unoccupied_loot_object = find_closest_node_to_point(filtered_unoccupied_loot_objects, self.global_position)
 			nearest_loot_object = find_closest_node_to_point(filtered_loot_objects, self.global_position)
-			if nearest_unoccupied_loot_object:
+			if filtered_unoccupied_loot_objects.is_empty() and occupying_loot_object == false:
+				print("should go to patrol destination")
 				# Door realignment logic. If the burglar has recently updated their entryway and that entryway is not null, 
 				# they will path towards that entryway. Otherwise, they will path towards the nearest loot object as normal. 
 				# This is to prevent the burglar from getting stuck on corners while trying to exit through a door.
@@ -671,7 +698,7 @@ func _physics_process(delta: float) -> void:
 					entryway_reference = current_entryway
 					_navigation_agent_3d.set_target_position(entryway_reference.global_position)
 				else:
-					_navigation_agent_3d.set_target_position(nearest_unoccupied_loot_object.global_position)
+					_navigation_agent_3d.set_target_position(patrol_destination)
 				var destination = _navigation_agent_3d.get_next_path_position()
 				var local_destination = destination - global_position
 				var path_direction = local_destination.normalized()
@@ -680,57 +707,22 @@ func _physics_process(delta: float) -> void:
 				var target_quat = target_transform.basis.get_rotation_quaternion()
 				var current_quat = global_transform.basis.get_rotation_quaternion()
 				
-				var direction := global_position.direction_to(nearest_unoccupied_loot_object.global_position)
+				var direction := global_position.direction_to(patrol_destination)
 				var desired_velocity := direction * walk_speed
 				desired_velocity += calculate_avoidance_force() * delta
 				var velocity_distance := velocity.distance_to(desired_velocity)
 				global_position.y = stored_y_position
 				
 				# Conditions for traveling to the path
-				if not _navigation_agent_3d.is_navigation_finished() and looting_timer_node.is_stopped():
+				if not _navigation_agent_3d.is_navigation_finished():
 					velocity = path_direction * walk_speed
 					move_and_slide()
 				# Conditions for coming to a full stop
 				else:
 					velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)
-					look_at(nearest_unoccupied_loot_object.global_position, Vector3.UP)
+					look_at(patrol_destination, Vector3.UP)
 					rotation.x = 0
 					rotation.z = 0
-				
-				#looting_timer_node.wait_time = nearest_loot_object.looting_duration
-				
-				
-				
-				
-				# If the burglar is inside the range of the loot object, this should occur
-				if occupied_loot_object != null and not occupied_loot_object.priority_list.is_empty():
-					if loot_object_prioritized_burglar != null:
-						if self == loot_object_prioritized_burglar and occupied_loot_object.is_looted == false:
-							is_looting = true
-						else:
-							is_looting = false
-						
-				
-				if is_looting == true and nearest_loot_object.is_looted == false and nearest_loot_object != null:
-					# Local variable created in preparation for the "nearest loot object"'s deletion from the filtered array
-					var looted_object = nearest_loot_object
-					#_animation_player.play("looting")
-					
-					#looting_timer_node.wait_time = looted_object.looting_duration
-					looting_timer_node.timeout.connect(func() -> void:
-						if occupying_loot_object == true:
-							is_looting = false
-							looted_object.is_looted = true
-							looted_object.hide()
-							has_loot = true
-						)
-					## Burglar comes to a stop
-					#velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)
-				#else:
-					#velocity = velocity.move_toward(
-						#desired_velocity,
-						#velocity_distance * walk_acceleration_factor * delta
-					#)
 				
 				if player_spotted == false:
 					if velocity.length_squared() == 0.00 and current_entryway != null and current_entryway_just_updated == true and current_entryway is Door3D:
@@ -741,46 +733,118 @@ func _physics_process(delta: float) -> void:
 						#look_at(destination, Vector3.UP)
 					else:
 						# Look Logic Continued
-						if occupying_loot_object == false:
+						var distance_between_self_and_patrol_point = global_position.distance_to(patrol_destination)
+						if distance_between_self_and_patrol_point > 3.0:
 							var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
 							global_transform.basis = Basis(next_quat)
 						else:
-							look_at(nearest_loot_object.global_position, Vector3.UP)
+							look_at(patrol_destination, Vector3.UP)
 							rotation.x = 0.0
 							rotation.z = 0.0
-					#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
-					#rotation.y = rotate_toward(rotation.y, atan2(velocity.x,velocity.z), delta * look_rotation_speed)
-					
 				else:
 					look_at(player.global_position, Vector3.UP)
 				rotation.x = 0
 				rotation.z = 0
 				
 				move_and_slide()
+			elif not filtered_unoccupied_loot_objects.is_empty():
+				if nearest_unoccupied_loot_object:
+					# Door realignment logic. If the burglar has recently updated their entryway and that entryway is not null, 
+					# they will path towards that entryway. Otherwise, they will path towards the nearest loot object as normal. 
+					# This is to prevent the burglar from getting stuck on corners while trying to exit through a door.
+					if current_entryway_just_updated == true and current_entryway != null:
+						entryway_reference = current_entryway
+						_navigation_agent_3d.set_target_position(entryway_reference.global_position)
+					else:
+						_navigation_agent_3d.set_target_position(nearest_unoccupied_loot_object.global_position)
+					var destination = _navigation_agent_3d.get_next_path_position()
+					var local_destination = destination - global_position
+					var path_direction = local_destination.normalized()
+					# Look Logic
+					var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
+					var target_quat = target_transform.basis.get_rotation_quaternion()
+					var current_quat = global_transform.basis.get_rotation_quaternion()
+					
+					var direction := global_position.direction_to(nearest_unoccupied_loot_object.global_position)
+					var desired_velocity := direction * walk_speed
+					desired_velocity += calculate_avoidance_force() * delta
+					var velocity_distance := velocity.distance_to(desired_velocity)
+					global_position.y = stored_y_position
+					
+					# Conditions for traveling to the path
+					if not _navigation_agent_3d.is_navigation_finished() and looting_timer_node.is_stopped():
+						velocity = path_direction * walk_speed
+						move_and_slide()
+					# Conditions for coming to a full stop
+					else:
+						velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)
+						look_at(nearest_unoccupied_loot_object.global_position, Vector3.UP)
+						rotation.x = 0
+						rotation.z = 0
+					
+					#looting_timer_node.wait_time = nearest_loot_object.looting_duration
+					
+					
+					
+					
+					# If the burglar is inside the range of the loot object, this should occur
+					if occupied_loot_object != null and not occupied_loot_object.priority_list.is_empty():
+						if loot_object_prioritized_burglar != null:
+							if self == loot_object_prioritized_burglar and occupied_loot_object.is_looted == false:
+								is_looting = true
+							else:
+								is_looting = false
+							
+					
+					if is_looting == true and nearest_loot_object.is_looted == false and nearest_loot_object != null:
+						# Local variable created in preparation for the "nearest loot object"'s deletion from the filtered array
+						var looted_object = nearest_loot_object
+						#_animation_player.play("looting")
+						
+						#looting_timer_node.wait_time = looted_object.looting_duration
+						looting_timer_node.timeout.connect(func() -> void:
+							if occupying_loot_object == true:
+								is_looting = false
+								looted_object.is_looted = true
+								looted_object.hide()
+								has_loot = true
+							)
+						## Burglar comes to a stop
+						#velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)
+					#else:
+						#velocity = velocity.move_toward(
+							#desired_velocity,
+							#velocity_distance * walk_acceleration_factor * delta
+						#)
+					
+					if player_spotted == false:
+						if velocity.length_squared() == 0.00 and current_entryway != null and current_entryway_just_updated == true and current_entryway is Door3D:
+							var entryway_look_reference = current_entryway
+							look_at(entryway_look_reference.global_position, Vector3.UP)
+							#var look_target = global_position + velocity
+							#look_at(look_target, Vector3.UP)
+							#look_at(destination, Vector3.UP)
+						else:
+							# Look Logic Continued
+							if occupying_loot_object == false:
+								var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
+								global_transform.basis = Basis(next_quat)
+							else:
+								look_at(nearest_loot_object.global_position, Vector3.UP)
+								rotation.x = 0.0
+								rotation.z = 0.0
+						#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
+						#rotation.y = rotate_toward(rotation.y, atan2(velocity.x,velocity.z), delta * look_rotation_speed)
+						
+					else:
+						look_at(player.global_position, Vector3.UP)
+					rotation.x = 0
+					rotation.z = 0
+					
+					move_and_slide()
 				
-				# Assigns the point of exit for the burglar. 80/20 chance of the burglar leaving
-				# where they came, or picking the closest door/window.
-				if chance <= 80:
-					point_of_exit = point_of_entry
-				else:
-					point_of_exit = nearest_poxit
-				#point_of_exit = nearest_poxit
-			
-			# Conditions for the transition to exiting state
-			if filtered_loot_objects.is_empty() and current_state != 15: 
-				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.MOVING_TO_POXIT))
-			
-			if player_spotted == true:
-				if engagement_timer_just_ended == false:
-					looting_timer_node.stop()
-					is_looting = false
-					get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.COMBAT))
-			
-			# Lure transition
-			if being_lured == true:
-				looting_timer_node.stop()
-				is_looting = false
-				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.MOVING_TO_LURE))
+				
+
 			
 		State.MOVING_TO_POXIT:
 				print("moving to poxit")
