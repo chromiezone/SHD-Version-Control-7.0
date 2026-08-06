@@ -65,31 +65,31 @@ func set_current_stage(new_stage: Stage) -> void:
 			_leader_burglar_path.progress = possible_spawns.pick_random()
 			
 			
-			#var additional_burglar_count := randi_range(4,5)
-			#for i in additional_burglar_count:
-				#var additional_path_follow = PathFollow3D.new()
-				#var additional_burglar := preload("res://enemies/burglar.tscn").instantiate()
-				#burglar_count += 1
-				#
-				#additional_burglar.position.y = -0.175
-				#$Spawner/Path3D.add_child(additional_path_follow)
-				#additional_path_follow.add_child(additional_burglar)
-				#additional_path_follow.progress = _leader_burglar_path.progress - randf_range(2.0, 4.0)
-				##additional_path_follow.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random() #should use this one in final
-				#additional_burglars_dict[additional_burglar] = 1.0
-				#additional_burglars_array.append(additional_burglar)
-				#
-				#additional_burglar.connect("enemy_died", func() -> void:
-					#burglar_count -= 1
-					#print("burglar cruelty is " + str(additional_burglar.cruelty))
-					#cruelty_score -= additional_burglar.cruelty
-					#additional_burglars_array.erase(additional_burglar)
-				#)
-				#additional_burglar.connect("burglar_path_stop", func() -> void:
-					#var collider = additional_burglar._roaming_ray_cast.get_collider()
-					#if collider is Door3D or collider is Window3D:
-						#additional_burglars_dict[additional_burglar] = 0.0
-				#)
+			var additional_burglar_count := randi_range(4,5)
+			for i in additional_burglar_count:
+				var additional_path_follow = PathFollow3D.new()
+				var additional_burglar := preload("res://enemies/burglar.tscn").instantiate()
+				burglar_count += 1
+				
+				additional_burglar.position.y = -0.175
+				$Spawner/Path3D.add_child(additional_path_follow)
+				additional_path_follow.add_child(additional_burglar)
+				additional_path_follow.progress = _leader_burglar_path.progress - randf_range(2.0, 4.0)
+				#additional_path_follow.progress = [_leader_burglar_path.progress - randf_range(2.0, 15.0), _leader_burglar_path.progress + randf_range(2.0, 15.0)].pick_random() #should use this one in final
+				additional_burglars_dict[additional_burglar] = 1.0
+				additional_burglars_array.append(additional_burglar)
+				
+				additional_burglar.connect("enemy_died", func() -> void:
+					burglar_count -= 1
+					print("burglar cruelty is " + str(additional_burglar.cruelty))
+					cruelty_score -= additional_burglar.cruelty
+					additional_burglars_array.erase(additional_burglar)
+				)
+				additional_burglar.connect("burglar_path_stop", func() -> void:
+					var collider = additional_burglar._roaming_ray_cast.get_collider()
+					if collider is Door3D or collider is Window3D:
+						additional_burglars_dict[additional_burglar] = 0.0
+				)
 			
 			
 			burglars_have_begun = true
@@ -212,14 +212,14 @@ func _physics_process(delta: float) -> void:
 	
 	
 	
-	#_leader_burglar_path.progress += move_speed * leader_speed_factor * delta
-	#for additional_burglar in additional_burglars_dict:
-		#if additional_burglar != null:
-			#var speed_factor = additional_burglars_dict[additional_burglar]
-			#var pathfollow = additional_burglar.get_parent()
-			#pathfollow.progress += move_speed * speed_factor * delta
-		#
-	#print("additional_burglars_dict is " + str(additional_burglars_dict))
+	_leader_burglar_path.progress += move_speed * leader_speed_factor * delta
+	for additional_burglar in additional_burglars_dict:
+		if additional_burglar != null:
+			var speed_factor = additional_burglars_dict[additional_burglar]
+			var pathfollow = additional_burglar.get_parent()
+			pathfollow.progress += move_speed * speed_factor * delta
+		
+	print("additional_burglars_dict is " + str(additional_burglars_dict))
 
 	
 
