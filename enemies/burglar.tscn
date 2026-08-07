@@ -382,11 +382,12 @@ transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_no3p5"]
 points = PackedVector3Array(4.99981, -0.0679476, 5.95145, -0.951635, -0.0679476, -7.61905, -2.38058, -0.0679476, -7.38039, -0.342385, 1.36503, -0.68477, -6.66592, -0.0679476, 4.04669, 6.42727, 0.884317, -2.38058, 1.19029, 1.12251, 5.71429, -5.71429, 1.12251, -1.19029, 6.90458, -0.0679476, -3.57087, 1.42745, 0.884317, -6.66592, -2.38058, 0.884317, 6.42727, -7.38039, -0.0679476, -2.38058, 6.42727, 0.884317, 2.38058, -3.80952, 0.884317, -5.71429, -0.951635, -0.0679476, 7.61905, -4.99981, 1.12251, 3.09505, 7.61905, -0.0679476, 0.951635, 4.04669, -0.0679476, -6.66592, 5.71429, 1.12251, -1.19029, 2.38058, 0.884317, 6.42727, 1.19029, 1.12251, -5.71429, -6.66592, 0.884317, 1.42745, 4.76116, 0.884317, -4.99981, 4.28534, 1.12251, 4.04669, -3.09505, 1.12251, -4.99981, -6.42727, 0.884317, -2.38058, -5.95145, -0.0679476, -4.99981, -4.76116, 0.884317, 4.99981, -4.04669, -0.0679476, 6.66592, -1.42745, 0.884317, -6.66592, 4.99981, 0.884317, 4.76116, 6.66592, -0.0679476, 4.04669)
 
-[node name="Burglar" type="CharacterBody3D" node_paths=PackedStringArray("debug_label")]
+[node name="Burglar" type="CharacterBody3D" node_paths=PackedStringArray("debug_label", "debug_state_label")]
 collision_layer = 2
 collision_mask = 26627
 script = ExtResource("1_ppjas")
 debug_label = NodePath("Label3D")
+debug_state_label = NodePath("StateLabel")
 max_health = 5
 
 [node name="Arm" type="Node3D" parent="."]
@@ -417,6 +418,11 @@ height = 1.60205
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7872, 0)
+billboard = 1
+text = "Health"
+
+[node name="StateLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.00709, 0)
 billboard = 1
 text = "Health"
 
@@ -554,22 +560,22 @@ one_shot = true
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0, 0, 0.166245)
 
 [node name="Skeleton3D" parent="BurglarSkinV2/Armature" index="0"]
-bones/0/position = Vector3(0, 0.940347, 0.182244)
+bones/0/position = Vector3(0, 0.955186, 0.182244)
 bones/1/rotation = Quaternion(0.119803, 1.18351e-07, 1.42816e-08, 0.992798)
 bones/2/position = Vector3(0.162604, 0.437528, -0.0507621)
-bones/2/rotation = Quaternion(0.172514, 0.0884907, 0.958218, -0.210301)
+bones/2/rotation = Quaternion(0.18287, 0.0783538, 0.966462, -0.162391)
 bones/3/rotation = Quaternion(0.166512, 0.016438, -0.065359, 0.983734)
 bones/4/rotation = Quaternion(-0.000514691, -0.00417002, 0.0423084, 0.999096)
-bones/5/rotation = Quaternion(0.0812993, 0.0874276, 0.987179, -0.10595)
-bones/6/rotation = Quaternion(-0.366303, 0.0154896, -0.0301257, 0.929879)
-bones/7/rotation = Quaternion(0.554108, 0.0879415, -0.00597495, 0.827765)
+bones/5/rotation = Quaternion(0.0821842, 0.0577221, 0.98963, -0.102701)
+bones/6/rotation = Quaternion(-0.317321, 0.0138978, -0.0308924, 0.947713)
+bones/7/rotation = Quaternion(0.535531, 0.0874924, -0.00677841, 0.839944)
 bones/8/position = Vector3(-0.162604, 0.437528, -0.0507621)
-bones/8/rotation = Quaternion(-0.179188, 0.0774976, 0.961588, 0.192962)
+bones/8/rotation = Quaternion(-0.187919, 0.068327, 0.968211, 0.150287)
 bones/9/rotation = Quaternion(0.166512, -0.016438, 0.065359, 0.983734)
 bones/10/rotation = Quaternion(-0.000514703, 0.00417002, -0.0423084, 0.999096)
-bones/11/rotation = Quaternion(-0.0744441, 0.0871806, 0.988007, 0.10344)
-bones/12/rotation = Quaternion(-0.366303, -0.0154896, 0.0301257, 0.929879)
-bones/13/rotation = Quaternion(0.554514, -0.0809094, 0.00392074, 0.828223)
+bones/11/rotation = Quaternion(-0.0752608, 0.0574671, 0.990429, 0.100416)
+bones/12/rotation = Quaternion(-0.317321, -0.0138978, 0.0308924, 0.947713)
+bones/13/rotation = Quaternion(0.535915, -0.080514, 0.00458918, 0.840411)
 bones/14/position = Vector3(0.218322, 0.628349, 0.61256)
 bones/14/rotation = Quaternion(-0.0520479, 0.705189, 0.705189, -0.0520479)
 bones/16/position = Vector3(-0.211116, 0.628349, 0.61256)

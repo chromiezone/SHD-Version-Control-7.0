@@ -396,6 +396,7 @@ func _ready() -> void:
 	# Stores reference to player
 	player = get_tree().root.get_node("TestScene/Player")
 	debug_label.text = str(health)
+	debug_state_label.text = str(current_state)
 	filtered_loot_objects = Blackboard.loot_objects
 	filtered_unoccupied_loot_objects = Blackboard.loot_objects
 	weapon_type = $Arm/ArmBody/HandleMarker.get_child(0)
@@ -479,6 +480,8 @@ func _physics_process(delta: float) -> void:
 	#print(walk_speed)
 	#print("current_state is " + str(current_state))
 	# Used to determine if burglar will take damage from a trap
+	
+	debug_state_label.text = str(current_state)
 	
 	# Updates list of unoccupied loot objects
 	filtered_unoccupied_loot_objects = Blackboard.loot_objects.filter(func(loot_object: LootObject):
@@ -585,7 +588,7 @@ func _physics_process(delta: float) -> void:
 				)
 				var distance_between_self_and_poe = global_position.distance_to(point_of_entry.global_position)
 				if not _navigation_agent_3d.is_navigation_finished() and distance_between_self_and_poe > 3.0:
-					velocity = path_direction * walk_speed * 5.0
+					velocity = path_direction * walk_speed
 					move_and_slide()
 				elif not _navigation_agent_3d.is_navigation_finished() and distance_between_self_and_poe < 2.7:
 					velocity = velocity.move_toward(Vector3.ZERO, walk_acceleration_factor * delta)
@@ -715,7 +718,8 @@ func _physics_process(delta: float) -> void:
 				
 				# Conditions for traveling to the path
 				if not _navigation_agent_3d.is_navigation_finished():
-					velocity = path_direction * walk_speed
+					#velocity = path_direction * walk_speed
+					velocity = velocity.move_toward(path_direction * walk_speed, velocity_distance * walk_acceleration_factor * delta)
 					move_and_slide()
 				# Conditions for coming to a full stop
 				else:
@@ -773,7 +777,8 @@ func _physics_process(delta: float) -> void:
 					
 					# Conditions for traveling to the path
 					if not _navigation_agent_3d.is_navigation_finished() and looting_timer_node.is_stopped():
-						velocity = path_direction * walk_speed
+						#velocity = path_direction * walk_speed
+						velocity = velocity.move_toward(path_direction * walk_speed, velocity_distance * walk_acceleration_factor * delta)
 						move_and_slide()
 					# Conditions for coming to a full stop
 					else:

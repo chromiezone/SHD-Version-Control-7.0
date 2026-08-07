@@ -2,6 +2,7 @@ class_name Enemy3D extends CharacterBody3D
 
 @export_category("Debugging")
 @export var debug_label: Label3D = null
+@export var debug_state_label : Label3D = null
 
 @export_category("Base Stats")
 @export var max_health := 100
