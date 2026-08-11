@@ -402,9 +402,6 @@ func _exiting_area_recheck() -> void:
 
 
 func _process(_delta: float) -> void:
-	#print(str(self) + "broken is " + str(broken))
-	print(str(self) + "can_interact is " + str(can_interact))
-	#print(str(_swivel.rotation.y) + str(is_left_hand_door) + "door open is" + str(door_open))
 	if door_trap != null:
 		door_trap.door_trap_in_effect.connect(func() -> void:
 			broken = true
@@ -446,7 +443,6 @@ func _process(_delta: float) -> void:
 	
 
 func _physics_process(_delta: float) -> void:
-	print(_swivel.rotation.y)
 	if Trap3D.Blackboard.player_money > 500:
 		_mid_section_interactable.can_interact = true
 		_top_section_interactable.can_interact = true

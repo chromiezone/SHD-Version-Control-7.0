@@ -219,9 +219,6 @@ func _physics_process(delta: float) -> void:
 			var pathfollow = additional_burglar.get_parent()
 			pathfollow.progress += move_speed * speed_factor * delta
 		
-	print("additional_burglars_dict is " + str(additional_burglars_dict))
-
-	
 
 
 

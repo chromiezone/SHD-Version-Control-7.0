@@ -146,8 +146,3 @@ func _ready() -> void:
 	
 func _process(_delta: float) -> void:
 	pane_position_y = _bottom_pane.position.y
-	
-	
-	#if occupancy_slots > 0:
-		#print("priority_list is " + str(priority_list))
-		#print(str(self) + "number of occupants is " + str(occupancy_slots))

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://botxo3s8o73jj"]
+[gd_scene load_steps=8 format=3 uid="uid://botxo3s8o73jj"]
 
 [ext_resource type="Material" uid="uid://jhjqownss2qu" path="res://traps/visuals/VisualRed.tres" id="1_h3byf"]
 [ext_resource type="Script" uid="uid://d1ppa6s8y0mdl" path="res://traps/visuals/nailboard_visual.gd" id="1_ik35e"]
@@ -13,8 +13,12 @@ size = Vector3(0.025, 0.125, -0.005)
 [sub_resource type="BoxShape3D" id="BoxShape3D_hsgim"]
 size = Vector3(0.253067, 0.0180969, 1.04883)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_qbmmt"]
+size = Vector3(0.253067, 0.106331, 1.04883)
+
 [node name="NailboardVisual" type="Area3D"]
-collision_mask = 8193
+collision_layer = 0
+collision_mask = 8192
 script = ExtResource("1_ik35e")
 
 [node name="Nailboard" type="MeshInstance3D" parent="."]
@@ -85,10 +89,18 @@ surface_material_override/0 = ExtResource("1_h3byf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00222015, -0.0111966, -0.0244141)
-visible = false
 shape = SubResource("BoxShape3D_hsgim")
 
 [node name="NailboardMesh" parent="." instance=ExtResource("4_uy17n")]
 transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, 0, 0, 0)
+
+[node name="ClippingPreventionArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00300997, 0)
+collision_layer = 0
+collision_mask = 24576
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ClippingPreventionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00222015, 0.0670848, -0.0244141)
+shape = SubResource("BoxShape3D_qbmmt")
 
 [editable path="NailboardMesh"]

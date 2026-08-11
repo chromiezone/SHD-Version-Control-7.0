@@ -4,9 +4,25 @@ var meets_prerequisites := false
 var clipping := false
 
 var trap_name := "BearTrap"
+var player : PlayerFPSController = null
+var default_rotation : float = 0.0
+
+func _ready() -> void:
+	player = Globals.player
 
 
 func _physics_process(_delta: float) -> void:
+	if Input.is_action_pressed("attack"):
+		rotation.x += 0.01
+	if Input.is_action_pressed("right_click"):
+		rotation.x -= 0.01
+	#if meets_prerequisites:
+		#$bear_trap_mesh.rotation.x = default_rotation
+	#elif player._camera.rotation.x > 0.0 and not meets_prerequisites:
+		#$bear_trap_mesh.rotation.x = player._camera.rotation.x * ((PI / 2.0))
+	#elif player._camera.rotation.x < 0.0 and not meets_prerequisites:
+		#$bear_trap_mesh.rotation.x = player._camera.rotation.x / ((PI / 2.0) * 1.2)
+	
 	
 	if not has_overlapping_bodies():
 		meets_prerequisites = false

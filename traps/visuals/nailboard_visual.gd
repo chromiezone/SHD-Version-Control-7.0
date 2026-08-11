@@ -1,11 +1,16 @@
 extends Area3D
 
 var meets_prerequisites := false
-
+var clipping := false
 var trap_name := "Nailboard"
 
 
 func _physics_process(_delta: float) -> void:
+	if Input.is_action_pressed("attack"):
+		rotation.z += 0.01
+	if Input.is_action_pressed("right_click"):
+		rotation.z -= 0.01
+	
 	
 	if not has_overlapping_bodies():
 		meets_prerequisites = false
@@ -25,6 +30,14 @@ func _physics_process(_delta: float) -> void:
 				continue
 			elif i is Trap3D:
 				meets_prerequisites = false
+	
+	if $ClippingPreventionArea.has_overlapping_bodies():
+		clipping = true
+	else:
+		clipping = false
+	
+	if clipping == true:
+		meets_prerequisites = false
 	
 	if Globals.player.inventory["Nailboard"] <= 0:
 		meets_prerequisites = false

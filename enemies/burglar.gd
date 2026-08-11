@@ -1,11 +1,5 @@
 class_name Burglar extends Enemy3D
 
-#func _unhandled_input(event: InputEvent) -> void:
-	#if event.is_action_pressed("confirm"):
-		#var random_position := Vector3.ZERO
-		#random_position.x = randf_range(-5.0, 5.0)
-		#random_position.z = randf_range(-5.0, 5.0)
-		#_navigation_agent_3d.set_target_position(random_position)
 
 signal burglar_path_stop
 
@@ -320,8 +314,6 @@ func set_current_state(new_state: State) -> void:
 		State.LOOTING:
 			patrol_destination.x = randf_range(-5.0, 5.0)
 			patrol_destination.z = randf_range(-5.0, 5.0)
-			#if player_spotted == true or last_state == 7:
-				#set_current_state(State.COMBAT)
 		State.COMBAT:
 			$EngagementTimer.start()
 			being_lured = false
@@ -409,7 +401,6 @@ func _ready() -> void:
 		if _hit_box.get_owner() is PlayerFPSController:
 			cruelty += 1
 		$Damage.play()
-		#print(_hit_box.damage_source)
 		debug_label.text = str(health)
 		if _hit_box.get_parent() is Trap3D or _hit_box.get_owner() is Trap3D:
 			var trap = _hit_box.get_parent()
@@ -427,10 +418,6 @@ func _ready() -> void:
 				health -= _hit_box.damage
 				print("enemy should take damage")
 				print(_hit_box.damage)
-		#elif _hit_box.get_owner() is PlayerFPSController:
-			#health -= _hit_box.damage
-			#print("damaged by player")
-			#print("player damage is " + str(_hit_box.damage))
 		)
 	
 	$VisionTimer.timeout.connect(_on_vision_timer_timeout)
@@ -445,41 +432,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	print("looting_timer time left = " + str(looting_timer_node.time_left))
 	print("is_looting = " + str(is_looting))
-	#print("current_entryway is " + str(current_entryway))
-	#print("current_entryway_just_updated is " + str(current_entryway_just_updated))
-	#print("velocity.length_squared is " + str(velocity.length_squared()))
-	#print("footstep_area_occupied is " + str(footstep_area_occupied))
-	#var destination = _navigation_agent_3d.get_next_path_position()
-	#var local_destination = destination - global_position
-	#var path_direction = local_destination.normalized()
-	#
-	#if _navigation_agent_3d.is_navigation_finished():
-		#return
-	#
-	##look_at(destination)
-	## Look at smooth code I ripped off google
-	#var target_transform = transform.looking_at(destination)
-	#var current_quat = Quaternion(transform.basis)
-	#var target_quat = Quaternion(target_transform.basis)
-	#var blended_quat = current_quat.slerp(target_quat, 0.1)
-	#transform.basis = Basis(blended_quat)
-	##
-	#
-	#velocity = path_direction * walk_speed
-	#move_and_slide()
-	
-	#print(vision_target)
-	#print($AwarenessTimer.time_left)
-	#print(vision_target_just_turned_player)
-	#print("current lure is " + str(lure))
-	#print("current state is " + str(current_state))
-	#print("time left on lure cooldown is " + str(_lure_interaction_cooldown.time_left))
 	print(str(self) + "'s current_state is " + str(current_state))
-	#print(last_state)
-	#print($AwarenessTimer.time_left)
-	#print(walk_speed)
-	#print("current_state is " + str(current_state))
-	# Used to determine if burglar will take damage from a trap
 	
 	debug_state_label.text = str(current_state)
 	
@@ -507,10 +460,8 @@ func _physics_process(delta: float) -> void:
 	# Walk noises
 	if velocity.length() > 2.2 or current_state in movement_states_array:
 		moving = true
-		#$BurglarSkinV2/AnimationPlayer.play("run")
 	else:
 		moving = false
-		#$BurglarSkinV2/AnimationPlayer.play("idle")
 	
 	
 	# Updates the nearest exit point for the burglar
@@ -527,10 +478,6 @@ func _physics_process(delta: float) -> void:
 		rotation.z = 0
 	
 	
-	#print(Blackboard.point_of_entries)
-	#print("burglar near relative entry is " + str(near_relative_entry))
-	#print(global_position.distance_squared_to(nearest_entry_relative_to_player.global_position))
-	#print(vision_target)
 	
 	# Determines if burglar is close to the nearest entry relative to the player
 	if global_position.distance_squared_to(nearest_entry_relative_to_player.global_position) <= 1.00 and %RoamingRayCast.get_collider() is Interactable3D:
@@ -613,7 +560,6 @@ func _physics_process(delta: float) -> void:
 			if filtered_loot_objects.is_empty() and not is_inside_home:
 				get_tree().create_timer(0.25).timeout.connect(set_current_state.bind(State.EXTRACTION))
 			if player_spotted == true:
-				#look_at(player.global_position, Vector3.UP)
 				rotation.x = 0.0
 				rotation.z = 0.0
 			else:
@@ -650,7 +596,6 @@ func _physics_process(delta: float) -> void:
 				point_of_exit = point_of_entry
 			else:
 				point_of_exit = nearest_poxit
-			#point_of_exit = nearest_poxit
 			
 			
 			# Conditions for the transition to exiting state
@@ -685,10 +630,6 @@ func _physics_process(delta: float) -> void:
 				return loot_object.is_looted == false
 				)
 				
-			#filtered_unoccupied_loot_objects = filtered_unoccupied_loot_objects.filter(func(loot_object: LootObject):
-				#return loot_object.occupied == false
-				#)
-			#print("unoccupied loot objects are " + str(filtered_unoccupied_loot_objects))
 			
 			nearest_unoccupied_loot_object = find_closest_node_to_point(filtered_unoccupied_loot_objects, self.global_position)
 			nearest_loot_object = find_closest_node_to_point(filtered_loot_objects, self.global_position)
@@ -787,11 +728,6 @@ func _physics_process(delta: float) -> void:
 						rotation.x = 0
 						rotation.z = 0
 					
-					#looting_timer_node.wait_time = nearest_loot_object.looting_duration
-					
-					
-					
-					
 					# If the burglar is inside the range of the loot object, this should occur
 					if occupied_loot_object != null and not occupied_loot_object.priority_list.is_empty():
 						if loot_object_prioritized_burglar != null:
@@ -814,21 +750,11 @@ func _physics_process(delta: float) -> void:
 								looted_object.hide()
 								has_loot = true
 							)
-						## Burglar comes to a stop
-						#velocity = velocity.move_toward(Vector3.ZERO, velocity_distance * walk_acceleration_factor * delta)
-					#else:
-						#velocity = velocity.move_toward(
-							#desired_velocity,
-							#velocity_distance * walk_acceleration_factor * delta
-						#)
 					
 					if player_spotted == false:
 						if velocity.length_squared() == 0.00 and current_entryway != null and current_entryway_just_updated == true and current_entryway is Door3D:
 							var entryway_look_reference = current_entryway
 							look_at(entryway_look_reference.global_position, Vector3.UP)
-							#var look_target = global_position + velocity
-							#look_at(look_target, Vector3.UP)
-							#look_at(destination, Vector3.UP)
 						else:
 							# Look Logic Continued
 							if occupying_loot_object == false:
@@ -838,8 +764,6 @@ func _physics_process(delta: float) -> void:
 								look_at(nearest_loot_object.global_position, Vector3.UP)
 								rotation.x = 0.0
 								rotation.z = 0.0
-						#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
-						#rotation.y = rotate_toward(rotation.y, atan2(velocity.x,velocity.z), delta * look_rotation_speed)
 						
 					else:
 						look_at(player.global_position, Vector3.UP)
@@ -854,13 +778,6 @@ func _physics_process(delta: float) -> void:
 		State.MOVING_TO_POXIT:
 				print("moving to poxit")
 				print("point of exit is " + str(point_of_exit))
-				#var direction := global_position.direction_to(point_of_exit.global_position) 
-				#var desired_velocity := direction * walk_speed
-				#var velocity_distance := velocity.distance_to(desired_velocity)
-				#velocity = velocity.move_toward(
-					#desired_velocity,
-					#velocity_distance * walk_acceleration_factor * delta
-				#)
 				var direction := global_position.direction_to(point_of_exit.global_position) 
 				var desired_velocity := direction * walk_speed
 				var velocity_distance := velocity.distance_to(desired_velocity)
@@ -881,10 +798,8 @@ func _physics_process(delta: float) -> void:
 				var distance_between_self_and_poxit = global_position.distance_to(point_of_exit.global_position)
 				print("distance between self and exit is " + str(distance_between_self_and_poxit))
 				
-				#velocity = path_direction * walk_speed
-				#move_and_slide()
 				global_position.y = stored_y_position
-				#look_at(point_of_exit.global_position)
+				
 				# Look Logic
 				var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
 				var target_quat = target_transform.basis.get_rotation_quaternion()
@@ -893,12 +808,10 @@ func _physics_process(delta: float) -> void:
 				var look_vector = point_of_exit.global_position - global_position
 				var look_angle = atan2(look_vector.x, look_vector.z)
 				if distance_between_self_and_poxit > 3.0:
-					#rotation.y = lerp_angle(rotation.y, atan2(velocity.x, velocity.z), delta * look_rotation_speed)
 					# Look Logic Continued
 					var next_quat: Quaternion = current_quat.slerp(target_quat, look_rotation_speed * delta)
 					global_transform.basis = Basis(next_quat) 
 				else:
-					#rotation.y = rotate_toward(rotation.y, look_angle, delta * look_rotation_speed)
 					look_at(point_of_exit.global_position, Vector3.UP)
 				rotation.x = 0
 				rotation.z = 0
@@ -931,8 +844,6 @@ func _physics_process(delta: float) -> void:
 			var _on_opposing_spaces = (player.is_inside_home == true and is_inside_home == false) or (player.is_inside_home == false and is_inside_home == true)
 			var needs_to_exit = player.is_inside_home == false and is_inside_home == true
 			var needs_to_enter = player.is_inside_home == true and is_inside_home == false
-			#if _on_opposing_spaces and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped() and global_position.distance_to(player.global_position) > 25.0:
-				#set_current_state(State.REROAMING)
 			if needs_to_exit and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped() and global_position.distance_to(player.global_position) > 15.0:
 				set_current_state(State.REROAMING)
 			if needs_to_enter and $AwarenessTimer.time_left < 9.0 and door_interaction_cooldown_timer.is_stopped():
@@ -950,12 +861,6 @@ func _physics_process(delta: float) -> void:
 			if $VisionTargetChangeTimer.is_stopped():
 				if player_spotted == true:
 					vision_target = player
-				#if vision_target_just_turned_entry:
-					#vision_target = player
-					#return
-				#if player_spotted == false and $AwarenessTimer.time_left < 8.0:
-					#vision_target = nearest_entry_relative_to_player
-				
 			
 			var direction := global_position.direction_to(player.global_position) 
 			var desired_velocity := direction * walk_speed
@@ -966,7 +871,6 @@ func _physics_process(delta: float) -> void:
 			var local_destination = destination - global_position
 			var path_direction = local_destination.normalized()
 			
-			#global_position.y = stored_y_position
 			if _grounding_ray_cast.is_colliding():
 				var y_pos = _grounding_ray_cast.get_collision_point()
 				global_position.y = y_pos.y
@@ -1093,9 +997,6 @@ func _physics_process(delta: float) -> void:
 				velocity_distance * walk_acceleration_factor * delta)
 				move_and_slide()
 			
-			#var look_vector = nearest_poxit.global_position - global_position
-			#var look_angle = atan2(look_vector.x, look_vector.z)
-			
 			# Look Logic
 			var target_transform: Transform3D = global_transform.looking_at(destination, Vector3.UP)
 			var target_quat = target_transform.basis.get_rotation_quaternion()
@@ -1150,7 +1051,6 @@ func _physics_process(delta: float) -> void:
 						
 						move_and_slide()
 			
-			#print(lure_delta_timer)
 			if lure != null:
 				_navigation_agent_3d.set_target_position(lure.global_position)
 				var destination = _navigation_agent_3d.get_next_path_position()
@@ -1174,11 +1074,7 @@ func _physics_process(delta: float) -> void:
 					look_at(lure.global_position, Vector3.UP)
 					rotation.x = 0
 					rotation.z = 0
-				#var nearest_entry_relative_to_lure = find_closest_node_to_point(Blackboard.point_of_entries, lure.global_position)
-				#if not $VisionArea.overlaps_area(lure):
-					#vision_target = nearest_entry_relative_to_lure
-				#vision_target = lure
-				#look_at(vision_target.global_position)
+					
 				if player_spotted == false:
 					if velocity.length_squared() > 0.01:
 							# Look Logic Continued
@@ -1195,7 +1091,6 @@ func _physics_process(delta: float) -> void:
 				if distance_between_self_and_lure < 1.5:
 					being_lured = false
 					get_tree().create_timer(5.0).timeout.connect(func() -> void:
-						#lure = null
 						if is_inside_home == true:
 							print("finished being lured, returning to looting")
 							set_current_state(State.LOOTING)
@@ -1220,9 +1115,7 @@ func _physics_process(delta: float) -> void:
 				get_tree().create_timer(0.5).timeout.connect(set_current_state.bind(State.ENTERING))
 
 func _on_vision_timer_timeout():
-	#print("timer working") 
 	var overlaps = $VisionArea.get_overlapping_bodies()
-	#print(overlaps)
 	if overlaps.size() > 0:
 		for overlap in overlaps:
 			if overlap == player:

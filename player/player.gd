@@ -157,8 +157,9 @@ func _process(_delta: float) -> void:
 		selected_fixed_trap = null
 
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed("invis"):
-		set_collision_layer_value(1, false)
+	#print("camera rotation x is " + str(_camera.rotation.x))
+	#if Input.is_action_just_pressed("invis"):
+		#set_collision_layer_value(1, false)
 	
 	Trap3D.Blackboard.player_money = money
 	

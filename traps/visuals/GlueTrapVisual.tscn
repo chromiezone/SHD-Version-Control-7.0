@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://ca3k2x4olka3u"]
+[gd_scene load_steps=6 format=3 uid="uid://ca3k2x4olka3u"]
 
 [ext_resource type="PackedScene" uid="uid://5njp82e6ynsy" path="res://traps/meshes/gluetrap_mesh.tscn" id="1_fu38h"]
 [ext_resource type="Script" uid="uid://db46mnpbkl5jj" path="res://traps/visuals/glue_trap_visual.gd" id="1_ud80t"]
@@ -7,6 +7,9 @@
 size = Vector3(1.26508, 0.020996, 1.26147)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0p42n"]
+size = Vector3(1.265, 0.0418711, 1.261)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o7mdd"]
 size = Vector3(1.265, 0.0418711, 1.261)
 
 [node name="GlueTrapVisual" type="Area3D"]
@@ -21,9 +24,15 @@ shape = SubResource("BoxShape3D_ud80t")
 
 [node name="ClippingPreventionArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.283909, 0)
+collision_layer = 0
+collision_mask = 24576
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ClippingPreventionArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00895524, 0.319071, 0.0251101)
 shape = SubResource("BoxShape3D_0p42n")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ClippingPreventionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00858533, 0.147378, 0.0247869)
+shape = SubResource("BoxShape3D_o7mdd")
 
 [editable path="gluetrap_mesh"]

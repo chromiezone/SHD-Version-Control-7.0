@@ -31,7 +31,6 @@ func _process(delta: float) -> void:
 		occupied = false
 	else:
 		occupied = true
-	print("occupants number is " + str(occupancy_slots) + ", occupied == " + str(occupied) + ", priority_list == " + str(priority_list))
 
 
 func _ready() -> void:
